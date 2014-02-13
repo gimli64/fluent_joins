@@ -1,1 +1,1 @@
-add_library (Bucket bucket.cpp)
+add_library(Bucket bucket.cpp)
