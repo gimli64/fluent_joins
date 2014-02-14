@@ -1,15 +1,16 @@
 #include "bucket.h"
 
 Bucket::Bucket()
-    :elements(BUCKET_SIZE)
+    :elements()
 {
+    elements.reserve(BUCKET_SIZE);
 }
 
-string Bucket::getValue(string value)
+string* Bucket::getValue(string value)
 {
     vector<string>::iterator it = find(elements.begin(), elements.end(), value);
     if (it != elements.end()) {
-        return *it;
+        return &(*it);
     }
     return NULL;
 }
@@ -17,11 +18,12 @@ string Bucket::getValue(string value)
 void Bucket::putValue(string value)
 {
     elements.push_back(value);
+    // TODO : raise an error if the bucket is full !
 }
 
 bool Bucket::isFull()
 {
-    return (this->size() >= BUCKET_SIZE);
+    return (size() >= BUCKET_SIZE);
 }
 
 int Bucket::size()

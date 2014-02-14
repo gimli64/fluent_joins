@@ -14,7 +14,7 @@ public:
     static const int BUCKET_SIZE = 10;
 
     Bucket();
-    string getValue(string value);
+    string* getValue(string value);
     void putValue(string value);
     bool isFull();
     int size();

@@ -6,7 +6,8 @@ add_subdirectory(tests)
 
 include(CTest)
 enable_testing ()
-add_test(NAME test COMMAND BucketTests)
+add_test(NAME bucketTest COMMAND BucketTests)
+add_test(NAME directoryTest COMMAND DirectoryTests)
 
 add_executable(main main.cpp)
 target_link_libraries(main Bucket)
