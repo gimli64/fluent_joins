@@ -10,4 +10,8 @@ add_test(NAME bucketTest COMMAND BucketTests)
 add_test(NAME directoryTest COMMAND DirectoryTests)
 
 add_executable(main main.cpp)
-target_link_libraries(main Bucket)
+
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common)
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common/directory)
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common/bucket)
+target_link_libraries(main Bucket HashingMethod Directory)

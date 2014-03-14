@@ -21,6 +21,7 @@ public:
     void putValue(string value);
     bool isFull();
     int size();
+    vector<string> getAllValues();
 
 private:
     vector<string> elements;

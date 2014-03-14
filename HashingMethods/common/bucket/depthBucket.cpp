@@ -5,6 +5,11 @@ DepthBucket::DepthBucket()
 {
 }
 
+DepthBucket::DepthBucket(HashingMethod hasher)
+    :localDepth(0), Bucket(hasher)
+{
+}
+
 int DepthBucket::getLocalDepth() {
     return localDepth;
 }

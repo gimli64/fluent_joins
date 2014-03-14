@@ -36,3 +36,7 @@ int Bucket::size()
 {
     return elements.size();
 }
+
+vector<string> Bucket::getAllValues() {
+    return elements;
+}
