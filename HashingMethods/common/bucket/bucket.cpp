@@ -6,6 +6,12 @@ Bucket::Bucket()
     elements.reserve(BUCKET_SIZE);
 }
 
+Bucket::Bucket(HashingMethod hasher)
+    :elements(), hasher(hasher)
+{
+    elements.reserve(BUCKET_SIZE);
+}
+
 string* Bucket::getValue(string value)
 {
     vector<string>::iterator it = find(elements.begin(), elements.end(), value);

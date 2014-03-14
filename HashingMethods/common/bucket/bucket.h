@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "hashingMethod.h"
+
 using std::string;
 using std::vector;
 using std::find;
@@ -14,6 +16,7 @@ public:
     static const int BUCKET_SIZE = 10;
 
     Bucket();
+    Bucket(HashingMethod hasher);
     string* getValue(string value);
     void putValue(string value);
     bool isFull();
@@ -21,6 +24,9 @@ public:
 
 private:
     vector<string> elements;
+
+protected:
+    HashingMethod hasher;
 };
 
 #endif // BUCKET_H

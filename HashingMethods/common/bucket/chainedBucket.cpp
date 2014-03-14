@@ -5,6 +5,11 @@ ChainedBucket::ChainedBucket()
 {
 }
 
+ChainedBucket::ChainedBucket(HashingMethod hasher)
+    :nextBucket(0), Bucket(hasher)
+{
+}
+
 string* ChainedBucket::getValue(string value)
 {
     string* result = Bucket::getValue(value);
@@ -17,7 +22,7 @@ string* ChainedBucket::getValue(string value)
 void ChainedBucket::putValue(string value) {
     if (this->isFull()) {
         if (!nextBucket) {
-            nextBucket = new ChainedBucket();
+            nextBucket = new ChainedBucket(hasher);
         }
         nextBucket->putValue(value);
     } else {

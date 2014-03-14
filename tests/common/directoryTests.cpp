@@ -3,6 +3,6 @@
 
 BOOST_AUTO_TEST_CASE(directory_test)
 {
-    Directory directory = Directory();
+//    Directory directory = Directory();
 }
 
