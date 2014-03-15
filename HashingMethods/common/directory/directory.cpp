@@ -67,3 +67,11 @@ void Directory::split(DepthBucket bucket) {
     newBucket1.setLocalDepth(bucket.getLocalDepth() + 1);
     newBucket2.setLocalDepth(newBucket1.getLocalDepth());
 }
+
+vector<DepthBucket>& Directory::getBuckets() {
+    return buckets;
+}
+
+int Directory::getGlobalDepth() {
+    return globalDepth;
+}

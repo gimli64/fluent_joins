@@ -5,5 +5,8 @@ using std::endl;
 
 int main()
 {
-    return 0;
+    HashingMethod hasher = HashingMethod();
+    Directory dir = Directory(hasher);
+    vector<DepthBucket>& buckets = dir.getBuckets();
+    cout << &buckets << endl;
 }
