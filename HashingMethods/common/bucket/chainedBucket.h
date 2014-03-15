@@ -6,7 +6,9 @@ class ChainedBucket : public Bucket
 {
 public:
     ChainedBucket();
-    ChainedBucket(HashingMethod hasher);
+    ChainedBucket(HashingMethod& hasher);
+
+    ~ChainedBucket();
 
     string* getValue(string value);
     void putValue(string value);

@@ -16,12 +16,13 @@ public:
     static const int BUCKET_SIZE = 10;
 
     Bucket();
-    Bucket(HashingMethod hasher);
+    Bucket(HashingMethod& hasher);
+    ~Bucket();
     string* getValue(string value);
     void putValue(string value);
     bool isFull();
     int size();
-    vector<string> getAllValues();
+    vector<string>& getAllValues();
 
 private:
     vector<string> elements;

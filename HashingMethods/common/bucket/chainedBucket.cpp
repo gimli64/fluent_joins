@@ -5,9 +5,14 @@ ChainedBucket::ChainedBucket()
 {
 }
 
-ChainedBucket::ChainedBucket(HashingMethod hasher)
+ChainedBucket::ChainedBucket(HashingMethod& hasher)
     :nextBucket(0), Bucket(hasher)
 {
+}
+
+ChainedBucket::~ChainedBucket()
+{
+    delete nextBucket;
 }
 
 string* ChainedBucket::getValue(string value)

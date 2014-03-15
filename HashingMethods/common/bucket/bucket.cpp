@@ -6,10 +6,14 @@ Bucket::Bucket()
     elements.reserve(BUCKET_SIZE);
 }
 
-Bucket::Bucket(HashingMethod hasher)
+Bucket::Bucket(HashingMethod& hasher)
     :elements(), hasher(hasher)
 {
     elements.reserve(BUCKET_SIZE);
+}
+
+Bucket::~Bucket()
+{
 }
 
 string* Bucket::getValue(string value)
@@ -37,7 +41,7 @@ int Bucket::size()
     return elements.size();
 }
 
-vector<string> Bucket::getAllValues()
+vector<string>& Bucket::getAllValues()
 {
     return elements;
 }

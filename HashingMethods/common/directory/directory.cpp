@@ -1,6 +1,6 @@
 #include "directory.h"
 
-Directory::Directory(HashingMethod hasher)
+Directory::Directory(HashingMethod& hasher)
     :globalDepth(0), buckets(), hasher(hasher)
 {
     buckets.push_back(DepthBucket(hasher));
@@ -16,13 +16,11 @@ void Directory::putValue(size_t key, string value) {
         if (bucket.getLocalDepth() == globalDepth) {
             doubleSize();
         }
-
         if (bucket.getLocalDepth() < globalDepth) {
             split(bucket);
             bucket = getBucket(key);
         }
     }
-
     bucket.putValue(value);
 }
 
@@ -38,10 +36,10 @@ void Directory::doubleSize() {
     globalDepth++;
 }
 
-void Directory::split(DepthBucket bucket) {
+void Directory::split(DepthBucket& bucket) {
     DepthBucket newBucket1 = DepthBucket(hasher);
     DepthBucket newBucket2 = DepthBucket(hasher);
-    vector<string> values = bucket.getAllValues();
+    vector<string>& values = bucket.getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = hasher.getHash(*it) & ((1 << globalDepth) - 1);
