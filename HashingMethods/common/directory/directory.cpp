@@ -1,5 +1,11 @@
 #include "directory.h"
 
+Directory::Directory()
+    :globalDepth(0), buckets()
+{
+    buckets.push_back(DepthBucket(hasher));
+}
+
 Directory::Directory(HashingMethod& hasher)
     :globalDepth(0), buckets(), hasher(hasher)
 {

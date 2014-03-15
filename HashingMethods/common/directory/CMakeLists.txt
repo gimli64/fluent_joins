@@ -1,4 +1,5 @@
 add_library(Directory directory.cpp)
+add_library(ChainedDirectory chainedDirectory.cpp)
 
 # Needed to link hashingMethod.h
 include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common)

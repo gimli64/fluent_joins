@@ -12,6 +12,7 @@ using std::vector;
 class Directory
 {
 public:
+    Directory();
     Directory(HashingMethod& hasher);
 
     string* getValue(size_t key, string value);
