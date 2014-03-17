@@ -4,6 +4,10 @@
 #define BOOST_TEST_MODULE directoryTests
 #include <boost/test/unit_test.hpp>
 #include <stdlib.h>
+#include <math.h>
+
+using std::cout;
+using std::endl;
 
 BOOST_AUTO_TEST_CASE(directory_test)
 {
@@ -36,7 +40,7 @@ BOOST_AUTO_TEST_CASE(chainedDirectory_test)
 
     for (int i = 0; i < directory.MAX_DOUBLING; i++) {
         directory.putValue(key, "0");
-        BOOST_CHECK_EQUAL(2 * (1 + i), directory.getBuckets().size());
+        BOOST_CHECK_EQUAL(pow(2, 1+i), directory.getBuckets().size());
         BOOST_CHECK_EQUAL(1 + i, directory.getGlobalDepth());
     }
 }

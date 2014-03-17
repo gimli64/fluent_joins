@@ -12,6 +12,7 @@ public:
     void setLocalDepth(int depth);
 
     virtual string className() const;
+    virtual ostream& dump(ostream &strm) const;
 private:
     int localDepth;
 };

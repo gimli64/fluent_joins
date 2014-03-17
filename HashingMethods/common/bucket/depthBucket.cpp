@@ -22,3 +22,9 @@ string DepthBucket::className() const
 {
     return "DepthBucket ";
 }
+
+ostream& DepthBucket::dump(ostream &strm) const
+{
+    ostream& output = Bucket::dump(strm);
+    return output << " , depth : " << localDepth;
+}

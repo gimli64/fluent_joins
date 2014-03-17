@@ -8,7 +8,7 @@ Directory::Directory()
 Directory::Directory(HashingMethod& hasher)
     :globalDepth(0), buckets(), hasher(hasher)
 {
-    buckets.push_back(DepthBucket(hasher));
+    buckets.push_back(new DepthBucket(hasher));
 }
 
 string* Directory::getValue(size_t key, string value)
@@ -34,50 +34,50 @@ void Directory::putValue(size_t key, string value)
 
 DepthBucket& Directory::getBucket(size_t key)
 {
-    return buckets.at(key & ((1 << globalDepth) - 1));
+    return *buckets.at(key & ((1 << globalDepth) - 1));
 }
 
 void Directory::doubleSize()
 {
     size_t old_size = buckets.size();
     buckets.reserve(2 * old_size);
-    for (size_t i = 0; i < old_size; ++i)
-        buckets.push_back(buckets[i]);
+    for (size_t i = 0; i < old_size; i++)
+        buckets.push_back(buckets.at(i));
     globalDepth++;
 }
 
 void Directory::split(DepthBucket& bucket)
 {
-    DepthBucket newBucket1 = DepthBucket(hasher);
-    DepthBucket newBucket2 = DepthBucket(hasher);
+    DepthBucket* newBucket1 = new DepthBucket(hasher);
+    DepthBucket* newBucket2 = new DepthBucket(hasher);
     vector<string>& values = bucket.getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = hasher.getHash(*it) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket.getLocalDepth())) == h)
-            newBucket2.putValue(*it);
+            newBucket2->putValue(*it);
         else
-            newBucket1.putValue(*it);
+            newBucket1->putValue(*it);
     }
 
     vector<int> l;
     for(vector<DepthBucket>::size_type i = 0; i < buckets.size(); i++) {
-        if(&buckets.at(i) == &bucket)
+        if(buckets.at(i) == &bucket)
             l.push_back(i);
     }
 
-    for(vector<int>::size_type i = 0; i < l.size(); i++) {
-        if ((i | (1 << bucket.getLocalDepth())) == i)
-            buckets.at(i) = newBucket2;
+    for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
+        if ((*it | (1 << bucket.getLocalDepth())) == *it)
+            buckets.at(*it) = newBucket2;
         else
-            buckets.at(i) = newBucket1;
+            buckets.at(*it) = newBucket1;
     }
 
-    newBucket1.setLocalDepth(bucket.getLocalDepth() + 1);
-    newBucket2.setLocalDepth(newBucket1.getLocalDepth());
+    newBucket1->setLocalDepth(bucket.getLocalDepth() + 1);
+    newBucket2->setLocalDepth(newBucket1->getLocalDepth());
 }
 
-vector<DepthBucket>& Directory::getBuckets()
+vector<DepthBucket*>& Directory::getBuckets()
 {
     return buckets;
 }
@@ -100,7 +100,7 @@ std::ostream& Directory::dump(std::ostream& strm) const
     ostream& output = strm;
     output << className() + ss.str() + " : \n";
     for(int i = 0; i < buckets.size(); i++) {
-        output << "#### " << buckets.at(i);
+        output << "#### " << *buckets.at(i);
         if (i < buckets.size() - 1)
             output << "\n";
     }

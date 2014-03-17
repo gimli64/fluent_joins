@@ -1,7 +1,7 @@
 #include "chainedDirectory.h"
 
 ChainedDirectory::ChainedDirectory(HashingMethod &hasher)
-    :numberBuckets(1), numberDoubling(1), Directory(hasher), nextDirectory(0)
+    :numberBuckets(1), numberDoubling(0), Directory(hasher), nextDirectory(0)
 {
 }
 
@@ -49,8 +49,8 @@ int ChainedDirectory::getChainCount()
 vector<string> ChainedDirectory::getAllValues()
 {
     vector<string> elements;
-    for(vector<DepthBucket>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        vector<string>& values = it->getAllValues();
+    for(vector<DepthBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+        vector<string>& values = (*it)->getAllValues();
         elements.insert(elements.end(), values.begin(), values.end());
     }
 
@@ -72,7 +72,9 @@ void ChainedDirectory::putValue(size_t key, string value)
         if (canBeDoubled() || bucket->getLocalDepth() < globalDepth) {
 
             if (bucket->getLocalDepth() == globalDepth && canBeDoubled()) {
+//                cout << *this << endl;
                 doubleSize();
+//                cout << *this << endl;
                 numberDoubling += 1;
                 bucket = &getBucket(key);  // Needed because of buckets reallocation in memory
             }
