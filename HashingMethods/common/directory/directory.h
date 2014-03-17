@@ -2,10 +2,13 @@
 #define DIRECTORY_H
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include "depthbucket.h"
 #include "hashingMethod.h"
 
+using std::cout;
+using std::endl;
 using std::string;
 using std::vector;
 
@@ -23,10 +26,10 @@ public:
 
 protected:
     int globalDepth;
-    vector<DepthBucket> buckets;
     HashingMethod hasher;
-    void split(DepthBucket& bucket);
+    vector<DepthBucket> buckets;
     void doubleSize();
+    void split(DepthBucket& bucket);
 };
 
 #endif // DIRECTORY_H

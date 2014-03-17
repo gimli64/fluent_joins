@@ -17,17 +17,18 @@ string* Directory::getValue(size_t key, string value) {
 }
 
 void Directory::putValue(size_t key, string value) {
-    DepthBucket& bucket = getBucket(key);
-    if (bucket.isFull()) {
-        if (bucket.getLocalDepth() == globalDepth) {
+    DepthBucket* bucket = &getBucket(key);
+    if (bucket->isFull()) {
+        if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
+            bucket = &getBucket(key);  // Needed because of buckets reallocation in memory
         }
-        if (bucket.getLocalDepth() < globalDepth) {
-            split(bucket);
-            bucket = getBucket(key);
+        if (bucket->getLocalDepth() < globalDepth) {
+            split(*bucket);
+            bucket = &getBucket(key);
         }
     }
-    bucket.putValue(value);
+    bucket->putValue(value);
 }
 
 DepthBucket& Directory::getBucket(size_t key) {
@@ -35,10 +36,10 @@ DepthBucket& Directory::getBucket(size_t key) {
 }
 
 void Directory::doubleSize() {
-    vector<DepthBucket> buckets2(buckets);
-    for (vector<DepthBucket>::iterator it = buckets2.begin(); it != buckets2.end(); ++it) {
-        buckets.push_back(*it);
-    }
+    size_t old_size = buckets.size();
+    buckets.reserve(2 * old_size);
+    for (size_t i = 0; i < old_size; ++i)
+        buckets.push_back(buckets[i]);
     globalDepth++;
 }
 

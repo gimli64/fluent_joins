@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(fluent_joins)
 
+#set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+
 add_subdirectory(HashingMethods)
 add_subdirectory(tests)
 
