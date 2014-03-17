@@ -13,7 +13,7 @@ ChainedDirectory::~ChainedDirectory()
 string* ChainedDirectory::getValue(size_t key, string value)
 {
     string* result = getBucket(key).getValue(value);
-    if (result == (string*) NULL && nextDirectory != 0)
+    if (result == (string*) NULL && nextDirectory)
         result = nextDirectory->getValue(key, value);
     return result;
 }
@@ -32,7 +32,7 @@ bool ChainedDirectory::canBeDoubled()
 int ChainedDirectory::getNumberBuckets()
 {
     int result = numberBuckets;
-    if (nextDirectory != 0)
+    if (nextDirectory)
         result += nextDirectory->getNumberBuckets();
 
     return result;
@@ -40,7 +40,7 @@ int ChainedDirectory::getNumberBuckets()
 
 int ChainedDirectory::getChainCount()
 {
-    if (nextDirectory != 0)
+    if (nextDirectory)
         return 1 + nextDirectory->getChainCount();
     else
         return 1;
@@ -54,7 +54,7 @@ vector<string> ChainedDirectory::getAllValues()
         elements.insert(elements.end(), values.begin(), values.end());
     }
 
-    if (nextDirectory != 0) {
+    if (nextDirectory) {
         vector<string> values = nextDirectory->getAllValues();
         elements.insert(elements.end(), values.begin(), values.end());
     }
@@ -64,26 +64,27 @@ vector<string> ChainedDirectory::getAllValues()
 
 void ChainedDirectory::putValue(size_t key, string value)
 {
-    DepthBucket &bucket = getBucket(key);
+    DepthBucket *bucket = &getBucket(key);
 
-    if (!bucket.isFull()) {
-        bucket.putValue(value);
+    if (!bucket->isFull()) {
+        bucket->putValue(value);
     } else {
-        if (canBeDoubled() || bucket.getLocalDepth() < globalDepth) {
+        if (canBeDoubled() || bucket->getLocalDepth() < globalDepth) {
 
-            if (bucket.getLocalDepth() == globalDepth && canBeDoubled()) {
+            if (bucket->getLocalDepth() == globalDepth && canBeDoubled()) {
                 doubleSize();
                 numberDoubling += 1;
+                bucket = &getBucket(key);  // Needed because of buckets reallocation in memory
             }
 
-            if (bucket.getLocalDepth() < globalDepth) {
-                split(bucket);
-                bucket = getBucket(key);
-                bucket.putValue(value);
+            if (bucket->getLocalDepth() < globalDepth) {
+                split(*bucket);
+                bucket = &getBucket(key);
+                bucket->putValue(value);
             }
 
         } else {
-            if (nextDirectory == 0)
+            if (!nextDirectory)
                 nextDirectory = new ChainedDirectory(hasher);
             nextDirectory->putValue(key, value);
         }

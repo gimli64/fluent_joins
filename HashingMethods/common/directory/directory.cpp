@@ -12,11 +12,13 @@ Directory::Directory(HashingMethod& hasher)
     buckets.push_back(DepthBucket(hasher));
 }
 
-string* Directory::getValue(size_t key, string value) {
+string* Directory::getValue(size_t key, string value)
+{
     return getBucket(key).getValue(value);
 }
 
-void Directory::putValue(size_t key, string value) {
+void Directory::putValue(size_t key, string value)
+{
     DepthBucket* bucket = &getBucket(key);
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
@@ -31,11 +33,13 @@ void Directory::putValue(size_t key, string value) {
     bucket->putValue(value);
 }
 
-DepthBucket& Directory::getBucket(size_t key) {
+DepthBucket& Directory::getBucket(size_t key)
+{
     return buckets.at(key & ((1 << globalDepth) - 1));
 }
 
-void Directory::doubleSize() {
+void Directory::doubleSize()
+{
     size_t old_size = buckets.size();
     buckets.reserve(2 * old_size);
     for (size_t i = 0; i < old_size; ++i)
@@ -43,7 +47,8 @@ void Directory::doubleSize() {
     globalDepth++;
 }
 
-void Directory::split(DepthBucket& bucket) {
+void Directory::split(DepthBucket& bucket)
+{
     DepthBucket newBucket1 = DepthBucket(hasher);
     DepthBucket newBucket2 = DepthBucket(hasher);
     vector<string>& values = bucket.getAllValues();
@@ -73,10 +78,12 @@ void Directory::split(DepthBucket& bucket) {
     newBucket2.setLocalDepth(newBucket1.getLocalDepth());
 }
 
-vector<DepthBucket>& Directory::getBuckets() {
+vector<DepthBucket>& Directory::getBuckets()
+{
     return buckets;
 }
 
-int Directory::getGlobalDepth() {
+int Directory::getGlobalDepth()
+{
     return globalDepth;
 }

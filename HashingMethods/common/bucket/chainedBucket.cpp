@@ -42,3 +42,12 @@ int ChainedBucket::getChainCount() {
         return 1;
     }
 }
+
+vector<string> ChainedBucket::getAllValues() {
+    vector<string> values = Bucket::getAllValues();
+    if (nextBucket) {
+        vector<string> nextBucketValues = nextBucket->getAllValues();
+        values.insert(values.end(), nextBucketValues.begin(), nextBucketValues.end());
+    }
+    return values;
+}

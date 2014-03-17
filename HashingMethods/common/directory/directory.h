@@ -20,7 +20,6 @@ public:
 
     string* getValue(size_t key, string value);
     void putValue(size_t key, string value);
-    DepthBucket& getBucket(size_t key);
     vector<DepthBucket>& getBuckets();
     int getGlobalDepth();
 
@@ -28,6 +27,7 @@ protected:
     int globalDepth;
     HashingMethod hasher;
     vector<DepthBucket> buckets;
+    DepthBucket& getBucket(size_t key);
     void doubleSize();
     void split(DepthBucket& bucket);
 };

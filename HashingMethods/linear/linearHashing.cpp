@@ -47,7 +47,7 @@ void LinearHashing::incrementSplitIndex()
 void LinearHashing::split()
 {
     ChainedBucket *bucketToSplit = &buckets.at(nextSplitIndex);
-    vector<string>& values = bucketToSplit->getAllValues();
+    vector<string> values = bucketToSplit->getAllValues();
     numberBuckets -= bucketToSplit->getChainCount();
     numberItems -= values.size();
 

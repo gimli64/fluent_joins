@@ -5,6 +5,8 @@
 class ChainedDirectory : public Directory
 {
 public:
+    static const int MAX_DOUBLING = 5;
+
     ChainedDirectory(HashingMethod& hasher);
     ~ChainedDirectory();
     string* getValue(size_t key, string value);
@@ -14,11 +16,9 @@ public:
     vector<string> getAllValues();
 
 private:
-    static const int MAX_DOUBLING = 5;
     int numberDoubling;
     int numberBuckets;
     ChainedDirectory* nextDirectory;
-
     void split(DepthBucket &bucket);
     bool canBeDoubled();
 };

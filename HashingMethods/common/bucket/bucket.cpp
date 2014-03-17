@@ -41,7 +41,12 @@ int Bucket::size()
     return elements.size();
 }
 
-vector<string>& Bucket::getAllValues()
+vector<string> &Bucket::getAllValues()
 {
     return elements;
+}
+
+std::ostream& operator<<(std::ostream& o, const Bucket& bucket)
+{
+    return bucket.dump(o);
 }

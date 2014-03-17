@@ -13,6 +13,16 @@ public:
     string* getValue(string value);
     void putValue(string value);
     int getChainCount();
+    vector<string> getAllValues();
+
+    virtual ostream& dump(ostream &strm) const {
+        ostream& output = Bucket::dump(strm);
+        if (nextBucket) {
+            output << " --> ";
+            return nextBucket->dump(output);
+        }
+        return output;
+    }
 
 private:
     ChainedBucket* nextBucket;
