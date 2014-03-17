@@ -17,3 +17,8 @@ int DepthBucket::getLocalDepth() {
 void DepthBucket::setLocalDepth(int depth) {
     localDepth = depth;
 }
+
+string DepthBucket::className() const
+{
+    return "DepthBucket ";
+}

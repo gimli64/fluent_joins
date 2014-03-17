@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 #include "depthbucket.h"
 #include "hashingMethod.h"
 
@@ -11,6 +12,8 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using std::ostream;
+using std::stringstream;
 
 class Directory
 {
@@ -23,6 +26,9 @@ public:
     vector<DepthBucket>& getBuckets();
     int getGlobalDepth();
 
+    virtual string className() const;
+    virtual std::ostream& dump(std::ostream& strm) const;
+
 protected:
     int globalDepth;
     HashingMethod hasher;
@@ -31,5 +37,7 @@ protected:
     void doubleSize();
     void split(DepthBucket& bucket);
 };
+
+std::ostream& operator<<(std::ostream&, const Directory&);
 
 #endif // DIRECTORY_H

@@ -15,6 +15,9 @@ public:
     int getChainCount();
     vector<string> getAllValues();
 
+    virtual string className() const;
+    virtual std::ostream& dump(std::ostream& strm) const;
+
 private:
     int numberDoubling;
     int numberBuckets;

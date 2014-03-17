@@ -51,3 +51,18 @@ vector<string> ChainedBucket::getAllValues() {
     }
     return values;
 }
+
+string ChainedBucket::className() const
+{
+    return "ChainedBucket ";
+}
+
+ostream& ChainedBucket::dump(ostream &strm) const
+{
+    ostream& output = Bucket::dump(strm);
+    if (nextBucket) {
+        output << " --> ";
+        return nextBucket->dump(output);
+    }
+    return output;
+}

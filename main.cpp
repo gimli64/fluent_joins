@@ -1,15 +1,14 @@
 #include "hashingMethod.h"
 #include "directory.h"
-#include "chainedBucket.h"
+#include "chainedDirectory.h"
+#include "Bucket.h"
+
 using std::cout;
 using std::endl;
 
 int main()
 {
-    DepthBucket bucket = DepthBucket();
-    bucket.putValue("0");
-    for (int i = 0; i < Bucket::BUCKET_SIZE; i++) {
-        bucket.putValue("0");
-    }
-    cout << bucket << endl;
+    HashingMethod hasher = HashingMethod();
+    ChainedDirectory directory = ChainedDirectory(hasher);
+    cout << directory << endl;
 }

@@ -3,7 +3,6 @@
 Directory::Directory()
     :globalDepth(0), buckets()
 {
-    buckets.push_back(DepthBucket(hasher));
 }
 
 Directory::Directory(HashingMethod& hasher)
@@ -86,4 +85,29 @@ vector<DepthBucket>& Directory::getBuckets()
 int Directory::getGlobalDepth()
 {
     return globalDepth;
+}
+
+string Directory::className() const
+{
+    return "Directory ";
+}
+
+std::ostream& Directory::dump(std::ostream& strm) const
+{
+    const void * address = static_cast<const void*>(this);
+    stringstream ss;
+    ss << address;
+    ostream& output = strm;
+    output << className() + ss.str() + " : \n";
+    for(int i = 0; i < buckets.size(); i++) {
+        output << "#### " << buckets.at(i);
+        if (i < buckets.size() - 1)
+            output << "\n";
+    }
+    return output;
+}
+
+std::ostream& operator<<(std::ostream& strm, const Directory& dir)
+{
+    return dir.dump(strm);
 }

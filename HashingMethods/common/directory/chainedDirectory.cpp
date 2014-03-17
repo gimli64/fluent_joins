@@ -90,3 +90,18 @@ void ChainedDirectory::putValue(size_t key, string value)
         }
     }
 }
+
+string ChainedDirectory::className() const
+{
+    return "ChainedDirectory ";
+}
+
+std::ostream& ChainedDirectory::dump(std::ostream& strm) const
+{
+    ostream& output = Directory::dump(strm);
+    if (nextDirectory) {
+        output << "\n --> ";
+        return nextDirectory->dump(output);
+    }
+    return output;
+}

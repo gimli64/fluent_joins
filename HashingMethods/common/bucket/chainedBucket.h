@@ -15,14 +15,8 @@ public:
     int getChainCount();
     vector<string> getAllValues();
 
-    virtual ostream& dump(ostream &strm) const {
-        ostream& output = Bucket::dump(strm);
-        if (nextBucket) {
-            output << " --> ";
-            return nextBucket->dump(output);
-        }
-        return output;
-    }
+    virtual string className() const;
+    virtual ostream& dump(ostream &strm) const;
 
 private:
     ChainedBucket* nextBucket;

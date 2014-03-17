@@ -11,6 +11,7 @@ public:
     int getLocalDepth();
     void setLocalDepth(int depth);
 
+    virtual string className() const;
 private:
     int localDepth;
 };

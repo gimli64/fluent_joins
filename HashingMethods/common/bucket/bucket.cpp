@@ -46,6 +46,25 @@ vector<string> &Bucket::getAllValues()
     return elements;
 }
 
+string Bucket::className() const
+{
+    return "Bucket ";
+}
+
+ostream& Bucket::dump(ostream &strm) const
+{
+    const void * address = static_cast<const void*>(this);
+    stringstream ss;
+    ss << address;
+    string output = className() + ss.str() + " : [";
+    for(int i = 0; i < elements.size(); i++) {
+        output += elements.at(i);
+        if (i < elements.size() - 1)
+            output += ", ";
+    }
+    return strm << output << "]";
+}
+
 std::ostream& operator<<(std::ostream& o, const Bucket& bucket)
 {
     return bucket.dump(o);
