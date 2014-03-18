@@ -17,10 +17,9 @@ public:
 
     virtual string className() const;
     virtual std::ostream& dump(std::ostream& strm) const;
-    int numberDoubling;
 
 private:
-
+    int numberDoubling;
     int numberBuckets;
     ChainedDirectory* nextDirectory;
     void split(DepthBucket &bucket);
