@@ -12,13 +12,13 @@ ChainedDirectory::~ChainedDirectory()
 
 string* ChainedDirectory::getValue(size_t key, string value)
 {
-    string* result = getBucket(key).getValue(value);
+    string* result = getBucket(key)->getValue(value);
     if (result == (string*) NULL && nextDirectory)
         result = nextDirectory->getValue(key, value);
     return result;
 }
 
-void ChainedDirectory::split(DepthBucket &bucket)
+void ChainedDirectory::split(DepthBucket* bucket)
 {
     Directory::split(bucket);
     numberBuckets++;
@@ -64,7 +64,7 @@ vector<string> ChainedDirectory::getAllValues()
 
 void ChainedDirectory::putValue(size_t key, string value)
 {
-    DepthBucket *bucket = &getBucket(key);
+    DepthBucket *bucket = getBucket(key);
 
     if (!bucket->isFull()) {
         bucket->putValue(value);
@@ -72,16 +72,14 @@ void ChainedDirectory::putValue(size_t key, string value)
         if (canBeDoubled() || bucket->getLocalDepth() < globalDepth) {
 
             if (bucket->getLocalDepth() == globalDepth && canBeDoubled()) {
-//                cout << *this << endl;
                 doubleSize();
-//                cout << *this << endl;
                 numberDoubling += 1;
-                bucket = &getBucket(key);  // Needed because of buckets reallocation in memory
+                bucket = getBucket(key);  // Needed because of buckets reallocation in memory
             }
 
             if (bucket->getLocalDepth() < globalDepth) {
-                split(*bucket);
-                bucket = &getBucket(key);
+                split(bucket);
+                bucket = getBucket(key);
                 bucket->putValue(value);
             }
 

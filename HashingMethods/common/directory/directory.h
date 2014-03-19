@@ -33,9 +33,9 @@ protected:
     int globalDepth;
     HashingMethod hasher;
     vector<DepthBucket*> buckets;
-    DepthBucket& getBucket(size_t key);
+    DepthBucket *getBucket(size_t key);
     void doubleSize();
-    void split(DepthBucket& bucket);
+    void split(DepthBucket *bucket);
 };
 
 std::ostream& operator<<(std::ostream&, const Directory&);

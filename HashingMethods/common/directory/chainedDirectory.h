@@ -22,7 +22,7 @@ private:
     int numberDoubling;
     int numberBuckets;
     ChainedDirectory* nextDirectory;
-    void split(DepthBucket &bucket);
+    void split(DepthBucket* bucket);
     bool canBeDoubled();
 };
 

@@ -13,28 +13,28 @@ Directory::Directory(HashingMethod& hasher)
 
 string* Directory::getValue(size_t key, string value)
 {
-    return getBucket(key).getValue(value);
+    return getBucket(key)->getValue(value);
 }
 
 void Directory::putValue(size_t key, string value)
 {
-    DepthBucket* bucket = &getBucket(key);
+    DepthBucket* bucket = getBucket(key);
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
-            bucket = &getBucket(key);  // Needed because of buckets reallocation in memory
+            bucket = getBucket(key);  // Needed because of buckets reallocation in memory
         }
         if (bucket->getLocalDepth() < globalDepth) {
-            split(*bucket);
-            bucket = &getBucket(key);
+            split(bucket);
+            bucket = getBucket(key);
         }
     }
     bucket->putValue(value);
 }
 
-DepthBucket& Directory::getBucket(size_t key)
+DepthBucket* Directory::getBucket(size_t key)
 {
-    return *buckets.at(key & ((1 << globalDepth) - 1));
+    return buckets.at(key & ((1 << globalDepth) - 1));
 }
 
 void Directory::doubleSize()
@@ -46,15 +46,15 @@ void Directory::doubleSize()
     globalDepth++;
 }
 
-void Directory::split(DepthBucket& bucket)
+void Directory::split(DepthBucket* bucket)
 {
     DepthBucket* newBucket1 = new DepthBucket(hasher);
     DepthBucket* newBucket2 = new DepthBucket(hasher);
-    vector<string>& values = bucket.getAllValues();
+    vector<string>& values = bucket->getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = hasher.getHash(*it) & ((1 << globalDepth) - 1);
-        if ((h | (1 << bucket.getLocalDepth())) == h)
+        if ((h | (1 << bucket->getLocalDepth())) == h)
             newBucket2->putValue(*it);
         else
             newBucket1->putValue(*it);
@@ -62,18 +62,18 @@ void Directory::split(DepthBucket& bucket)
 
     vector<int> l;
     for(vector<DepthBucket>::size_type i = 0; i < buckets.size(); i++) {
-        if(buckets.at(i) == &bucket)
+        if(buckets.at(i) == bucket)
             l.push_back(i);
     }
 
     for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
-        if ((*it | (1 << bucket.getLocalDepth())) == *it)
+        if ((*it | (1 << bucket->getLocalDepth())) == *it)
             buckets.at(*it) = newBucket2;
         else
             buckets.at(*it) = newBucket1;
     }
 
-    newBucket1->setLocalDepth(bucket.getLocalDepth() + 1);
+    newBucket1->setLocalDepth(bucket->getLocalDepth() + 1);
     newBucket2->setLocalDepth(newBucket1->getLocalDepth());
 }
 
