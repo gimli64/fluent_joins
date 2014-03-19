@@ -5,9 +5,10 @@ ChainedBucket::ChainedBucket()
 {
 }
 
-ChainedBucket::ChainedBucket(HashingMethod& hasher)
+ChainedBucket::ChainedBucket(HashingMethod *hasher)
     :nextBucket(0), Bucket(hasher)
 {
+    notifyNumberBuckets(1);
 }
 
 ChainedBucket::~ChainedBucket()
@@ -50,6 +51,11 @@ vector<string> ChainedBucket::getAllValues() {
         values.insert(values.end(), nextBucketValues.begin(), nextBucketValues.end());
     }
     return values;
+}
+
+void ChainedBucket::notifyNumberBuckets(int numberBuckets)
+{
+    hasher->setNumberBuckets(hasher->getNumberBuckets() + numberBuckets);
 }
 
 string ChainedBucket::className() const

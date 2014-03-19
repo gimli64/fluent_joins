@@ -19,7 +19,7 @@ public:
     static const int BUCKET_SIZE = 10;
 
     Bucket();
-    Bucket(HashingMethod& hasher);
+    Bucket(HashingMethod *hasher);
     ~Bucket();
     string* getValue(string value);
     void putValue(string value);
@@ -34,7 +34,7 @@ private:
     vector<string> elements;
 
 protected:
-    HashingMethod hasher;
+    HashingMethod* hasher;
 };
 
 std::ostream& operator<<(std::ostream&, const Bucket&);

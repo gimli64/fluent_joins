@@ -1,16 +1,37 @@
 #include "extendibleHashing.h"
 
 ExtendibleHashing::ExtendibleHashing()
-    :directory(Directory(*this))
+    :directory(Directory(this))
 {
 }
 
-string* ExtendibleHashing::get(size_t key, string value)
+string* ExtendibleHashing::getValue(size_t key, string value)
 {
     return directory.getValue(key, value);
 }
 
-void ExtendibleHashing::put(size_t key, string value)
+void ExtendibleHashing::putValue(size_t key, string value)
 {
     directory.putValue(key, value);
+}
+
+string ExtendibleHashing::className() const
+{
+    return "ExtendibleHashing ";
+}
+
+ostream& ExtendibleHashing::dump(ostream& strm) const
+{
+    const void * address = static_cast<const void*>(this);
+    stringstream ss;
+    ss << address;
+    ostream& output = strm;
+    output << className() + ss.str() + " : \n";
+    output << "## " << directory;
+    return output;
+}
+
+ostream& operator<<(ostream& strm, const ExtendibleHashing& hash)
+{
+    return hash.dump(strm);
 }

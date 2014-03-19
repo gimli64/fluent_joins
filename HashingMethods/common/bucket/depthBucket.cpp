@@ -5,7 +5,7 @@ DepthBucket::DepthBucket()
 {
 }
 
-DepthBucket::DepthBucket(HashingMethod& hasher)
+DepthBucket::DepthBucket(HashingMethod *hasher)
     :localDepth(0), Bucket(hasher)
 {
 }

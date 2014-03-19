@@ -2,11 +2,13 @@
 #define CHAINEDBUCKET_H
 #include "bucket.h"
 
+using std::cout; using std::endl;
+
 class ChainedBucket : public Bucket
 {
 public:
     ChainedBucket();
-    ChainedBucket(HashingMethod& hasher);
+    ChainedBucket(HashingMethod* hasher);
 
     ~ChainedBucket();
 
@@ -20,6 +22,7 @@ public:
 
 private:
     ChainedBucket* nextBucket;
+    void notifyNumberBuckets(int numberBuckets);
 };
 
 #endif // CHAINEDBUCKET_H

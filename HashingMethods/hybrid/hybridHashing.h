@@ -4,12 +4,13 @@
 #include "chainedDirectory.h"
 #include "depthBucket.h"
 
+using std::cout;
+using std::endl;
+
 class HybridHashing : public HashingMethod
 {
 public:
     HybridHashing();
-    string* get(size_t key, string value);
-    void put(size_t key, string value);
 
 private:
     static const double SPLIT_RATIO;
@@ -18,9 +19,11 @@ private:
     int nextSplitIndex;
     int initialNumberDirectories;
     int bucketCapacity;
-    vector<ChainedDirectory> directories;
+    vector<ChainedDirectory*> directories;
 
-    ChainedDirectory& getChainedDirectory(size_t key);
+    virtual string* getValue(size_t key, string value);
+    virtual void putValue(size_t key, string value);
+    ChainedDirectory* getChainedDirectory(size_t key);
     int getLeftMostBits(size_t key);
     void incrementSplitIndex();
     double getRatio();

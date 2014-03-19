@@ -3,13 +3,15 @@
 #include "hashingMethod.h"
 #include "chainedBucket.h"
 
+using std::ostream;
+using std::cout; using std::endl;
+
 class LinearHashing : public HashingMethod
 {
 public:
     LinearHashing();
-
-    string* get(size_t key, string value);
-    void put(size_t key, string value);
+    virtual string className() const;
+    virtual ostream& dump(ostream& strm) const;
 
 private:
     static const double SPLIT_RATIO;
@@ -17,12 +19,16 @@ private:
     int nextSplitIndex;
     int initialNumberBuckets;
     int bucketCapacity;
-    vector<ChainedBucket> buckets;
+    vector<ChainedBucket*> buckets;
 
-    ChainedBucket& getBucket(size_t key);
+    virtual string* getValue(size_t key, string value);
+    virtual void putValue(size_t key, string value);
+    ChainedBucket *getBucket(size_t key);
     double getRatio();
     void incrementSplitIndex();
     void split();
 };
+
+ostream& operator<<(ostream&, const LinearHashing&);
 
 #endif // LINEARHASHING_H

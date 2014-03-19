@@ -5,22 +5,24 @@ const double LinearHashing::SPLIT_RATIO = 0.75;
 LinearHashing::LinearHashing()
     :level(0), nextSplitIndex(0), initialNumberBuckets(1), bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets()
 {
-    buckets.push_back(ChainedBucket(*(this)));
+    buckets.push_back(new ChainedBucket(this));
 }
 
-string* LinearHashing::get(size_t key, string value)
+string* LinearHashing::getValue(size_t key, string value)
 {
-    return getBucket(key).getValue(value);
+    return getBucket(key)->getValue(value);
 }
 
-void LinearHashing::put(size_t key, string value)
+void LinearHashing::putValue(size_t key, string value)
 {
-    getBucket(key).putValue(value);
-    if (getRatio() > SPLIT_RATIO)
+    getBucket(key)->putValue(value);
+    numberItems++;
+    if (getRatio() > SPLIT_RATIO) {
         split();
+    }
 }
 
-ChainedBucket& LinearHashing::getBucket(size_t key)
+ChainedBucket* LinearHashing::getBucket(size_t key)
 {
     int bucketIndex = key & ((1 << level) - 1);
     if (bucketIndex < nextSplitIndex)
@@ -46,16 +48,43 @@ void LinearHashing::incrementSplitIndex()
 
 void LinearHashing::split()
 {
-    ChainedBucket *bucketToSplit = &buckets.at(nextSplitIndex);
+    ChainedBucket *bucketToSplit = buckets.at(nextSplitIndex);
     vector<string> values = bucketToSplit->getAllValues();
     numberBuckets -= bucketToSplit->getChainCount();
     numberItems -= values.size();
 
-    buckets.at(nextSplitIndex) = ChainedBucket(*(this));
-    buckets.push_back(ChainedBucket(*(this)));
-
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
-        HashingMethod::put(*it);
+    buckets.at(nextSplitIndex) = new ChainedBucket(this);
+    buckets.push_back(new ChainedBucket(this));
+    incrementSplitIndex();
 
     delete bucketToSplit;
+
+    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
+        put(*it);
+    }
+}
+
+string LinearHashing::className() const
+{
+    return "LinearHashing ";
+}
+
+std::ostream& LinearHashing::dump(std::ostream& strm) const
+{
+    const void * address = static_cast<const void*>(this);
+    stringstream ss;
+    ss << address;
+    ostream& output = strm;
+    output << className() + ss.str() + " : \n";
+    for(int i = 0; i < buckets.size(); i++) {
+        output << "#### " << *buckets.at(i);
+        if (i < buckets.size() - 1)
+            output << "\n";
+    }
+    return output;
+}
+
+ostream& operator<<(ostream& strm, const LinearHashing& dir)
+{
+    return dir.dump(strm);
 }

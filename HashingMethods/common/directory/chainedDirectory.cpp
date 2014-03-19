@@ -1,6 +1,6 @@
 #include "chainedDirectory.h"
 
-ChainedDirectory::ChainedDirectory(HashingMethod &hasher)
+ChainedDirectory::ChainedDirectory(HashingMethod* hasher)
     :numberBuckets(1), numberDoubling(0), Directory(hasher), nextDirectory(0)
 {
 }

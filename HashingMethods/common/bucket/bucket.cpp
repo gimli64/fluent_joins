@@ -6,7 +6,7 @@ Bucket::Bucket()
     elements.reserve(BUCKET_SIZE);
 }
 
-Bucket::Bucket(HashingMethod& hasher)
+Bucket::Bucket(HashingMethod* hasher)
     :elements(), hasher(hasher)
 {
     elements.reserve(BUCKET_SIZE);

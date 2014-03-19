@@ -19,7 +19,7 @@ class Directory
 {
 public:
     Directory();
-    Directory(HashingMethod& hasher);
+    Directory(HashingMethod* hasher);
 
     string* getValue(size_t key, string value);
     void putValue(size_t key, string value);
@@ -31,7 +31,7 @@ public:
 
 protected:
     int globalDepth;
-    HashingMethod hasher;
+    HashingMethod* hasher;
     vector<DepthBucket*> buckets;
     DepthBucket *getBucket(size_t key);
     void doubleSize();

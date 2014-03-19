@@ -10,24 +10,32 @@ size_t HashingMethod::getHash(string value)
     return hasher(value);
 }
 
+int HashingMethod::getNumberBuckets()
+{
+    return numberBuckets;
+}
+
+void HashingMethod::setNumberBuckets(int number)
+{
+    numberBuckets = number;
+}
+
 string* HashingMethod::get(string value)
 {
-    size_t key = getHash(value);
-    return get(key, value);
+    return getValue(getHash(value), value);
 }
 
 void HashingMethod::put(string value)
 {
-    size_t key = getHash(value);
-    put(key, value);
+    putValue(getHash(value), value);
 }
 
-string* HashingMethod::get(size_t key, string value)
+string* HashingMethod::getValue(size_t key, string value)
 {
     return (string*) NULL;
 }
 
-void HashingMethod::put(size_t key, string value)
+void HashingMethod::putValue(size_t key, string value)
 {
 }
 
