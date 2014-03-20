@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <fstream>
+#include <sys/resource.h>
 
 using std::ifstream;
 using std::string;

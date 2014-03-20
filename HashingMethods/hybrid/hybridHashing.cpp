@@ -74,3 +74,28 @@ void HybridHashing::split()
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
         HashingMethod::put(*it);
 }
+
+string HybridHashing::className() const
+{
+    return "HybridHashing ";
+}
+
+std::ostream& HybridHashing::dump(std::ostream& strm) const
+{
+    const void * address = static_cast<const void*>(this);
+    stringstream ss;
+    ss << address;
+    ostream& output = strm;
+    output << className() + ss.str() + " : \n";
+    for(int i = 0; i < directories.size(); i++) {
+        output << "\n## " << *directories.at(i);
+        if (i < directories.size() - 1)
+            output << "\n";
+    }
+    return output;
+}
+
+ostream& operator<<(ostream& strm, const HybridHashing& dir)
+{
+    return dir.dump(strm);
+}

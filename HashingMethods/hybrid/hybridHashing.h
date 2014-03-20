@@ -11,6 +11,8 @@ class HybridHashing : public HashingMethod
 {
 public:
     HybridHashing();
+    virtual string className() const;
+    virtual ostream& dump(ostream& strm) const;
 
 private:
     static const double SPLIT_RATIO;
@@ -29,5 +31,7 @@ private:
     double getRatio();
     void split();
 };
+
+ostream& operator<<(ostream&, const HybridHashing&);
 
 #endif // HYBRIDHASHING_H

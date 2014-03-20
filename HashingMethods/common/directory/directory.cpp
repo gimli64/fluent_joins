@@ -22,7 +22,6 @@ void Directory::putValue(size_t key, string value)
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
-            bucket = getBucket(key);  // Needed because of buckets reallocation in memory
         }
         if (bucket->getLocalDepth() < globalDepth) {
             split(bucket);
