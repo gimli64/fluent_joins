@@ -19,7 +19,7 @@ int main()
         if (ext_hasher.get(*it) == (string*) NULL)
             cout << "Error" << endl;
     }
-    cout << ext_hasher << endl;
+//    cout << ext_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     printf("Resource usage : %ld kB \n", usage.ru_maxrss);
@@ -34,7 +34,7 @@ int main()
         if (hyb_hasher.get(*it) == (string*) NULL)
             cout << "Error" << endl;
     }
-    cout << hyb_hasher << endl;
+//    cout << hyb_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     printf("Resource usage : %ld kB \n", usage.ru_maxrss);
@@ -49,7 +49,7 @@ int main()
         if (lin_hasher.get(*it) == (string*) NULL)
             cout << "Error" << endl;
     }
-    cout << lin_hasher << endl;
+//    cout << lin_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     printf("Resource usage : %ld kB \n", usage.ru_maxrss);

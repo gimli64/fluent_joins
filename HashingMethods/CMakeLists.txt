@@ -1,3 +1,5 @@
+find_package(Boost REQUIRED COMPONENTS serialization system filesystem)
+include_directories(${Boost_INCLUDE_DIRS})
 add_subdirectory(common)
 add_subdirectory(extendible)
 add_subdirectory(linear)

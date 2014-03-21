@@ -1,9 +1,12 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
-#include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "hashingMethod.h"
 
@@ -20,7 +23,6 @@ public:
 
     Bucket();
     Bucket(HashingMethod *hasher);
-    ~Bucket();
     string* getValue(string value);
     void putValue(string value);
     bool isFull();
@@ -33,10 +35,14 @@ public:
 private:
     vector<string> elements;
 
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) { ar & elements; }
+
 protected:
     HashingMethod* hasher;
 };
 
-std::ostream& operator<<(std::ostream&, const Bucket&);
+ostream& operator<<(ostream&, const Bucket&);
 
 #endif // BUCKET_H

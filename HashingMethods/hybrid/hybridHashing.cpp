@@ -5,24 +5,24 @@ const double HybridHashing::SPLIT_RATIO = 0.75;
 HybridHashing::HybridHashing()
     :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE)
 {
-    directories.push_back(new ChainedDirectory(this));
+    directories.push_back(ChainedDirectory(this));
 }
 
 string* HybridHashing::getValue(size_t key, string value)
 {
-    return getChainedDirectory(key)->getValue(key, value);
+    return getChainedDirectory(key).getValue(key, value);
 }
 
 void HybridHashing::putValue(size_t key, string value)
 {
-    getChainedDirectory(key)->putValue(key, value);
+    getChainedDirectory(key).putValue(key, value);
     numberItems++;
     if (getRatio() > SPLIT_RATIO) {
         split();
     }
 }
 
-ChainedDirectory *HybridHashing::getChainedDirectory(size_t key)
+ChainedDirectory &HybridHashing::getChainedDirectory(size_t key)
 {
     key = getLeftMostBits(key);
     int pageIndex = key & mask;
@@ -60,16 +60,14 @@ double HybridHashing::getRatio()
 
 void HybridHashing::split()
 {
-    ChainedDirectory *directoryToSplit = directories.at(nextSplitIndex);
-    vector<string> values = directoryToSplit->getAllValues();
-    numberBuckets -= directoryToSplit->getNumberBuckets();
+    ChainedDirectory &directoryToSplit = directories.at(nextSplitIndex);
+    vector<string> values = directoryToSplit.getAllValues();
+    numberBuckets -= directoryToSplit.getNumberBuckets();
     numberItems -= values.size();
 
-    directories.at(nextSplitIndex) = new ChainedDirectory(this);
-    directories.push_back(new ChainedDirectory(this));
+    directories.at(nextSplitIndex) = ChainedDirectory(this);
+    directories.push_back(ChainedDirectory(this));
     incrementSplitIndex();
-
-    delete directoryToSplit;
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
         HashingMethod::put(*it);
@@ -88,7 +86,7 @@ std::ostream& HybridHashing::dump(std::ostream& strm) const
     ostream& output = strm;
     output << className() + ss.str() + " : \n";
     for(int i = 0; i < directories.size(); i++) {
-        output << "\n## " << *directories.at(i);
+        output << "\n## " << directories.at(i);
         if (i < directories.size() - 1)
             output << "\n";
     }

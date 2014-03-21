@@ -10,8 +10,6 @@ public:
     ChainedBucket();
     ChainedBucket(HashingMethod* hasher);
 
-    ~ChainedBucket();
-
     string* getValue(string value);
     void putValue(string value);
     int getChainCount();

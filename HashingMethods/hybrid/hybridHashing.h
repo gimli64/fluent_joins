@@ -21,11 +21,11 @@ private:
     int nextSplitIndex;
     int initialNumberDirectories;
     int bucketCapacity;
-    vector<ChainedDirectory*> directories;
+    vector<ChainedDirectory> directories;
 
     virtual string* getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
-    ChainedDirectory* getChainedDirectory(size_t key);
+    ChainedDirectory& getChainedDirectory(size_t key);
     int getLeftMostBits(size_t key);
     void incrementSplitIndex();
     double getRatio();

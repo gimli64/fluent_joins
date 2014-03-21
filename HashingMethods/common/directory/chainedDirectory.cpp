@@ -5,11 +5,6 @@ ChainedDirectory::ChainedDirectory(HashingMethod* hasher)
 {
 }
 
-ChainedDirectory::~ChainedDirectory()
-{
-    delete nextDirectory;
-}
-
 string* ChainedDirectory::getValue(size_t key, string value)
 {
     string* result = getBucket(key)->getValue(value);

@@ -11,11 +11,6 @@ ChainedBucket::ChainedBucket(HashingMethod *hasher)
     notifyNumberBuckets(1);
 }
 
-ChainedBucket::~ChainedBucket()
-{
-    delete nextBucket;
-}
-
 string* ChainedBucket::getValue(string value)
 {
     string* result = Bucket::getValue(value);

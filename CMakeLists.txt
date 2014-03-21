@@ -12,3 +12,6 @@ add_test(NAME hashingMethodTest COMMAND HashingMethodTests)
 
 add_executable(main main.cpp)
 
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common)
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common/bucket)
+target_link_libraries (main Bucket HashingMethod)

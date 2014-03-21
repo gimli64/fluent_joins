@@ -19,11 +19,11 @@ private:
     int nextSplitIndex;
     int initialNumberBuckets;
     int bucketCapacity;
-    vector<ChainedBucket*> buckets;
+    vector<ChainedBucket> buckets;
 
     virtual string* getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
-    ChainedBucket *getBucket(size_t key);
+    ChainedBucket& getBucket(size_t key);
     double getRatio();
     void incrementSplitIndex();
     void split();
