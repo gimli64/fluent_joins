@@ -1,8 +1,9 @@
 #ifndef CHAINEDBUCKET_H
 #define CHAINEDBUCKET_H
+
 #include "bucket.h"
 
-using std::cout; using std::endl;
+#include <boost/serialization/base_object.hpp>
 
 class ChainedBucket : public Bucket
 {
@@ -21,6 +22,14 @@ public:
 private:
     ChainedBucket* nextBucket;
     void notifyNumberBuckets(int numberBuckets);
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<Bucket>(*this);
+        ar & nextBucket;
+    }
 };
 
 #endif // CHAINEDBUCKET_H

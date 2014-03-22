@@ -1,13 +1,13 @@
 #include "bucket.h"
 
 Bucket::Bucket()
-    :elements()
+    :elements(), hasher(0), name("buckets/" + lexical_cast<string>(this))
 {
     elements.reserve(BUCKET_SIZE);
 }
 
 Bucket::Bucket(HashingMethod* hasher)
-    :elements(), hasher(hasher)
+    :elements(), hasher(hasher), name("buckets/" + lexical_cast<string>(this))
 {
     elements.reserve(BUCKET_SIZE);
 }
@@ -49,10 +49,7 @@ string Bucket::className() const
 
 ostream& Bucket::dump(ostream &strm) const
 {
-    const void * address = static_cast<const void*>(this);
-    stringstream ss;
-    ss << address;
-    string output = className() + ss.str() + " : [";
+    string output = className() + name + " : [";
     for(int i = 0; i < elements.size(); i++) {
         output += elements.at(i);
         if (i < elements.size() - 1)

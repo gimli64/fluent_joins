@@ -44,15 +44,15 @@ int ChainedDirectory::getChainCount()
 vector<string> ChainedDirectory::getAllValues()
 {
     vector<string> elements;
-    for(vector<DepthBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        vector<string>& values = (*it)->getAllValues();
-        elements.insert(elements.end(), values.begin(), values.end());
-    }
+//    for(vector<DepthBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+//        vector<string>& values = (*it)->getAllValues();
+//        elements.insert(elements.end(), values.begin(), values.end());
+//    }
 
-    if (nextDirectory) {
-        vector<string> values = nextDirectory->getAllValues();
-        elements.insert(elements.end(), values.begin(), values.end());
-    }
+//    if (nextDirectory) {
+//        vector<string> values = nextDirectory->getAllValues();
+//        elements.insert(elements.end(), values.begin(), values.end());
+//    }
 
     return elements;
 }

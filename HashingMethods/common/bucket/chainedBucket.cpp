@@ -1,14 +1,16 @@
 #include "chainedBucket.h"
 
 ChainedBucket::ChainedBucket()
-    :nextBucket(0)
+    :nextBucket(0), Bucket()
 {
 }
 
 ChainedBucket::ChainedBucket(HashingMethod *hasher)
     :nextBucket(0), Bucket(hasher)
 {
-    notifyNumberBuckets(1);
+    if (hasher) {
+        notifyNumberBuckets(1);
+    }
 }
 
 string* ChainedBucket::getValue(string value)

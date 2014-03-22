@@ -1,25 +1,28 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
+#include "hashingMethod.h"
+
 #include <sstream>
 #include <fstream>
 #include <vector>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
-
-#include "hashingMethod.h"
+#include <boost/lexical_cast.hpp>
 
 using std::string;
 using std::vector;
 using std::find;
 using std::ostream;
 using std::stringstream;
+using boost::lexical_cast;
 
 class Bucket
 {
 public:
     static const int BUCKET_SIZE = 10;
+    string name;
 
     Bucket();
     Bucket(HashingMethod *hasher);
@@ -37,7 +40,11 @@ private:
 
     friend class boost::serialization::access;
     template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) { ar & elements; }
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & name;
+        ar & elements;
+    }
 
 protected:
     HashingMethod* hasher;

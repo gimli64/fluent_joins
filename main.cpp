@@ -1,26 +1,25 @@
-#include "bucket.h"
+#include "chainedBucket.h"
+#include "depthBucket.h"
+#include "directory.h"
 #include "hashingMethod.h"
 
 int main()
 {
-    std::ofstream ofs("bucket_test.txt");
-    Bucket bucket;
-    bucket.putValue("0");
-    bucket.putValue("1");
-    bucket.putValue("2");
-
-    std::cout << bucket << std::endl;
-    {
-        boost::archive::text_oarchive oa(ofs);
-        oa << bucket;
-    }
-
-    Bucket new_bucket;
-    {
-        std::ifstream ifs("bucket_test.txt");
-        boost::archive::text_iarchive ia(ifs);
-        ia >> new_bucket;
-    }
-    std::cout << new_bucket << std::endl;
+    HashingMethod hasher;
+    Directory dir(&hasher);
+    size_t key = hasher.getHash("0");
+    cout << dir << endl;
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    dir.putValue(key, "0");
+    cout << dir << endl;
     return 0;
 }
