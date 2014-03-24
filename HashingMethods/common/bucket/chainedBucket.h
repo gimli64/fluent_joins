@@ -2,7 +2,7 @@
 #define CHAINEDBUCKET_H
 
 #include "bucket.h"
-#include "linear/linearHashing.h"
+#include "bucketFactory.h"
 
 #include <boost/serialization/base_object.hpp>
 
@@ -20,7 +20,7 @@ public:
 
 private:
     ChainedBucket* nextBucket;
-    void notifyBucket();
+    void notifyFactory();
 
     friend class boost::serialization::access;
     template<class Archive>

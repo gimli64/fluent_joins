@@ -59,14 +59,14 @@ void HybridHashing::incrementSplitIndex()
 
 double HybridHashing::getRatio()
 {
-    return ((double) numberItems) / (bucketCapacity * numberBuckets);
+//    return ((double) numberItems) / (bucketCapacity * numberBuckets);
 }
 
 void HybridHashing::split()
 {
     ChainedDirectory &directoryToSplit = directories.at(nextSplitIndex);
     vector<string> values = directoryToSplit.getAllValues();
-    numberBuckets -= directoryToSplit.getNumberBuckets();
+//    numberBuckets -= directoryToSplit.getNumberBuckets();
     numberItems -= values.size();
 
     directories.at(nextSplitIndex) = ChainedDirectory();

@@ -2,20 +2,16 @@
 #define DIRECTORY_H
 
 #include "common/bucket/depthBucket.h"
+#include "common/bucket/bucketFactory.h"
 #include "common/hashingMethod.h"
 
 #include <iostream>
 #include <algorithm>
 #include <vector>
 #include <sstream>
-#include <boost/lexical_cast.hpp>
 
 using namespace std;
 using namespace boost;
-using boost::archive::text_iarchive;
-using boost::archive::text_oarchive;
-
-class ExtendibleHashing;
 
 class Directory
 {
@@ -32,14 +28,10 @@ public:
 
 protected:
     int globalDepth;
+    BucketFactory<DepthBucket>* factory;
     vector<string> buckets;
 
     DepthBucket *getBucket(size_t key);
-    DepthBucket *readBucket(string bucketFile) const;
-    DepthBucket *createBucket();
-    void notifyBucket();
-    void unNotifyBucket();
-    void writeBucket(DepthBucket *bucket);
     void doubleSize();
     void split(DepthBucket *bucket);
 };

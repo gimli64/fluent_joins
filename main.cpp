@@ -8,7 +8,28 @@ using namespace std;
 
 int main()
 {
-    Directory dir = Directory();
-    dir.init();
-    cout << dir << endl;
+    LinearHashing *hasher = LinearHashing::getInstance();
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
+    hasher->put("0");
+    cout << *hasher << endl;
 }

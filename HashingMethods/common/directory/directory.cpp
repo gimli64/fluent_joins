@@ -1,14 +1,12 @@
 #include "directory.h"
-#include "extendible/extendibleHashing.h"
 
 Directory::Directory()
     :globalDepth(0), buckets()
 {
-}
-
-void Directory::init() {
-    DepthBucket *bucket = createBucket();
+    factory = BucketFactory<DepthBucket>::getInstance();
+    DepthBucket *bucket = factory->createBucket();
     buckets.push_back(bucket->name);
+    delete bucket;
 }
 
 string Directory::getValue(size_t key, string value)
@@ -39,42 +37,13 @@ void Directory::putValue(size_t key, string value)
         }
     }
     bucket->putValue(value);
-    writeBucket(bucket);
+    factory->writeBucket(bucket);
     delete bucket;
 }
 
 DepthBucket* Directory::getBucket(size_t key)
 {
-    return readBucket(buckets.at(key & ((1 << globalDepth) - 1)));
-}
-
-DepthBucket* Directory::readBucket(string bucketFile) const
-{
-    DepthBucket* bucket = new DepthBucket;
-    {
-        ifstream ifs(bucketFile.c_str());
-        text_iarchive ia(ifs);
-        ia >> *bucket;
-    }
-    return bucket;
-}
-
-DepthBucket *Directory::createBucket()
-{
-    DepthBucket *bucket = new DepthBucket;
-    bucket->name += lexical_cast<string>(ExtendibleHashing::getInstance()->getNumberBuckets());
-    writeBucket(bucket);
-    notifyBucket();
-    return bucket;
-}
-
-void Directory::writeBucket(DepthBucket *bucket)
-{
-    ofstream ofs(bucket->name.c_str());
-    {
-        text_oarchive oa(ofs);
-        oa << *bucket;
-    }
+    return factory->readBucket(buckets.at(key & ((1 << globalDepth) - 1)));
 }
 
 void Directory::doubleSize()
@@ -89,8 +58,8 @@ void Directory::doubleSize()
 
 void Directory::split(DepthBucket* bucket)
 {
-    DepthBucket *newBucket1 = createBucket();
-    DepthBucket *newBucket2 = createBucket();
+    DepthBucket *newBucket1 = factory->createBucket();
+    DepthBucket *newBucket2 = factory->createBucket();
     vector<string>& values = bucket->getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
@@ -118,12 +87,10 @@ void Directory::split(DepthBucket* bucket)
 
     newBucket1->setLocalDepth(bucket->getLocalDepth() + 1);
     newBucket2->setLocalDepth(newBucket1->getLocalDepth());
-    writeBucket(newBucket1);
-    writeBucket(newBucket2);
+    factory->writeBucket(newBucket1);
+    factory->writeBucket(newBucket2);
 
-    remove(bucket->name.c_str());
-    unNotifyBucket();
-    delete bucket;
+    factory->deleteBucket(bucket);
     delete newBucket1;
     delete newBucket2;
 }
@@ -138,16 +105,6 @@ string Directory::className() const
     return "Directory ";
 }
 
-void Directory::notifyBucket()
-{
-    ExtendibleHashing::getInstance()->incrementNumberBuckets();
-}
-
-void Directory::unNotifyBucket()
-{
-    ExtendibleHashing::getInstance()->decrementNumberBuckets();
-}
-
 ostream& Directory::dump(ostream& strm) const
 {
     const void * address = static_cast<const void*>(this);
@@ -158,7 +115,7 @@ ostream& Directory::dump(ostream& strm) const
 
     DepthBucket* bucket;
     for(int i = 0; i < buckets.size(); i++) {
-        bucket = readBucket(buckets.at(i));
+        bucket = factory->readBucket(buckets.at(i));
         output << "#### " << *bucket;
         delete bucket;
         if (i < buckets.size() - 1)

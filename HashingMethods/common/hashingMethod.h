@@ -14,10 +14,6 @@ public:
     size_t getHash(string value);
     string get(string value);
     void put(string value);
-    int getNumberBuckets();
-    void setNumberBuckets(int number);
-    void incrementNumberBuckets();
-    void decrementNumberBuckets();
 
 private:
     boost::hash<string> hasher;
@@ -27,7 +23,6 @@ private:
     virtual void putValue(size_t key, string value);
 
 protected:
-    int numberBuckets;
     int numberItems;
     HashingMethod();
 };

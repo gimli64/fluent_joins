@@ -3,7 +3,7 @@
 HashingMethod *HashingMethod::instance = 0;
 
 HashingMethod::HashingMethod()
-    :numberBuckets(0), numberItems(0)
+    :numberItems(0)
 {
 }
 
@@ -17,26 +17,6 @@ HashingMethod *HashingMethod::getInstance()
 size_t HashingMethod::getHash(string value)
 {
     return hasher(value);
-}
-
-int HashingMethod::getNumberBuckets()
-{
-    return numberBuckets;
-}
-
-void HashingMethod::setNumberBuckets(int number)
-{
-    numberBuckets = number;
-}
-
-void HashingMethod::incrementNumberBuckets()
-{
-    setNumberBuckets(getNumberBuckets() + 1);
-}
-
-void HashingMethod::decrementNumberBuckets()
-{
-    setNumberBuckets(getNumberBuckets() - 1);
 }
 
 string HashingMethod::get(string value)

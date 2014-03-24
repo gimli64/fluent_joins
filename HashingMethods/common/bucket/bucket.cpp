@@ -38,6 +38,11 @@ vector<string> &Bucket::getAllValues()
     return elements;
 }
 
+int Bucket::getChainCount()
+{
+    return 1;
+}
+
 string Bucket::className() const
 {
     return "Bucket ";

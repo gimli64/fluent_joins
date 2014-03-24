@@ -1,5 +1,4 @@
 #include "linearHashing.h"
-#include "common/bucket/chainedBucket.h"
 
 const double LinearHashing::SPLIT_RATIO = 0.75;
 LinearHashing *LinearHashing::instance = 0;
@@ -8,15 +7,16 @@ LinearHashing::LinearHashing()
     :level(0), nextSplitIndex(0), initialNumberBuckets(1),
       bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), HashingMethod()
 {
+    factory = BucketFactory<ChainedBucket>::getInstance();
+    ChainedBucket *bucket = factory->createBucket();
+    buckets.push_back(bucket->name);
+    delete bucket;
 }
 
 LinearHashing *LinearHashing::getInstance()
 {
     if (instance == 0) {
         instance = new LinearHashing();
-        ChainedBucket *bucket = instance->createBucket();
-        instance->buckets.push_back(bucket->name);
-        delete bucket;
     }
     return instance;
 }
@@ -40,7 +40,7 @@ void LinearHashing::putValue(size_t key, string value)
 {
     ChainedBucket *bucket = getBucket(key);
     bucket->putValue(value);
-    writeBucket(bucket);
+    factory->writeBucket(bucket);
     numberItems++;
     if (getRatio() > SPLIT_RATIO) {
         split();
@@ -54,40 +54,12 @@ ChainedBucket *LinearHashing::getBucket(size_t key)
     if (bucketIndex < nextSplitIndex)
         bucketIndex = key & ((1 << level + 1) - 1);
 
-    return readBucket(buckets.at(bucketIndex));
-}
-
-ChainedBucket *LinearHashing::readBucket(string bucketFile) const
-{
-    ChainedBucket *bucket = new ChainedBucket;
-    {
-        ifstream ifs(bucketFile.c_str());
-        text_iarchive ia(ifs);
-        ia >> *bucket;
-    }
-    return bucket;
-}
-
-ChainedBucket *LinearHashing::createBucket()
-{
-    ChainedBucket *bucket = new ChainedBucket;
-    numberBuckets++;
-    writeBucket(bucket);
-    return bucket;
-}
-
-void LinearHashing::writeBucket(ChainedBucket *bucket)
-{
-    ofstream ofs(bucket->name.c_str());
-    {
-        text_oarchive oa(ofs);
-        oa << *bucket;
-    }
+    return factory->readBucket(buckets.at(bucketIndex));
 }
 
 double LinearHashing::getRatio()
 {
-    return ((double) numberItems) / (bucketCapacity * numberBuckets);
+    return ((double) numberItems) / (bucketCapacity * factory->getNumberBuckets());
 }
 
 void LinearHashing::incrementSplitIndex()
@@ -102,22 +74,17 @@ void LinearHashing::incrementSplitIndex()
 
 void LinearHashing::split()
 {
-    ChainedBucket *bucketToSplit = readBucket(buckets.at(nextSplitIndex));
+    ChainedBucket *bucketToSplit = factory->readBucket(buckets.at(nextSplitIndex));
     vector<string> values = bucketToSplit->getAllValues();
+    factory->deleteBucket(bucketToSplit);
 
-    ChainedBucket *newBucket1 = createBucket();
-    ChainedBucket *newBucket2 = createBucket();
+    ChainedBucket *newBucket1 = factory->createBucket();
+    ChainedBucket *newBucket2 = factory->createBucket();
     buckets.at(nextSplitIndex) = newBucket1->name;
     buckets.push_back(newBucket2->name);
-    writeBucket(newBucket1);
-    writeBucket(newBucket2);
 
-    numberBuckets -= bucketToSplit->getChainCount();
     numberItems -= values.size();
     incrementSplitIndex();
-
-    remove(bucketToSplit->name.c_str());
-    delete bucketToSplit;
     delete newBucket1;
     delete newBucket2;
 
@@ -136,7 +103,7 @@ std::ostream& LinearHashing::dump(std::ostream& strm) const
 
     ChainedBucket* bucket;
     for(int i = 0; i < buckets.size(); i++) {
-        bucket = readBucket(buckets.at(i));
+        bucket = factory->readBucket(buckets.at(i));
         output << "#### " << *bucket;
         delete bucket;
         if (i < buckets.size() - 1)

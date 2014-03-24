@@ -2,14 +2,10 @@
 #define LINEARHASHING_H
 
 #include "common/hashingMethod.h"
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include "common/bucket/chainedBucket.h"
+#include "common/bucket/bucketFactory.h"
 
 using namespace std;
-using namespace boost;
-using namespace boost::archive;
-
-class ChainedBucket;
 
 class LinearHashing : public HashingMethod
 {
@@ -24,15 +20,13 @@ private:
     int initialNumberBuckets;
     int bucketCapacity;
     vector<string> buckets;
+    BucketFactory<ChainedBucket>* factory;
     static LinearHashing *instance;
 
     LinearHashing();
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
     ChainedBucket *getBucket(size_t key);
-    ChainedBucket *readBucket(string bucketFile) const;
-    ChainedBucket *createBucket();
-    void writeBucket(ChainedBucket *bucket);
     double getRatio();
     void incrementSplitIndex();
     void split();
