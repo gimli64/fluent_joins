@@ -24,13 +24,12 @@ public:
     void deleteBucket(T *bucket);   // Remove and change number buckets
     void removeBucket(T *bucket);   // Remove without changing number buckets
 
-    void incrementNumberBuckets();
-    int getNumberBuckets();
+    int getBucketCount();
 
 private:
     BucketFactory();
     static BucketFactory<T>* instance;
-    int numberBuckets;
+    int bucketCount;
 };
 
 template<class T>
@@ -46,7 +45,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :numberBuckets(0)
+    :bucketCount(0)
 {
 }
 
@@ -76,8 +75,8 @@ template<class T>
 T* BucketFactory<T>::newBucket()
 {
     T *bucket = new T();
-    bucket->name += lexical_cast<string>(numberBuckets);
-    numberBuckets++;
+    bucket->name += lexical_cast<string>(bucketCount);
+    bucketCount++;
     return bucket;
 }
 
@@ -92,7 +91,7 @@ T* BucketFactory<T>::createBucket()
 template<class T>
 void BucketFactory<T>::deleteBucket(T *bucket)
 {
-    numberBuckets -= bucket->getChainCount();
+    bucketCount -= bucket->getChainCount();
     removeBucket(bucket);
 }
 
@@ -104,14 +103,8 @@ void BucketFactory<T>::removeBucket(T *bucket)
 }
 
 template<class T>
-void BucketFactory<T>::incrementNumberBuckets()
+int BucketFactory<T>::getBucketCount()
 {
-    numberBuckets++;
-}
-
-template<class T>
-int BucketFactory<T>::getNumberBuckets()
-{
-    return numberBuckets;
+    return bucketCount;
 }
 #endif // BUCKETFACTORY_H

@@ -17,6 +17,7 @@ class Directory
 {
 public:
     Directory();
+    Directory(HashingMethod *hasher);
 
     void init();
     string getValue(size_t key, string value);
@@ -29,6 +30,7 @@ public:
 protected:
     int globalDepth;
     BucketFactory<DepthBucket>* factory;
+    HashingMethod *hasher;
     vector<string> buckets;
 
     DepthBucket *getBucket(size_t key);

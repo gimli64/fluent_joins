@@ -2,7 +2,6 @@
 #define HYBRIDHASHING_H
 #include "common/hashingMethod.h"
 #include "common/directory/chainedDirectory.h"
-#include "common/bucket/depthBucket.h"
 
 using std::cout;
 using std::endl;
@@ -21,6 +20,7 @@ private:
     int nextSplitIndex;
     int initialNumberDirectories;
     int bucketCapacity;
+    int numberBuckets;
     vector<ChainedDirectory> directories;
 
     virtual string getValue(size_t key, string value);

@@ -11,13 +11,11 @@ class Directory;
 class ExtendibleHashing : public HashingMethod
 {
 public:
-    static ExtendibleHashing *getInstance();
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
 private:
     Directory directory;
-    static ExtendibleHashing *instance;
 
     ExtendibleHashing();
     virtual string getValue(size_t key, string value);

@@ -11,19 +11,19 @@ using std::endl;
 
 BOOST_AUTO_TEST_CASE(directory_test)
 {
-    HashingMethod *hasher = HashingMethod::getInstance();
-    Directory directory;
-    BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
-    size_t key = hasher->getHash("0");
-    directory.putValue(key, "0");
-    BOOST_CHECK_EQUAL("0", directory.getValue(key, "0"));
+//    HashingMethod *hasher = HashingMethod::getInstance();
+//    Directory directory;
+//    BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
+//    size_t key = hasher->getHash("0");
+//    directory.putValue(key, "0");
+//    BOOST_CHECK_EQUAL("0", directory.getValue(key, "0"));
 
-    for (int i = 1; i < Bucket::BUCKET_SIZE; i++) {
-        directory.putValue(key, "0");
-    }
-    BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
-    directory.putValue(key, "0");
-    BOOST_CHECK_EQUAL(1, directory.getGlobalDepth());
+//    for (int i = 1; i < Bucket::BUCKET_SIZE; i++) {
+//        directory.putValue(key, "0");
+//    }
+//    BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
+//    directory.putValue(key, "0");
+//    BOOST_CHECK_EQUAL(1, directory.getGlobalDepth());
 }
 
 //BOOST_AUTO_TEST_CASE(chainedDirectory_test)

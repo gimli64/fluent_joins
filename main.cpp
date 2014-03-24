@@ -9,7 +9,8 @@ using namespace std;
 
 int main()
 {
-    ChainedDirectory dir = ChainedDirectory();
+    HashingMethod hasher = HashingMethod();
+    ChainedDirectory dir = ChainedDirectory(&hasher);
     dir.putValue(0, "0");
     cout << dir << endl;
     dir.putValue(0, "0");

@@ -10,21 +10,22 @@ using std::size_t;
 class HashingMethod
 {
 public:
-    static HashingMethod *getInstance();
+    HashingMethod();
     size_t getHash(string value);
     string get(string value);
     void put(string value);
+    int getNumberBuckets();
+    void setNumberBuckets(int number);
 
 private:
     boost::hash<string> hasher;
-    static HashingMethod *instance;
 
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
 
 protected:
     int numberItems;
-    HashingMethod();
+    int numberBuckets;
 };
 
 #endif // HASHINGMETHOD_H

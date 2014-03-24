@@ -1,6 +1,8 @@
 #ifndef CHAINEDDIRECTORY_H
 #define CHAINEDDIRECTORY_H
+
 #include "directory.h"
+#include "common/hashingMethod.h"
 
 class ChainedDirectory : public Directory
 {
@@ -8,6 +10,7 @@ public:
     static const int MAX_DOUBLING = 5;
 
     ChainedDirectory();
+    ChainedDirectory(HashingMethod *hasher);
     string getValue(size_t key, string value);
     void putValue(size_t key, string value);
     int getNumberBuckets();
@@ -23,6 +26,7 @@ private:
     ChainedDirectory* nextDirectory;
     void split(DepthBucket* bucket);
     bool canBeDoubled();
+    void notifyNumberBuckets(int number);
 };
 
 #endif // CHAINEDDIRECTORY_H

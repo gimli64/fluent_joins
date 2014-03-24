@@ -50,7 +50,7 @@ ChainedBucket *LinearHashing::getBucket(size_t key)
 
 double LinearHashing::getRatio()
 {
-    return ((double) numberItems) / (bucketCapacity * factory->getNumberBuckets());
+    return ((double) numberItems) / (bucketCapacity * factory->getBucketCount());
 }
 
 void LinearHashing::incrementSplitIndex()

@@ -5,6 +5,13 @@ ChainedDirectory::ChainedDirectory()
 {
 }
 
+ChainedDirectory::ChainedDirectory(HashingMethod *hasher)
+    :numberBuckets(1), numberDoubling(0), Directory(hasher), nextDirectory(0)
+{
+    notifyNumberBuckets(1);
+}
+
+
 string ChainedDirectory::getValue(size_t key, string value)
 {
     string result;
@@ -69,7 +76,7 @@ void ChainedDirectory::putValue(size_t key, string value)
 
         } else {
             if (!nextDirectory)
-                nextDirectory = new ChainedDirectory;
+                nextDirectory = new ChainedDirectory(hasher);
             nextDirectory->putValue(key, value);
         }
     }
@@ -80,6 +87,7 @@ void ChainedDirectory::split(DepthBucket* bucket)
 {
     Directory::split(bucket);
     numberBuckets++;
+    notifyNumberBuckets(1);
 }
 
 bool ChainedDirectory::canBeDoubled()
@@ -107,6 +115,11 @@ int ChainedDirectory::getChainCount()
 string ChainedDirectory::className() const
 {
     return "ChainedDirectory ";
+}
+
+void ChainedDirectory::notifyNumberBuckets(int number)
+{
+    hasher->setNumberBuckets(hasher->getNumberBuckets() + number);
 }
 
 std::ostream& ChainedDirectory::dump(std::ostream& strm) const

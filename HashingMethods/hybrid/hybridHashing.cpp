@@ -5,7 +5,7 @@ const double HybridHashing::SPLIT_RATIO = 0.75;
 HybridHashing::HybridHashing()
     :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE)
 {
-    directories.push_back(ChainedDirectory());
+    directories.push_back(ChainedDirectory(this));
 }
 
 string HybridHashing::getValue(size_t key, string value)
@@ -59,18 +59,18 @@ void HybridHashing::incrementSplitIndex()
 
 double HybridHashing::getRatio()
 {
-//    return ((double) numberItems) / (bucketCapacity * numberBuckets);
+    return ((double) numberItems) / (bucketCapacity * numberBuckets);
 }
 
 void HybridHashing::split()
 {
     ChainedDirectory &directoryToSplit = directories.at(nextSplitIndex);
     vector<string> values = directoryToSplit.getAllValues();
-//    numberBuckets -= directoryToSplit.getNumberBuckets();
+    numberBuckets -= directoryToSplit.getNumberBuckets();
     numberItems -= values.size();
 
-    directories.at(nextSplitIndex) = ChainedDirectory();
-    directories.push_back(ChainedDirectory());
+    directories.at(nextSplitIndex) = ChainedDirectory(this);
+    directories.push_back(ChainedDirectory(this));
     incrementSplitIndex();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
