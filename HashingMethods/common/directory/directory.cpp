@@ -22,7 +22,7 @@ string* Directory::getValue(size_t key, string value)
 
 void Directory::putValue(size_t key, string value)
 {
-    DepthBucket* bucket = getBucket(key);
+    DepthBucket *bucket = getBucket(key);
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
@@ -44,7 +44,7 @@ DepthBucket* Directory::getBucket(size_t key)
 
 DepthBucket* Directory::readBucket(string bucketFile) const
 {
-    DepthBucket* bucket = new DepthBucket(hasher);
+    DepthBucket* bucket = new DepthBucket;
     {
         ifstream ifs(bucketFile.c_str());
         text_iarchive ia(ifs);

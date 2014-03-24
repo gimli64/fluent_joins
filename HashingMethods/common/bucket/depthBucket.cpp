@@ -8,6 +8,7 @@ DepthBucket::DepthBucket()
 DepthBucket::DepthBucket(HashingMethod *hasher)
     :localDepth(0), Bucket(hasher)
 {
+    BUCKET_COUNT++;
 }
 
 int DepthBucket::getLocalDepth() {

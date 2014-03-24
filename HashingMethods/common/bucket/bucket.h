@@ -21,6 +21,7 @@ using boost::lexical_cast;
 class Bucket
 {
 public:
+    static int BUCKET_COUNT;
     static const int BUCKET_SIZE = 10;
     string name;
 
