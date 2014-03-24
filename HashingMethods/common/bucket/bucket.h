@@ -1,7 +1,7 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
-#include "hashingMethod.h"
+#include "common/hashingMethod.h"
 
 #include <sstream>
 #include <fstream>
@@ -16,12 +16,10 @@ using std::vector;
 using std::find;
 using std::ostream;
 using std::stringstream;
-using boost::lexical_cast;
 
 class Bucket
 {
 public:
-    static int BUCKET_COUNT;
     static const int BUCKET_SIZE = 10;
     string name;
 

@@ -1,13 +1,8 @@
+include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/)
+
 add_executable(BucketTests bucketTests.cpp)
 add_executable(DirectoryTests directoryTests.cpp)
 add_executable(HashingMethodTests hashingMethodTests.cpp)
-
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common)
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common/bucket)
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/common/directory)
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/extendible)
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/hybrid)
-include_directories(${PROJECT_SOURCE_DIR}/HashingMethods/linear)
 
 target_link_libraries (BucketTests
                        Bucket

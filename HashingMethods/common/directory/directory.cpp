@@ -1,11 +1,14 @@
 #include "directory.h"
+#include "extendible/extendibleHashing.h"
 
 Directory::Directory()
     :globalDepth(0), buckets()
 {
-    DepthBucket bucket;
-    writeBucket(bucket);
-    buckets.push_back(bucket.name);
+}
+
+void Directory::init() {
+    DepthBucket *bucket = createBucket();
+    buckets.push_back(bucket->name);
 }
 
 string Directory::getValue(size_t key, string value)
@@ -36,7 +39,7 @@ void Directory::putValue(size_t key, string value)
         }
     }
     bucket->putValue(value);
-    writeBucket(*bucket);
+    writeBucket(bucket);
     delete bucket;
 }
 
@@ -56,12 +59,21 @@ DepthBucket* Directory::readBucket(string bucketFile) const
     return bucket;
 }
 
-void Directory::writeBucket(DepthBucket& bucket)
+DepthBucket *Directory::createBucket()
 {
-    ofstream ofs(bucket.name.c_str());
+    DepthBucket *bucket = new DepthBucket;
+    bucket->name += lexical_cast<string>(ExtendibleHashing::getInstance()->getNumberBuckets());
+    writeBucket(bucket);
+    notifyBucket();
+    return bucket;
+}
+
+void Directory::writeBucket(DepthBucket *bucket)
+{
+    ofstream ofs(bucket->name.c_str());
     {
         text_oarchive oa(ofs);
-        oa << bucket;
+        oa << *bucket;
     }
 }
 
@@ -77,16 +89,16 @@ void Directory::doubleSize()
 
 void Directory::split(DepthBucket* bucket)
 {
-    DepthBucket newBucket1;
-    DepthBucket newBucket2;
+    DepthBucket *newBucket1 = createBucket();
+    DepthBucket *newBucket2 = createBucket();
     vector<string>& values = bucket->getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = HashingMethod::getInstance()->getHash(*it) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
-            newBucket2.putValue(*it);
+            newBucket2->putValue(*it);
         else
-            newBucket1.putValue(*it);
+            newBucket1->putValue(*it);
     }
 
     vector<int> l;
@@ -97,19 +109,23 @@ void Directory::split(DepthBucket* bucket)
 
     for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
         if ((*it | (1 << bucket->getLocalDepth())) == *it) {
-            buckets.at(*it) = newBucket2.name;
+            buckets.at(*it) = newBucket2->name;
         }
         else {
-            buckets.at(*it) = newBucket1.name;
+            buckets.at(*it) = newBucket1->name;
         }
     }
 
-    newBucket1.setLocalDepth(bucket->getLocalDepth() + 1);
-    newBucket2.setLocalDepth(newBucket1.getLocalDepth());
+    newBucket1->setLocalDepth(bucket->getLocalDepth() + 1);
+    newBucket2->setLocalDepth(newBucket1->getLocalDepth());
     writeBucket(newBucket1);
     writeBucket(newBucket2);
+
     remove(bucket->name.c_str());
+    unNotifyBucket();
     delete bucket;
+    delete newBucket1;
+    delete newBucket2;
 }
 
 int Directory::getGlobalDepth()
@@ -120,6 +136,16 @@ int Directory::getGlobalDepth()
 string Directory::className() const
 {
     return "Directory ";
+}
+
+void Directory::notifyBucket()
+{
+    ExtendibleHashing::getInstance()->incrementNumberBuckets();
+}
+
+void Directory::unNotifyBucket()
+{
+    ExtendibleHashing::getInstance()->decrementNumberBuckets();
 }
 
 ostream& Directory::dump(ostream& strm) const

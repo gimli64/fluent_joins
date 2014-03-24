@@ -9,8 +9,10 @@ ExtendibleHashing::ExtendibleHashing()
 
 ExtendibleHashing *ExtendibleHashing::getInstance()
 {
-    if (instance == 0)
-        instance = new ExtendibleHashing;
+    if (instance == 0) {
+        instance = new ExtendibleHashing();
+        instance->directory.init();
+    }
     return instance;
 }
 

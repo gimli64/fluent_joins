@@ -29,6 +29,16 @@ void HashingMethod::setNumberBuckets(int number)
     numberBuckets = number;
 }
 
+void HashingMethod::incrementNumberBuckets()
+{
+    setNumberBuckets(getNumberBuckets() + 1);
+}
+
+void HashingMethod::decrementNumberBuckets()
+{
+    setNumberBuckets(getNumberBuckets() - 1);
+}
+
 string HashingMethod::get(string value)
 {
     try {

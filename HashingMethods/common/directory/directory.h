@@ -1,8 +1,8 @@
 #ifndef DIRECTORY_H
 #define DIRECTORY_H
 
-#include "depthbucket.h"
-#include "hashingMethod.h"
+#include "common/bucket/depthBucket.h"
+#include "common/hashingMethod.h"
 
 #include <iostream>
 #include <algorithm>
@@ -10,24 +10,19 @@
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 
-using std::cout;
-using std::endl;
-using std::string;
-using std::vector;
-using std::ostream;
-using std::stringstream;
-using std::ofstream;
-using std::ifstream;
-using std::remove;
-using boost::lexical_cast;
+using namespace std;
+using namespace boost;
 using boost::archive::text_iarchive;
 using boost::archive::text_oarchive;
+
+class ExtendibleHashing;
 
 class Directory
 {
 public:
     Directory();
 
+    void init();
     string getValue(size_t key, string value);
     void putValue(size_t key, string value);
     int getGlobalDepth();
@@ -41,7 +36,10 @@ protected:
 
     DepthBucket *getBucket(size_t key);
     DepthBucket *readBucket(string bucketFile) const;
-    void writeBucket(DepthBucket &bucket);
+    DepthBucket *createBucket();
+    void notifyBucket();
+    void unNotifyBucket();
+    void writeBucket(DepthBucket *bucket);
     void doubleSize();
     void split(DepthBucket *bucket);
 };

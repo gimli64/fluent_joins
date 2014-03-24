@@ -1,6 +1,6 @@
-#include "directory.h"
-#include "chainedDirectory.h"
-#include "hashingMethod.h"
+#include "common/directory/directory.h"
+#include "common/directory/chainedDirectory.h"
+#include "common/hashingMethod.h"
 #define BOOST_TEST_MODULE directoryTests
 #include <boost/test/unit_test.hpp>
 #include <stdlib.h>

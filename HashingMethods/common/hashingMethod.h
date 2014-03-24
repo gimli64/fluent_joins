@@ -16,6 +16,8 @@ public:
     void put(string value);
     int getNumberBuckets();
     void setNumberBuckets(int number);
+    void incrementNumberBuckets();
+    void decrementNumberBuckets();
 
 private:
     boost::hash<string> hasher;

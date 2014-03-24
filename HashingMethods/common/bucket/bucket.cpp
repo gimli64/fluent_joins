@@ -1,9 +1,7 @@
 #include "bucket.h"
 
-int Bucket::BUCKET_COUNT = 0;
-
 Bucket::Bucket()
-    :elements(), name("buckets/bucket" + lexical_cast<string>(BUCKET_COUNT))
+    :elements(), name("buckets/bucket")
 {
     elements.reserve(BUCKET_SIZE);
 }

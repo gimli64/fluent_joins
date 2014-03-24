@@ -1,6 +1,6 @@
-#include "bucket.h"
-#include "depthBucket.h"
-#include "chainedBucket.h"
+#include "common/bucket/bucket.h"
+#include "common/bucket/depthBucket.h"
+#include "common/bucket/chainedBucket.h"
 #define BOOST_TEST_MODULE bucketTests
 #include <boost/test/unit_test.hpp>
 

@@ -1,10 +1,12 @@
 #ifndef EXTENDIBLEHASHING_H
 #define EXTENDIBLEHASHING_H
-#include "hashingMethod.h"
-#include "directory.h"
+#include "common/hashingMethod.h"
+#include "common/directory/directory.h"
 #include <sstream>
 
 using std::ostream;
+
+class Directory;
 
 class ExtendibleHashing : public HashingMethod
 {

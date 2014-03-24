@@ -1,8 +1,8 @@
 #ifndef HYBRIDHASHING_H
 #define HYBRIDHASHING_H
-#include "hashingMethod.h"
-#include "chainedDirectory.h"
-#include "depthBucket.h"
+#include "common/hashingMethod.h"
+#include "common/directory/chainedDirectory.h"
+#include "common/bucket/depthBucket.h"
 
 using std::cout;
 using std::endl;

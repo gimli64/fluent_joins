@@ -3,6 +3,7 @@
 ChainedBucket::ChainedBucket()
     :nextBucket(0), Bucket()
 {
+    name += lexical_cast<string>(LinearHashing::getInstance()->getNumberBuckets());
 }
 
 string ChainedBucket::getValue(string value)
@@ -27,6 +28,7 @@ string ChainedBucket::getValue(string value)
 void ChainedBucket::putValue(string value) {
     if (this->isFull()) {
         if (!nextBucket) {
+            notifyBucket();
             nextBucket = new ChainedBucket;
         }
         nextBucket->putValue(value);
@@ -52,10 +54,10 @@ vector<string> ChainedBucket::getAllValues() {
     return values;
 }
 
-//void ChainedBucket::notifyNumberBuckets(int numberBuckets)
-//{
-//    hasher->setNumberBuckets(hasher->getNumberBuckets() + numberBuckets);
-//}
+void ChainedBucket::notifyBucket()
+{
+    LinearHashing::getInstance()->incrementNumberBuckets();
+}
 
 string ChainedBucket::className() const
 {
