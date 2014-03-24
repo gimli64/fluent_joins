@@ -14,11 +14,13 @@ Bucket::Bucket(HashingMethod* hasher)
     elements.reserve(BUCKET_SIZE);
 }
 
-string* Bucket::getValue(string value)
+string Bucket::getValue(string value)
 {
     vector<string>::iterator it = find(elements.begin(), elements.end(), value);
     if (it != elements.end()) {
-        return &(*it);
+        return *it;
+    } else {
+        throw string("Value wasn't found");
     }
     return NULL;
 }

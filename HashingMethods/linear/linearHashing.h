@@ -21,7 +21,7 @@ private:
     int bucketCapacity;
     vector<ChainedBucket> buckets;
 
-    virtual string* getValue(size_t key, string value);
+    virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
     ChainedBucket& getBucket(size_t key);
     double getRatio();

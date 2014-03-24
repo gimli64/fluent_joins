@@ -11,7 +11,7 @@ public:
     ChainedBucket();
     ChainedBucket(HashingMethod* hasher);
 
-    string* getValue(string value);
+    string getValue(string value);
     void putValue(string value);
     int getChainCount();
     vector<string> getAllValues();

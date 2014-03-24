@@ -5,12 +5,21 @@ ChainedDirectory::ChainedDirectory(HashingMethod* hasher)
 {
 }
 
-string* ChainedDirectory::getValue(size_t key, string value)
+string ChainedDirectory::getValue(size_t key, string value)
 {
-    string* result = getBucket(key)->getValue(value);
-    if (result == (string*) NULL && nextDirectory)
-        result = nextDirectory->getValue(key, value);
-    return result;
+    try {
+        return getBucket(key)->getValue(value);
+    } catch (string &e) {
+        if (!nextDirectory) {
+            throw e;
+        } else {
+            try {
+                return nextDirectory->getValue(key, value);
+            } catch (string &e) {
+                throw e;
+            }
+        }
+    }
 }
 
 void ChainedDirectory::split(DepthBucket* bucket)

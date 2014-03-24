@@ -15,10 +15,10 @@ int main()
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         ext_hasher.put(*it);
     }
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        if (ext_hasher.get(*it) == (string*) NULL)
-            cout << "Error" << endl;
-    }
+//    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
+//        if (ext_hasher.get(*it) == (string*) NULL)
+//            cout << "Error" << endl;
+//    }
 //    cout << ext_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
@@ -30,10 +30,10 @@ int main()
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         hyb_hasher.put(*it);
     }
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        if (hyb_hasher.get(*it) == (string*) NULL)
-            cout << "Error" << endl;
-    }
+//    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
+//        if (hyb_hasher.get(*it) == (string*) NULL)
+//            cout << "Error" << endl;
+//    }
 //    cout << hyb_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
@@ -45,10 +45,10 @@ int main()
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
         lin_hasher.put(*it);
     }
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        if (lin_hasher.get(*it) == (string*) NULL)
-            cout << "Error" << endl;
-    }
+//    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
+//        if (lin_hasher.get(*it) == (string*) NULL)
+//            cout << "Error" << endl;
+//    }
 //    cout << lin_hasher << endl;
     getrusage(who, &usage);
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);

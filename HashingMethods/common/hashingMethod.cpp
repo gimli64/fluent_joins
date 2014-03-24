@@ -20,9 +20,13 @@ void HashingMethod::setNumberBuckets(int number)
     numberBuckets = number;
 }
 
-string* HashingMethod::get(string value)
+string HashingMethod::get(string value)
 {
-    return getValue(getHash(value), value);
+    try {
+        return getValue(getHash(value), value);
+    } catch (string &e) {
+        throw e;
+    }
 }
 
 void HashingMethod::put(string value)
@@ -30,9 +34,9 @@ void HashingMethod::put(string value)
     putValue(getHash(value), value);
 }
 
-string* HashingMethod::getValue(size_t key, string value)
+string HashingMethod::getValue(size_t key, string value)
 {
-    return (string*) NULL;
+    throw string("Value wasn't found");
 }
 
 void HashingMethod::putValue(size_t key, string value)

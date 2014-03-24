@@ -8,9 +8,13 @@ LinearHashing::LinearHashing()
     buckets.push_back(ChainedBucket(this));
 }
 
-string* LinearHashing::getValue(size_t key, string value)
+string LinearHashing::getValue(size_t key, string value)
 {
-    return getBucket(key).getValue(value);
+    try {
+        return getBucket(key).getValue(value);
+    } catch (string &e) {
+        throw e;
+    }
 }
 
 void LinearHashing::putValue(size_t key, string value)

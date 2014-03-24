@@ -27,7 +27,7 @@ public:
 
     Bucket();
     Bucket(HashingMethod *hasher);
-    string* getValue(string value);
+    string getValue(string value);
     void putValue(string value);
     bool isFull();
     int size();

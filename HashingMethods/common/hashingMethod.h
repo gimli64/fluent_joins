@@ -12,14 +12,14 @@ class HashingMethod
 public:
     HashingMethod();
     size_t getHash(string value);
-    string* get(string value);
+    string get(string value);
     void put(string value);
     int getNumberBuckets();
     void setNumberBuckets(int number);
 
 private:
     boost::hash<string> hasher;
-    virtual string* getValue(size_t key, string value);
+    virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
 
 protected:

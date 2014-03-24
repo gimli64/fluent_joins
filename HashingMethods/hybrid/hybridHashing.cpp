@@ -8,9 +8,13 @@ HybridHashing::HybridHashing()
     directories.push_back(ChainedDirectory(this));
 }
 
-string* HybridHashing::getValue(size_t key, string value)
+string HybridHashing::getValue(size_t key, string value)
 {
-    return getChainedDirectory(key).getValue(key, value);
+    try {
+        return getChainedDirectory(key).getValue(key, value);
+    } catch (string &e) {
+        throw e;
+    }
 }
 
 void HybridHashing::putValue(size_t key, string value)

@@ -8,16 +8,24 @@ ChainedBucket::ChainedBucket()
 ChainedBucket::ChainedBucket(HashingMethod *hasher)
     :nextBucket(0), Bucket(hasher)
 {
-    if (hasher) {
-        notifyNumberBuckets(1);
-    }
+    notifyNumberBuckets(1);
 }
 
-string* ChainedBucket::getValue(string value)
+string ChainedBucket::getValue(string value)
 {
-    string* result = Bucket::getValue(value);
-    if (result == (string*) NULL && nextBucket) {
-        result = nextBucket->getValue(value);
+    string result;
+    try {
+        result = Bucket::getValue(value);
+    } catch(string &e) {
+        if (!nextBucket) {
+            throw e;
+        } else {
+            try {
+                result = nextBucket->getValue(value);
+            } catch (string &e) {
+                throw e;
+            }
+        }
     }
     return result;
 }

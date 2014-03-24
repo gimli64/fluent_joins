@@ -29,7 +29,7 @@ public:
     Directory();
     Directory(HashingMethod* hasher);
 
-    string* getValue(size_t key, string value);
+    string getValue(size_t key, string value);
     void putValue(size_t key, string value);
     int getGlobalDepth();
 

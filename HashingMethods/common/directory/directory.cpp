@@ -12,10 +12,17 @@ Directory::Directory(HashingMethod *hasher)
     buckets.push_back(bucket.name);
 }
 
-string* Directory::getValue(size_t key, string value)
+string Directory::getValue(size_t key, string value)
 {
+    string result;
     DepthBucket *bucket = getBucket(key);
-    string* result = bucket->getValue(value);
+    try {
+        result = bucket->getValue(value);
+    } catch (string &e) {
+        delete bucket;
+        throw e;
+    }
+
     delete bucket;
     return result;
 }

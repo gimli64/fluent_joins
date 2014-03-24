@@ -5,9 +5,13 @@ ExtendibleHashing::ExtendibleHashing()
 {
 }
 
-string* ExtendibleHashing::getValue(size_t key, string value)
+string ExtendibleHashing::getValue(size_t key, string value)
 {
-    return directory.getValue(key, value);
+    try {
+        return directory.getValue(key, value);
+    } catch (string &e) {
+        throw e;
+    }
 }
 
 void ExtendibleHashing::putValue(size_t key, string value)
