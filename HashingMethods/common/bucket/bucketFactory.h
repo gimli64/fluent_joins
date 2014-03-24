@@ -21,7 +21,8 @@ public:
 
     T* newBucket();     // Creation without serialization
     T* createBucket();  // Creation and serialization
-    void deleteBucket(T *bucket);
+    void deleteBucket(T *bucket);   // Remove and change number buckets
+    void removeBucket(T *bucket);   // Remove without changing number buckets
 
     void incrementNumberBuckets();
     int getNumberBuckets();
@@ -91,8 +92,14 @@ T* BucketFactory<T>::createBucket()
 template<class T>
 void BucketFactory<T>::deleteBucket(T *bucket)
 {
-    remove(bucket->name.c_str());
     numberBuckets -= bucket->getChainCount();
+    removeBucket(bucket);
+}
+
+template<class T>
+void BucketFactory<T>::removeBucket(T *bucket)
+{
+    remove(bucket->name.c_str());
     delete bucket;
 }
 

@@ -53,6 +53,8 @@ void Directory::doubleSize()
     for (size_t i = 0; i < old_size; i++) {
         buckets.push_back(buckets.at(i));
     }
+    cout << "double" << endl;
+    cout << *this << endl;
     globalDepth++;
 }
 
@@ -90,7 +92,7 @@ void Directory::split(DepthBucket* bucket)
     factory->writeBucket(newBucket1);
     factory->writeBucket(newBucket2);
 
-    factory->deleteBucket(bucket);
+    factory->removeBucket(bucket);
     delete newBucket1;
     delete newBucket2;
 }

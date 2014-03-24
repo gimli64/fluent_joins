@@ -10,7 +10,7 @@ using namespace std;
 class LinearHashing : public HashingMethod
 {
 public:
-    static LinearHashing *getInstance();
+    LinearHashing();
     virtual ostream& dump(ostream& strm) const;
 
 private:
@@ -21,9 +21,7 @@ private:
     int bucketCapacity;
     vector<string> buckets;
     BucketFactory<ChainedBucket>* factory;
-    static LinearHashing *instance;
 
-    LinearHashing();
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
     ChainedBucket *getBucket(size_t key);

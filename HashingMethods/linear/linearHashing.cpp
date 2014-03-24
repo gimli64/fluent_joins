@@ -1,7 +1,6 @@
 #include "linearHashing.h"
 
 const double LinearHashing::SPLIT_RATIO = 0.75;
-LinearHashing *LinearHashing::instance = 0;
 
 LinearHashing::LinearHashing()
     :level(0), nextSplitIndex(0), initialNumberBuckets(1),
@@ -11,14 +10,6 @@ LinearHashing::LinearHashing()
     ChainedBucket *bucket = factory->createBucket();
     buckets.push_back(bucket->name);
     delete bucket;
-}
-
-LinearHashing *LinearHashing::getInstance()
-{
-    if (instance == 0) {
-        instance = new LinearHashing();
-    }
-    return instance;
 }
 
 string LinearHashing::getValue(size_t key, string value)
