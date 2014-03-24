@@ -3,13 +3,7 @@
 int Bucket::BUCKET_COUNT = 0;
 
 Bucket::Bucket()
-    :elements(), hasher(0), name("buckets/bucket" + lexical_cast<string>(BUCKET_COUNT))
-{
-    elements.reserve(BUCKET_SIZE);
-}
-
-Bucket::Bucket(HashingMethod* hasher)
-    :elements(), hasher(hasher), name("buckets/bucket" + lexical_cast<string>(BUCKET_COUNT))
+    :elements(), name("buckets/bucket" + lexical_cast<string>(BUCKET_COUNT))
 {
     elements.reserve(BUCKET_SIZE);
 }

@@ -26,7 +26,6 @@ public:
     string name;
 
     Bucket();
-    Bucket(HashingMethod *hasher);
     string getValue(string value);
     void putValue(string value);
     bool isFull();
@@ -46,9 +45,6 @@ private:
         ar & name;
         ar & elements;
     }
-
-protected:
-    HashingMethod* hasher;
 };
 
 ostream& operator<<(ostream&, const Bucket&);

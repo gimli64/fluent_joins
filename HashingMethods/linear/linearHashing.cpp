@@ -5,7 +5,7 @@ const double LinearHashing::SPLIT_RATIO = 0.75;
 LinearHashing::LinearHashing()
     :level(0), nextSplitIndex(0), initialNumberBuckets(1), bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets()
 {
-    buckets.push_back(ChainedBucket(this));
+    buckets.push_back(ChainedBucket());
 }
 
 string LinearHashing::getValue(size_t key, string value)
@@ -57,8 +57,8 @@ void LinearHashing::split()
     numberBuckets -= bucketToSplit.getChainCount();
     numberItems -= values.size();
 
-    buckets.at(nextSplitIndex) = ChainedBucket(this);
-    buckets.push_back(ChainedBucket(this));
+    buckets.at(nextSplitIndex) = ChainedBucket();
+    buckets.push_back(ChainedBucket());
     incrementSplitIndex();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {

@@ -9,7 +9,6 @@ class DepthBucket : public Bucket
 {
 public:
     DepthBucket();
-    DepthBucket(HashingMethod* hasher);
 
     int getLocalDepth();
     void setLocalDepth(int depth);

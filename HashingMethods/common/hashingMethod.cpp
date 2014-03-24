@@ -1,8 +1,17 @@
 #include "hashingMethod.h"
 
+HashingMethod *HashingMethod::instance = 0;
+
 HashingMethod::HashingMethod()
     :numberBuckets(0), numberItems(0)
 {
+}
+
+HashingMethod *HashingMethod::getInstance()
+{
+    if (instance == 0)
+        instance = new HashingMethod;
+    return instance;
 }
 
 size_t HashingMethod::getHash(string value)

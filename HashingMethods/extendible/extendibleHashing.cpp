@@ -1,8 +1,17 @@
 #include "extendibleHashing.h"
 
+ExtendibleHashing *ExtendibleHashing::instance = 0;
+
 ExtendibleHashing::ExtendibleHashing()
-    :directory(Directory(this))
+    :directory(Directory()), HashingMethod()
 {
+}
+
+ExtendibleHashing *ExtendibleHashing::getInstance()
+{
+    if (instance == 0)
+        instance = new ExtendibleHashing;
+    return instance;
 }
 
 string ExtendibleHashing::getValue(size_t key, string value)

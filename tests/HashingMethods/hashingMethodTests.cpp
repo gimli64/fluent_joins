@@ -7,10 +7,10 @@
 
 BOOST_AUTO_TEST_CASE(hashingMethod_test)
 {
-    HashingMethod hasher = HashingMethod();
-    hasher.put("0");
+    HashingMethod *hasher = HashingMethod::getInstance();
+    hasher->put("0");
     try {
-        hasher.get("0");
+        hasher->get("0");
     } catch (string &e) {
         BOOST_CHECK_EQUAL("Value wasn't found", e);
     }
@@ -18,11 +18,11 @@ BOOST_AUTO_TEST_CASE(hashingMethod_test)
 
 BOOST_AUTO_TEST_CASE(extendibleHashing_test)
 {
-    ExtendibleHashing hasher = ExtendibleHashing();
-    hasher.put("0");
-    BOOST_CHECK_EQUAL("0", hasher.get("0"));
+    ExtendibleHashing *hasher = ExtendibleHashing::getInstance();
+    hasher->put("0");
+    BOOST_CHECK_EQUAL("0", hasher->get("0"));
     try {
-        hasher.get("1");
+        hasher->get("1");
     } catch (string &e) {
         BOOST_CHECK_EQUAL("Value wasn't found", e);
     }

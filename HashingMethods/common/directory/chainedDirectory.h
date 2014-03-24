@@ -7,7 +7,7 @@ class ChainedDirectory : public Directory
 public:
     static const int MAX_DOUBLING = 5;
 
-    ChainedDirectory(HashingMethod *hasher);
+    ChainedDirectory();
     string getValue(size_t key, string value);
     void putValue(size_t key, string value);
     int getNumberBuckets();

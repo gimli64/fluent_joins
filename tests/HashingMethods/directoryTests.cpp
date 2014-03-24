@@ -11,10 +11,10 @@ using std::endl;
 
 BOOST_AUTO_TEST_CASE(directory_test)
 {
-    HashingMethod hasher = HashingMethod();
-    Directory directory = Directory(&hasher);
+    HashingMethod *hasher = HashingMethod::getInstance();
+    Directory directory;
     BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
-    size_t key = hasher.getHash("0");
+    size_t key = hasher->getHash("0");
     directory.putValue(key, "0");
     BOOST_CHECK_EQUAL("0", directory.getValue(key, "0"));
 

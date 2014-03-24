@@ -5,12 +5,6 @@ ChainedBucket::ChainedBucket()
 {
 }
 
-ChainedBucket::ChainedBucket(HashingMethod *hasher)
-    :nextBucket(0), Bucket(hasher)
-{
-    notifyNumberBuckets(1);
-}
-
 string ChainedBucket::getValue(string value)
 {
     string result;
@@ -33,7 +27,7 @@ string ChainedBucket::getValue(string value)
 void ChainedBucket::putValue(string value) {
     if (this->isFull()) {
         if (!nextBucket) {
-            nextBucket = new ChainedBucket(hasher);
+            nextBucket = new ChainedBucket;
         }
         nextBucket->putValue(value);
     } else {
@@ -58,10 +52,10 @@ vector<string> ChainedBucket::getAllValues() {
     return values;
 }
 
-void ChainedBucket::notifyNumberBuckets(int numberBuckets)
-{
-    hasher->setNumberBuckets(hasher->getNumberBuckets() + numberBuckets);
-}
+//void ChainedBucket::notifyNumberBuckets(int numberBuckets)
+//{
+//    hasher->setNumberBuckets(hasher->getNumberBuckets() + numberBuckets);
+//}
 
 string ChainedBucket::className() const
 {

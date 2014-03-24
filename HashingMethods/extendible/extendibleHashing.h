@@ -9,12 +9,15 @@ using std::ostream;
 class ExtendibleHashing : public HashingMethod
 {
 public:
-    ExtendibleHashing();
+    static ExtendibleHashing *getInstance();
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
 private:
     Directory directory;
+    static ExtendibleHashing *instance;
+
+    ExtendibleHashing();
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
 };

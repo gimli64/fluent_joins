@@ -1,7 +1,7 @@
 #include "chainedDirectory.h"
 
-ChainedDirectory::ChainedDirectory(HashingMethod* hasher)
-    :numberBuckets(1), numberDoubling(0), Directory(hasher), nextDirectory(0)
+ChainedDirectory::ChainedDirectory()
+    :numberBuckets(1), numberDoubling(0), Directory(), nextDirectory(0)
 {
 }
 
@@ -89,7 +89,7 @@ void ChainedDirectory::putValue(size_t key, string value)
 
         } else {
             if (!nextDirectory)
-                nextDirectory = new ChainedDirectory(hasher);
+                nextDirectory = new ChainedDirectory;
             nextDirectory->putValue(key, value);
         }
     }
