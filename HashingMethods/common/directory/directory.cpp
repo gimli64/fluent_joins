@@ -3,11 +3,6 @@
 Directory::Directory()
     :globalDepth(0), buckets()
 {
-}
-
-Directory::Directory(HashingMethod *hasher)
-    :globalDepth(0), buckets(), hasher(hasher)
-{
     factory = BucketFactory<DepthBucket>::getInstance();
     DepthBucket *bucket = factory->createBucket();
     buckets.push_back(bucket->name);
@@ -58,8 +53,6 @@ void Directory::doubleSize()
     for (size_t i = 0; i < old_size; i++) {
         buckets.push_back(buckets.at(i));
     }
-    cout << "double" << endl;
-    cout << *this << endl;
     globalDepth++;
 }
 
@@ -67,6 +60,7 @@ void Directory::split(DepthBucket* bucket)
 {
     DepthBucket *newBucket1 = factory->createBucket();
     DepthBucket *newBucket2 = factory->createBucket();
+    HashingMethod *hasher = HashingMethod::getInstance();
     vector<string>& values = bucket->getAllValues();
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {

@@ -1,7 +1,7 @@
 #include "bucket.h"
 
 Bucket::Bucket()
-    :elements(), name("buckets/bucket")
+    :elements(), name("/tmp/buckets/bucket")
 {
     elements.reserve(BUCKET_SIZE);
 }

@@ -20,8 +20,8 @@ private:
     int nextSplitIndex;
     int initialNumberDirectories;
     int bucketCapacity;
-    int numberBuckets;
     vector<ChainedDirectory> directories;
+    BucketFactory<DepthBucket> *factory;
 
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);

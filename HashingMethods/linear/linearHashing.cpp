@@ -50,7 +50,7 @@ ChainedBucket *LinearHashing::getBucket(size_t key)
 
 double LinearHashing::getRatio()
 {
-    return ((double) numberItems) / (bucketCapacity * factory->getBucketCount());
+    return ((double) numberItems) / (bucketCapacity * factory->getNumberBuckets());
 }
 
 void LinearHashing::incrementSplitIndex()
@@ -65,9 +65,9 @@ void LinearHashing::incrementSplitIndex()
 
 void LinearHashing::split()
 {
+    cout << "SPLIT" << endl;
     ChainedBucket *bucketToSplit = factory->readBucket(buckets.at(nextSplitIndex));
     vector<string> values = bucketToSplit->getAllValues();
-    factory->deleteBucket(bucketToSplit);
 
     ChainedBucket *newBucket1 = factory->createBucket();
     ChainedBucket *newBucket2 = factory->createBucket();
@@ -76,6 +76,7 @@ void LinearHashing::split()
 
     numberItems -= values.size();
     incrementSplitIndex();
+    factory->deleteBucket(bucketToSplit);
     delete newBucket1;
     delete newBucket2;
 

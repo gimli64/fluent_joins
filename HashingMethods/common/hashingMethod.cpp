@@ -1,8 +1,17 @@
 #include "hashingMethod.h"
 
+HashingMethod* HashingMethod::instance = 0;
+
 HashingMethod::HashingMethod()
-    :numberItems(0), numberBuckets(0)
+    :numberItems(0)
 {
+}
+
+HashingMethod* HashingMethod::getInstance()
+{
+    if (!instance)
+        instance = new HashingMethod();
+    return instance;
 }
 
 size_t HashingMethod::getHash(string value)
@@ -32,15 +41,3 @@ string HashingMethod::getValue(size_t key, string value)
 void HashingMethod::putValue(size_t key, string value)
 {
 }
-
-int HashingMethod::getNumberBuckets()
-{
-    return numberBuckets;
-}
-
-void HashingMethod::setNumberBuckets(int number)
-{
-    numberBuckets = number;
-}
-
-

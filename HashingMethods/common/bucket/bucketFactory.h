@@ -23,13 +23,17 @@ public:
     T* createBucket();  // Creation and serialization
     void deleteBucket(T *bucket);   // Remove and change number buckets
     void removeBucket(T *bucket);   // Remove without changing number buckets
+    void removeAll();
 
     int getBucketCount();
+    int getNumberBuckets();
+    void setNumberBuckets(int number);
 
 private:
     BucketFactory();
     static BucketFactory<T>* instance;
     int bucketCount;
+    int numberBuckets;
 };
 
 template<class T>
@@ -45,7 +49,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0)
+    :bucketCount(0), numberBuckets(0)
 {
 }
 
@@ -77,6 +81,7 @@ T* BucketFactory<T>::newBucket()
     T *bucket = new T();
     bucket->name += lexical_cast<string>(bucketCount);
     bucketCount++;
+    numberBuckets++;
     return bucket;
 }
 
@@ -91,7 +96,7 @@ T* BucketFactory<T>::createBucket()
 template<class T>
 void BucketFactory<T>::deleteBucket(T *bucket)
 {
-    bucketCount -= bucket->getChainCount();
+    numberBuckets -= bucket->getChainCount();
     removeBucket(bucket);
 }
 
@@ -103,8 +108,28 @@ void BucketFactory<T>::removeBucket(T *bucket)
 }
 
 template<class T>
+void BucketFactory<T>::removeAll()
+{
+    numberBuckets = 0;
+    bucketCount = 0;
+    system("exec rm /tmp/buckets/*");
+}
+
+template<class T>
 int BucketFactory<T>::getBucketCount()
 {
     return bucketCount;
+}
+
+template<class T>
+int BucketFactory<T>::getNumberBuckets()
+{
+    return numberBuckets;
+}
+
+template<class T>
+void BucketFactory<T>::setNumberBuckets(int number)
+{
+    numberBuckets = number;
 }
 #endif // BUCKETFACTORY_H
