@@ -10,6 +10,7 @@ using std::size_t;
 class HashingMethod
 {
 public:
+    int numberDirEntries;
     HashingMethod();
     static HashingMethod* getInstance();
     size_t getHash(string value);

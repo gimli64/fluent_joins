@@ -8,10 +8,12 @@ class ChainedDirectory : public Directory
 {
 public:
     static const int MAX_DOUBLING = 7;
+    static const int CAPA = 4;
 
     ChainedDirectory();
-    string getValue(size_t key, string value);
-    void putValue(size_t key, string value);
+    ChainedDirectory(HashingMethod *hasher);
+//    string getValue(size_t key, string value);
+//    void putValue(size_t key, string value);
     int getNumberBuckets();
     int getChainCount();
     vector<string> getAllValues();
@@ -23,7 +25,9 @@ private:
     int numberDoubling;
     int numberBuckets;
     ChainedDirectory* nextDirectory;
+    HashingMethod *hasher;
     void split(DepthBucket* bucket);
+    virtual void doubleSize();
     bool canBeDoubled();
     void notifyNumberBuckets(int number);
 };

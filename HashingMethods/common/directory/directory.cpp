@@ -125,6 +125,11 @@ ostream& Directory::dump(ostream& strm) const
     return output;
 }
 
+int Directory::getSize()
+{
+    return buckets.size();
+}
+
 ostream& operator<<(ostream& strm, const Directory& dir)
 {
     return dir.dump(strm);

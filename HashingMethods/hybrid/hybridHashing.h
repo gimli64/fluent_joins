@@ -20,6 +20,7 @@ private:
     int nextSplitIndex;
     int initialNumberDirectories;
     int bucketCapacity;
+    int dirCapa;
     vector<ChainedDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 

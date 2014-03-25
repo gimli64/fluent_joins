@@ -22,6 +22,7 @@ public:
     string getValue(size_t key, string value);
     void putValue(size_t key, string value);
     int getGlobalDepth();
+    int getSize();
 
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
@@ -32,7 +33,7 @@ protected:
     vector<string> buckets;
 
     DepthBucket *getBucket(size_t key);
-    void doubleSize();
+    virtual void doubleSize();
     void split(DepthBucket *bucket);
 };
 
