@@ -8,6 +8,7 @@ ChainedDirectory::ChainedDirectory()
 ChainedDirectory::ChainedDirectory(HashingMethod *hasher)
     :numberBuckets(1), numberDoubling(0), Directory(), nextDirectory(0), hasher(hasher)
 {
+    hasher->numberDirEntries += 1;
 }
 
 //string ChainedDirectory::getValue(size_t key, string value)
@@ -35,7 +36,8 @@ vector<string> ChainedDirectory::getAllValues()
 {
     vector<string> elements;
     DepthBucket* bucket;
-    for(vector<string>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+    set<string> uniqueBuckets = set<string>(buckets.begin(), buckets.end());
+    for(set<string>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
         bucket = factory->readBucket(*it);
         vector<string>& values = bucket->getAllValues();
         elements.insert(elements.end(), values.begin(), values.end());
@@ -95,10 +97,10 @@ void ChainedDirectory::doubleSize()
     Directory::doubleSize();
 }
 
-bool ChainedDirectory::canBeDoubled()
-{
-    return numberDoubling < MAX_DOUBLING;
-}
+//bool ChainedDirectory::canBeDoubled()
+//{
+//    return numberDoubling < MAX_DOUBLING;
+//}
 
 int ChainedDirectory::getNumberBuckets()
 {

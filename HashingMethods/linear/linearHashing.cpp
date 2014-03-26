@@ -65,7 +65,6 @@ void LinearHashing::incrementSplitIndex()
 
 void LinearHashing::split()
 {
-    cout << "SPLIT" << endl;
     ChainedBucket *bucketToSplit = factory->readBucket(buckets.at(nextSplitIndex));
     vector<string> values = bucketToSplit->getAllValues();
 

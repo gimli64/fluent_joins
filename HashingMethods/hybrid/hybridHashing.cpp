@@ -23,8 +23,8 @@ void HybridHashing::putValue(size_t key, string value)
 {
     getChainedDirectory(key).putValue(key, value);
     numberItems++;
-    cout << getRatio() << endl;
-    cout << numberDirEntries << endl;
+//    cout << getRatio() << endl;
+//    cout << numberDirEntries << endl;
     if (getRatio() > SPLIT_RATIO) {
         split();
     }
@@ -69,14 +69,14 @@ double HybridHashing::getRatio()
 
 void HybridHashing::split()
 {
-    cout << "SPLIT" << endl;
+//    cout << "SPLIT" << endl;
     ChainedDirectory &directoryToSplit = directories.at(nextSplitIndex);
     vector<string> values = directoryToSplit.getAllValues();
     factory->setNumberBuckets(factory->getNumberBuckets() - directoryToSplit.getNumberBuckets());
     numberDirEntries -= directoryToSplit.getSize();
-    cout << numberItems << endl;
+//    cout << numberItems << endl;
     numberItems -= values.size();
-    cout << numberItems << endl;
+//    cout << numberItems << endl;
 
     directories.at(nextSplitIndex) = ChainedDirectory(this);
     directories.push_back(ChainedDirectory(this));

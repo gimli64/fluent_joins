@@ -27,7 +27,6 @@ string ChainedBucket::getValue(string value)
 void ChainedBucket::putValue(string value) {
     if (this->isFull()) {
         if (!nextBucket) {
-            cout << "CHAIN" << endl;
             nextBucket = BucketFactory<ChainedBucket>::getInstance()->newBucket();
         }
         nextBucket->putValue(value);

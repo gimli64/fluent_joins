@@ -3,7 +3,7 @@
 HashingMethod* HashingMethod::instance = 0;
 
 HashingMethod::HashingMethod()
-    :numberItems(0), numberDirEntries(1)
+    :numberItems(0), numberDirEntries(0)
 {
 }
 

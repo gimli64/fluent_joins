@@ -7,8 +7,8 @@
 class ChainedDirectory : public Directory
 {
 public:
-    static const int MAX_DOUBLING = 7;
-    static const int CAPA = 4;
+//    static const int MAX_DOUBLING = 7;
+    static const int CAPA = 8;
 
     ChainedDirectory();
     ChainedDirectory(HashingMethod *hasher);
@@ -28,7 +28,7 @@ private:
     HashingMethod *hasher;
     void split(DepthBucket* bucket);
     virtual void doubleSize();
-    bool canBeDoubled();
+//    bool canBeDoubled();
     void notifyNumberBuckets(int number);
 };
 
