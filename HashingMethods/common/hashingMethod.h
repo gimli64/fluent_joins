@@ -10,12 +10,14 @@ using std::size_t;
 class HashingMethod
 {
 public:
-    int numberDirEntries;
     HashingMethod();
     static HashingMethod* getInstance();
     size_t getHash(string value);
     string get(string value);
     void put(string value);
+
+    virtual int getNumberDirEntries();
+    virtual void setNumberDirEntries(int number);
 
 private:
     boost::hash<string> hasher;

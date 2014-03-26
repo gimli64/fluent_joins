@@ -13,6 +13,10 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
+    virtual int getNumberDirEntries();
+    virtual void setNumberDirEntries(int number);
+    double getAverageSize();
+
 private:
     static const double SPLIT_RATIO;
     int level;
@@ -21,11 +25,13 @@ private:
     int initialNumberDirectories;
     int bucketCapacity;
     int dirCapa;
+    int numberDirEntries;
     vector<ChainedDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 
     virtual string getValue(size_t key, string value);
     virtual void putValue(size_t key, string value);
+
     ChainedDirectory& getChainedDirectory(size_t key);
     int getLeftMostBits(size_t key);
     void incrementSplitIndex();

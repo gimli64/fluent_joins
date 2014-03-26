@@ -91,7 +91,7 @@ void Directory::split(DepthBucket* bucket)
     factory->writeBucket(newBucket1);
     factory->writeBucket(newBucket2);
 
-    factory->removeBucket(bucket);
+    factory->deleteBucket(bucket);
     delete newBucket1;
     delete newBucket2;
 }

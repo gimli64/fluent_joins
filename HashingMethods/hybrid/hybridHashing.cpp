@@ -4,7 +4,7 @@ const double HybridHashing::SPLIT_RATIO = 0.75;
 
 HybridHashing::HybridHashing()
     :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
-      dirCapa(ChainedDirectory::CAPA)
+      dirCapa(ChainedDirectory::CAPA), numberDirEntries(0)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
     directories.push_back(ChainedDirectory(this));
@@ -23,8 +23,6 @@ void HybridHashing::putValue(size_t key, string value)
 {
     getChainedDirectory(key).putValue(key, value);
     numberItems++;
-//    cout << getRatio() << endl;
-//    cout << numberDirEntries << endl;
     if (getRatio() > SPLIT_RATIO) {
         split();
     }
@@ -63,20 +61,15 @@ void HybridHashing::incrementSplitIndex()
 
 double HybridHashing::getRatio()
 {
-//    return ((double) numberItems) / (bucketCapacity * factory->getNumberBuckets());
     return ((double) numberItems * numberDirEntries) / (bucketCapacity * factory->getNumberBuckets() * dirCapa * directories.size());
 }
 
 void HybridHashing::split()
 {
-//    cout << "SPLIT" << endl;
-    ChainedDirectory &directoryToSplit = directories.at(nextSplitIndex);
-    vector<string> values = directoryToSplit.getAllValues();
-    factory->setNumberBuckets(factory->getNumberBuckets() - directoryToSplit.getNumberBuckets());
+    ChainedDirectory directoryToSplit = directories.at(nextSplitIndex);
+    vector<string> values = directoryToSplit.popAllValues();
     numberDirEntries -= directoryToSplit.getSize();
-//    cout << numberItems << endl;
     numberItems -= values.size();
-//    cout << numberItems << endl;
 
     directories.at(nextSplitIndex) = ChainedDirectory(this);
     directories.push_back(ChainedDirectory(this));
@@ -84,6 +77,16 @@ void HybridHashing::split()
 
     for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
         HashingMethod::put(*it);
+}
+
+int HybridHashing::getNumberDirEntries()
+{
+    return numberDirEntries;
+}
+
+void HybridHashing::setNumberDirEntries(int number)
+{
+    numberDirEntries = number;
 }
 
 string HybridHashing::className() const
@@ -109,4 +112,14 @@ std::ostream& HybridHashing::dump(std::ostream& strm) const
 ostream& operator<<(ostream& strm, const HybridHashing& dir)
 {
     return dir.dump(strm);
+}
+
+double HybridHashing::getAverageSize()
+{
+    int sizes = 0;
+    for(int i = 0; i < directories.size(); i++) {
+        sizes += directories.at(i).getSize();
+    }
+
+    return (double) sizes / directories.size();
 }

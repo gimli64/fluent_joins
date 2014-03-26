@@ -3,7 +3,7 @@
 HashingMethod* HashingMethod::instance = 0;
 
 HashingMethod::HashingMethod()
-    :numberItems(0), numberDirEntries(0)
+    :numberItems(0)
 {
 }
 
@@ -39,5 +39,14 @@ string HashingMethod::getValue(size_t key, string value)
 }
 
 void HashingMethod::putValue(size_t key, string value)
+{
+}
+
+int HashingMethod::getNumberDirEntries()
+{
+    return 0;
+}
+
+void HashingMethod::setNumberDirEntries(int number)
 {
 }

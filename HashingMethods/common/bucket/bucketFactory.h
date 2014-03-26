@@ -28,6 +28,7 @@ public:
     int getBucketCount();
     int getNumberBuckets();
     void setNumberBuckets(int number);
+    void decreaseNumberBuckets(int number);
 
 private:
     BucketFactory();
@@ -131,5 +132,11 @@ template<class T>
 void BucketFactory<T>::setNumberBuckets(int number)
 {
     numberBuckets = number;
+}
+
+template<class T>
+void BucketFactory<T>::decreaseNumberBuckets(int number)
+{
+    numberBuckets -= number;
 }
 #endif // BUCKETFACTORY_H

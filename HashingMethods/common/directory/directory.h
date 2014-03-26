@@ -34,7 +34,7 @@ protected:
 
     DepthBucket *getBucket(size_t key);
     virtual void doubleSize();
-    void split(DepthBucket *bucket);
+    virtual void split(DepthBucket *bucket);
 };
 
 ostream& operator<<(ostream&, const Directory&);
