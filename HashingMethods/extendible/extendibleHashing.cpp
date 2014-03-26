@@ -5,18 +5,18 @@ ExtendibleHashing::ExtendibleHashing()
 {
 }
 
-string ExtendibleHashing::getValue(size_t key, string value)
+string ExtendibleHashing::getValue(size_t hash, string key)
 {
     try {
-        return directory.getValue(key, value);
+        return directory.getValue(hash, key);
     } catch (string &e) {
         throw e;
     }
 }
 
-void ExtendibleHashing::putValue(size_t key, string value)
+void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 {
-    directory.putValue(key, value);
+    directory.putCouple(hash, couple);
 }
 
 string ExtendibleHashing::className() const

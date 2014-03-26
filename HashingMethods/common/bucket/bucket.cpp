@@ -6,20 +6,20 @@ Bucket::Bucket()
     elements.reserve(BUCKET_SIZE);
 }
 
-string Bucket::getValue(string value)
+string Bucket::getValue(string key)
 {
-    vector<string>::iterator it = find(elements.begin(), elements.end(), value);
+    vector<Couple>::iterator it = find(elements.begin(), elements.end(), key);
     if (it != elements.end()) {
-        return *it;
+        return (*it).value;
     } else {
         throw string("Value wasn't found");
     }
     return NULL;
 }
 
-void Bucket::putValue(string value)
+void Bucket::putCouple(Couple couple)
 {
-    elements.push_back(value);
+    elements.push_back(couple);
     // TODO : raise an error if the bucket is full !
 }
 
@@ -33,7 +33,7 @@ int Bucket::size()
     return elements.size();
 }
 
-vector<string> &Bucket::getAllValues()
+vector<Couple> &Bucket::getAllValues()
 {
     return elements;
 }
@@ -52,14 +52,14 @@ ostream& Bucket::dump(ostream &strm) const
 {
     string output = className() + name + " : [";
     for(int i = 0; i < elements.size(); i++) {
-        output += elements.at(i);
+        output += elements.at(i).value;
         if (i < elements.size() - 1)
             output += ", ";
     }
     return strm << output << "]";
 }
 
-std::ostream& operator<<(std::ostream& o, const Bucket& bucket)
+ostream& operator<<(ostream& o, const Bucket& bucket)
 {
     return bucket.dump(o);
 }

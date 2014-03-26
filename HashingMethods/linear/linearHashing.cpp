@@ -12,12 +12,12 @@ LinearHashing::LinearHashing()
     delete bucket;
 }
 
-string LinearHashing::getValue(size_t key, string value)
+string LinearHashing::getValue(size_t hash, string key)
 {
     string result;
-    ChainedBucket *bucket = getBucket(key);
+    ChainedBucket *bucket = getBucket(hash);
     try {
-        result = bucket->getValue(value);
+        result = bucket->getValue(key);
     } catch (string &e) {
         delete bucket;
         throw e;
@@ -27,10 +27,10 @@ string LinearHashing::getValue(size_t key, string value)
     return result;
 }
 
-void LinearHashing::putValue(size_t key, string value)
+void LinearHashing::putCouple(size_t hash, Couple couple)
 {
-    ChainedBucket *bucket = getBucket(key);
-    bucket->putValue(value);
+    ChainedBucket *bucket = getBucket(hash);
+    bucket->putCouple(couple);
     factory->writeBucket(bucket);
     numberItems++;
     if (getRatio() > SPLIT_RATIO) {
@@ -39,11 +39,11 @@ void LinearHashing::putValue(size_t key, string value)
     delete bucket;
 }
 
-ChainedBucket *LinearHashing::getBucket(size_t key)
+ChainedBucket *LinearHashing::getBucket(size_t hash)
 {
-    int bucketIndex = key & ((1 << level) - 1);
+    int bucketIndex = hash & ((1 << level) - 1);
     if (bucketIndex < nextSplitIndex)
-        bucketIndex = key & ((1 << level + 1) - 1);
+        bucketIndex = hash & ((1 << level + 1) - 1);
 
     return factory->readBucket(buckets.at(bucketIndex));
 }
@@ -66,7 +66,7 @@ void LinearHashing::incrementSplitIndex()
 void LinearHashing::split()
 {
     ChainedBucket *bucketToSplit = factory->readBucket(buckets.at(nextSplitIndex));
-    vector<string> values = bucketToSplit->getAllValues();
+    vector<Couple> values = bucketToSplit->getAllValues();
 
     ChainedBucket *newBucket1 = factory->createBucket();
     ChainedBucket *newBucket2 = factory->createBucket();
@@ -79,7 +79,7 @@ void LinearHashing::split()
     delete newBucket1;
     delete newBucket2;
 
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
+    for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
         put(*it);
     }
 }

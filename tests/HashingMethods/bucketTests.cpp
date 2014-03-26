@@ -7,7 +7,7 @@
 BOOST_AUTO_TEST_CASE(bucket_test)
 {
     Bucket bucket = Bucket();
-    bucket.putValue("0");
+    bucket.putCouple(Couple("0", "0"));
     BOOST_CHECK_EQUAL("0", bucket.getValue("0"));
     try {
         bucket.getValue("1");
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(bucket_test)
 
     bucket = Bucket();
     for (int i = 0; i < Bucket::BUCKET_SIZE; i++) {
-        bucket.putValue("0");
+        bucket.putCouple(Couple("0", "0"));
     }
     BOOST_CHECK_EQUAL(true, bucket.isFull());
     BOOST_CHECK_EQUAL("0", bucket.getAllValues()[0]);
@@ -38,11 +38,11 @@ BOOST_AUTO_TEST_CASE(chainedBucket_test)
 {
     ChainedBucket bucket = ChainedBucket();
     for (int i = 0; i < Bucket::BUCKET_SIZE; i++) {
-        bucket.putValue("0");
+        bucket.putCouple(Couple("0", "0"));
     }
     BOOST_CHECK_EQUAL(true, bucket.isFull());
     BOOST_CHECK_EQUAL(1, bucket.getChainCount());
-    bucket.putValue("1");
+    bucket.putCouple(Couple("1", "1"));
     BOOST_CHECK_EQUAL("1", bucket.getValue("1"));
     BOOST_CHECK_EQUAL(2, bucket.getChainCount());
 }

@@ -14,31 +14,31 @@ HashingMethod* HashingMethod::getInstance()
     return instance;
 }
 
-size_t HashingMethod::getHash(string value)
+size_t HashingMethod::getHash(string key)
 {
-    return hasher(value);
+    return hasher(key);
 }
 
-string HashingMethod::get(string value)
+string HashingMethod::get(string key)
 {
     try {
-        return getValue(getHash(value), value);
+        return getValue(getHash(key), key);
     } catch (string &e) {
         throw e;
     }
 }
 
-void HashingMethod::put(string value)
+void HashingMethod::put(Couple couple)
 {
-    putValue(getHash(value), value);
+    putCouple(getHash(couple.key), couple);
 }
 
-string HashingMethod::getValue(size_t key, string value)
+string HashingMethod::getValue(size_t hash, string key)
 {
     throw string("Value wasn't found");
 }
 
-void HashingMethod::putValue(size_t key, string value)
+void HashingMethod::putCouple(size_t hash, Couple couple)
 {
 }
 

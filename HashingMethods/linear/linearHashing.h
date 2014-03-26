@@ -22,9 +22,9 @@ private:
     vector<string> buckets;
     BucketFactory<ChainedBucket>* factory;
 
-    virtual string getValue(size_t key, string value);
-    virtual void putValue(size_t key, string value);
-    ChainedBucket *getBucket(size_t key);
+    virtual string getValue(size_t hash, string key);
+    virtual void putCouple(size_t hash, Couple couple);
+    ChainedBucket *getBucket(size_t hash);
     double getRatio();
     void incrementSplitIndex();
     void split();

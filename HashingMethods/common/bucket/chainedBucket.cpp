@@ -5,17 +5,17 @@ ChainedBucket::ChainedBucket()
 {
 }
 
-string ChainedBucket::getValue(string value)
+string ChainedBucket::getValue(string key)
 {
     string result;
     try {
-        result = Bucket::getValue(value);
+        result = Bucket::getValue(key);
     } catch(string &e) {
         if (!nextBucket) {
             throw e;
         } else {
             try {
-                result = nextBucket->getValue(value);
+                result = nextBucket->getValue(key);
             } catch (string &e) {
                 throw e;
             }
@@ -24,14 +24,14 @@ string ChainedBucket::getValue(string value)
     return result;
 }
 
-void ChainedBucket::putValue(string value) {
+void ChainedBucket::putCouple(Couple couple) {
     if (this->isFull()) {
         if (!nextBucket) {
             nextBucket = BucketFactory<ChainedBucket>::getInstance()->newBucket();
         }
-        nextBucket->putValue(value);
+        nextBucket->putCouple(couple);
     } else {
-        Bucket::putValue(value);
+        Bucket::putCouple(couple);
     }
 }
 
@@ -43,10 +43,10 @@ int ChainedBucket::getChainCount() {
     }
 }
 
-vector<string> ChainedBucket::getAllValues() {
-    vector<string> values = Bucket::getAllValues();
+vector<Couple> ChainedBucket::getAllValues() {
+    vector<Couple> values = Bucket::getAllValues();
     if (nextBucket) {
-        vector<string> nextBucketValues = nextBucket->getAllValues();
+        vector<Couple> nextBucketValues = nextBucket->getAllValues();
         values.insert(values.end(), nextBucketValues.begin(), nextBucketValues.end());
     }
     return values;

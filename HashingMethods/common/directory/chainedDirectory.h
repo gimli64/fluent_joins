@@ -16,7 +16,7 @@ public:
 
     int getNumberBuckets();
     int getChainCount();
-    vector<string> popAllValues();
+    vector<Couple> popAllValues();
 
     virtual string className() const;
 

@@ -10,40 +10,40 @@ HybridHashing::HybridHashing()
     directories.push_back(ChainedDirectory(this));
 }
 
-string HybridHashing::getValue(size_t key, string value)
+string HybridHashing::getValue(size_t hash, string key)
 {
     try {
-        return getChainedDirectory(key).getValue(key, value);
+        return getChainedDirectory(hash).getValue(hash, key);
     } catch (string &e) {
         throw e;
     }
 }
 
-void HybridHashing::putValue(size_t key, string value)
+void HybridHashing::putCouple(size_t hash, Couple couple)
 {
-    getChainedDirectory(key).putValue(key, value);
+    getChainedDirectory(hash).putCouple(hash, couple);
     numberItems++;
     if (getRatio() > SPLIT_RATIO) {
         split();
     }
 }
 
-ChainedDirectory &HybridHashing::getChainedDirectory(size_t key)
+ChainedDirectory &HybridHashing::getChainedDirectory(size_t hash)
 {
-    key = getLeftMostBits(key);
-    int pageIndex = key & mask;
+    hash = getLeftMostBits(hash);
+    int pageIndex = hash & mask;
     if (pageIndex < nextSplitIndex)
-        pageIndex = key & (mask | (1 << (31 - (level - 1))));
+        pageIndex = hash & (mask | (1 << (31 - (level - 1))));
 
     return directories.at(pageIndex);
 }
 
-int HybridHashing::getLeftMostBits(size_t key)
+int HybridHashing::getLeftMostBits(size_t hash)
 {
     unsigned int newKey = 0;
     for (int i = 31; i >= level-1; i--) {
-        newKey |= ((unsigned int)(key & (1 << 31)) >> i);
-        key <<=  1;
+        newKey |= ((unsigned int)(hash & (1 << 31)) >> i);
+        hash <<=  1;
     }
     return newKey;
 }
@@ -67,7 +67,7 @@ double HybridHashing::getRatio()
 void HybridHashing::split()
 {
     ChainedDirectory directoryToSplit = directories.at(nextSplitIndex);
-    vector<string> values = directoryToSplit.popAllValues();
+    vector<Couple> values = directoryToSplit.popAllValues();
     numberDirEntries -= directoryToSplit.getSize();
     numberItems -= values.size();
 
@@ -75,8 +75,8 @@ void HybridHashing::split()
     directories.push_back(ChainedDirectory(this));
     incrementSplitIndex();
 
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it)
-        HashingMethod::put(*it);
+    for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it)
+        put(*it);
 }
 
 int HybridHashing::getNumberDirEntries()

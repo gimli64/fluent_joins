@@ -1,6 +1,8 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
+#include "common/structure/couple.h"
+
 #include <vector>
 #include <boost/serialization/vector.hpp>
 
@@ -13,18 +15,18 @@ public:
     string name;
 
     Bucket();
-    string getValue(string value);
-    void putValue(string value);
+    string getValue(string key);
+    void putCouple(Couple couple);
     bool isFull();
     int size();
     int getChainCount();
-    vector<string>& getAllValues();
+    vector<Couple>& getAllValues();
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 
 private:
-    vector<string> elements;
+    vector<Couple> elements;
 
     friend class boost::serialization::access;
     template<class Archive>

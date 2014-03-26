@@ -29,11 +29,11 @@ private:
     vector<ChainedDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 
-    virtual string getValue(size_t key, string value);
-    virtual void putValue(size_t key, string value);
+    virtual string getValue(size_t hash, string key);
+    virtual void putCouple(size_t hash, Couple couple);
 
-    ChainedDirectory& getChainedDirectory(size_t key);
-    int getLeftMostBits(size_t key);
+    ChainedDirectory& getChainedDirectory(size_t hash);
+    int getLeftMostBits(size_t hash);
     void incrementSplitIndex();
     double getRatio();
     void split();

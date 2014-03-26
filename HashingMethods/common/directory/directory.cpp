@@ -9,12 +9,12 @@ Directory::Directory()
     delete bucket;
 }
 
-string Directory::getValue(size_t key, string value)
+string Directory::getValue(size_t hash, string key)
 {
     string result;
-    DepthBucket *bucket = getBucket(key);
+    DepthBucket *bucket = getBucket(hash);
     try {
-        result = bucket->getValue(value);
+        result = bucket->getValue(key);
     } catch (string &e) {
         delete bucket;
         throw e;
@@ -24,26 +24,26 @@ string Directory::getValue(size_t key, string value)
     return result;
 }
 
-void Directory::putValue(size_t key, string value)
+void Directory::putCouple(size_t hash, Couple couple)
 {
-    DepthBucket *bucket = getBucket(key);
+    DepthBucket *bucket = getBucket(hash);
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
         }
         if (bucket->getLocalDepth() < globalDepth) {
             split(bucket);
-            bucket = getBucket(key);
+            bucket = getBucket(hash);
         }
     }
-    bucket->putValue(value);
+    bucket->putCouple(couple);
     factory->writeBucket(bucket);
     delete bucket;
 }
 
-DepthBucket* Directory::getBucket(size_t key)
+DepthBucket* Directory::getBucket(size_t hash)
 {
-    return factory->readBucket(buckets.at(key & ((1 << globalDepth) - 1)));
+    return factory->readBucket(buckets.at(hash & ((1 << globalDepth) - 1)));
 }
 
 void Directory::doubleSize()
@@ -61,14 +61,14 @@ void Directory::split(DepthBucket* bucket)
     DepthBucket *newBucket1 = factory->createBucket();
     DepthBucket *newBucket2 = factory->createBucket();
     HashingMethod *hasher = HashingMethod::getInstance();
-    vector<string>& values = bucket->getAllValues();
+    vector<Couple>& values = bucket->getAllValues();
 
-    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        size_t h = hasher->getHash(*it) & ((1 << globalDepth) - 1);
+    for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
+        size_t h = hasher->getHash((*it).key) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
-            newBucket2->putValue(*it);
+            newBucket2->putCouple(*it);
         else
-            newBucket1->putValue(*it);
+            newBucket1->putCouple(*it);
     }
 
     vector<int> l;

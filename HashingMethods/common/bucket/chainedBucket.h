@@ -10,17 +10,16 @@ class ChainedBucket : public Bucket
 {
 public:
     ChainedBucket();
-    string getValue(string value);
-    void putValue(string value);
+    string getValue(string key);
+    void putCouple(Couple couple);
     int getChainCount();
-    vector<string> getAllValues();
+    vector<Couple> getAllValues();
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 
 private:
     ChainedBucket* nextBucket;
-    void notifyFactory();
 
     friend class boost::serialization::access;
     template<class Archive>
