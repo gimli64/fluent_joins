@@ -11,37 +11,4 @@ using namespace std;
 
 int main()
 {
-//    HybridHashing hasher = HybridHashing();
-//    BucketFactory<DepthBucket> *factory = BucketFactory<DepthBucket>::getInstance();
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("1");
-//    cout << hasher << endl;
-//    hasher.put("2");
-//    cout << hasher << endl;
-//    hasher.put("3");
-//    cout << hasher << endl;
-//    hasher.put("4");
-//    cout << hasher << endl;
-//    hasher.put("5");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
-//    hasher.put("0");
-//    cout << hasher << endl;
 }
