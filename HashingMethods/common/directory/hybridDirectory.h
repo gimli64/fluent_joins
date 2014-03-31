@@ -1,18 +1,18 @@
-#ifndef CHAINEDDIRECTORY_H
-#define CHAINEDDIRECTORY_H
+#ifndef HYBRIDDIRECTORY_H
+#define HYBRIDDIRECTORY_H
 
 #include "directory.h"
 #include "common/hashingMethod.h"
 
 using namespace std;
 
-class ChainedDirectory : public Directory
+class HybridDirectory : public Directory
 {
 public:
     static const int CAPA = 32;
 
-    ChainedDirectory();
-    ChainedDirectory(HashingMethod *hasher);
+    HybridDirectory();
+    HybridDirectory(HashingMethod *hasher);
 
     int getNumberBuckets();
     int getChainCount();
@@ -28,4 +28,4 @@ private:
     void notifyNumberBuckets(int number);
 };
 
-#endif // CHAINEDDIRECTORY_H
+#endif // HybridDirectory_H

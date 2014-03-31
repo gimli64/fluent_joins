@@ -18,7 +18,7 @@ target_link_libraries (main
                        ChainedBucket
                        DepthBucket
                        Directory
-                       ChainedDirectory
+                       HybridDirectory
                        HashingMethod
                        LinearHashing
                        ExtendibleHashing

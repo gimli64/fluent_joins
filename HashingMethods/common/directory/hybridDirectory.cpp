@@ -1,17 +1,17 @@
-#include "chainedDirectory.h"
+#include "hybridDirectory.h"
 
-ChainedDirectory::ChainedDirectory()
+HybridDirectory::HybridDirectory()
     :numberBuckets(1), Directory()
 {
 }
 
-ChainedDirectory::ChainedDirectory(HashingMethod *hasher)
+HybridDirectory::HybridDirectory(HashingMethod *hasher)
     :numberBuckets(1), Directory(), hasher(hasher)
 {
     hasher->setNumberDirEntries(hasher->getNumberDirEntries() + 1);
 }
 
-vector<Couple> ChainedDirectory::popAllValues()
+vector<Couple> HybridDirectory::popAllValues()
 {
     vector<Couple> elements;
     set<string> uniqueBuckets = set<string>(buckets.begin(), buckets.end());
@@ -25,24 +25,24 @@ vector<Couple> ChainedDirectory::popAllValues()
     return elements;
 }
 
-void ChainedDirectory::split(DepthBucket* bucket)
+void HybridDirectory::split(DepthBucket* bucket)
 {
     Directory::split(bucket);
     numberBuckets++;
 }
 
-void ChainedDirectory::doubleSize()
+void HybridDirectory::doubleSize()
 {
     hasher->setNumberDirEntries(hasher->getNumberDirEntries() + buckets.size());
     Directory::doubleSize();
 }
 
-int ChainedDirectory::getNumberBuckets()
+int HybridDirectory::getNumberBuckets()
 {
     return numberBuckets;
 }
 
-string ChainedDirectory::className() const
+string HybridDirectory::className() const
 {
-    return "ChainedDirectory ";
+    return "HybridDirectory ";
 }

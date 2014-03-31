@@ -15,7 +15,7 @@ target_link_libraries (BucketTests
 
 target_link_libraries (DirectoryTests
                        Directory
-                       ChainedDirectory
+                       HybridDirectory
                        HashingMethod
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}

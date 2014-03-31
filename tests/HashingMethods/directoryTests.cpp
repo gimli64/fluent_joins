@@ -1,5 +1,5 @@
 #include "common/directory/directory.h"
-#include "common/directory/chainedDirectory.h"
+#include "common/directory/hybridDirectory.h"
 #include "common/hashingMethod.h"
 #define BOOST_TEST_MODULE directoryTests
 #include <boost/test/unit_test.hpp>
@@ -26,10 +26,10 @@ BOOST_AUTO_TEST_CASE(directory_test)
     BOOST_CHECK_EQUAL(1, directory.getGlobalDepth());
 }
 
-BOOST_AUTO_TEST_CASE(chainedDirectory_test)
+BOOST_AUTO_TEST_CASE(HybridDirectory_test)
 {
     HashingMethod *hasher = HashingMethod::getInstance();
-    ChainedDirectory directory = ChainedDirectory(hasher);
+    HybridDirectory directory = HybridDirectory(hasher);
     size_t key = hasher->getHash("0");
     for (int i = 0; i < Bucket::BUCKET_SIZE; i++) {
         directory.putCouple(key, Couple("0", "0"));

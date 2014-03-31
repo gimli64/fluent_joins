@@ -1,7 +1,7 @@
 #ifndef HYBRIDHASHING_H
 #define HYBRIDHASHING_H
 #include "common/hashingMethod.h"
-#include "common/directory/chainedDirectory.h"
+#include "common/directory/hybridDirectory.h"
 
 using std::cout;
 using std::endl;
@@ -26,13 +26,13 @@ private:
     int bucketCapacity;
     int dirCapa;
     int numberDirEntries;
-    vector<ChainedDirectory> directories;
+    vector<HybridDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 
     virtual string getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
-    ChainedDirectory& getChainedDirectory(size_t hash);
+    HybridDirectory& getHybridDirectory(size_t hash);
     int getLeftMostBits(size_t hash);
     void incrementSplitIndex();
     double getRatio();

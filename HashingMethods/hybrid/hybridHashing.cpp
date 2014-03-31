@@ -4,16 +4,16 @@ const double HybridHashing::SPLIT_RATIO = 0.75;
 
 HybridHashing::HybridHashing()
     :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
-      dirCapa(ChainedDirectory::CAPA), numberDirEntries(0)
+      dirCapa(HybridDirectory::CAPA), numberDirEntries(0)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
-    directories.push_back(ChainedDirectory(this));
+    directories.push_back(HybridDirectory(this));
 }
 
 string HybridHashing::getValue(size_t hash, string key)
 {
     try {
-        return getChainedDirectory(hash).getValue(hash, key);
+        return getHybridDirectory(hash).getValue(hash, key);
     } catch (string &e) {
         throw e;
     }
@@ -21,14 +21,14 @@ string HybridHashing::getValue(size_t hash, string key)
 
 void HybridHashing::putCouple(size_t hash, Couple couple)
 {
-    getChainedDirectory(hash).putCouple(hash, couple);
+    getHybridDirectory(hash).putCouple(hash, couple);
     numberItems++;
     if (getRatio() > SPLIT_RATIO) {
         split();
     }
 }
 
-ChainedDirectory &HybridHashing::getChainedDirectory(size_t hash)
+HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
 {
     hash = getLeftMostBits(hash);
     int pageIndex = hash & mask;
@@ -66,13 +66,13 @@ double HybridHashing::getRatio()
 
 void HybridHashing::split()
 {
-    ChainedDirectory directoryToSplit = directories.at(nextSplitIndex);
+    HybridDirectory directoryToSplit = directories.at(nextSplitIndex);
     vector<Couple> values = directoryToSplit.popAllValues();
     numberDirEntries -= directoryToSplit.getSize();
     numberItems -= values.size();
 
-    directories.at(nextSplitIndex) = ChainedDirectory(this);
-    directories.push_back(ChainedDirectory(this));
+    directories.at(nextSplitIndex) = HybridDirectory(this);
+    directories.push_back(HybridDirectory(this));
     incrementSplitIndex();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it)
