@@ -4,9 +4,18 @@ Couple::Couple()
 {
 }
 
-Couple::Couple(string key, string value)
-    :key(key), value(value)
+Couple::Couple(string key, vector<string>& values)
+    :key(key), values(values)
 {
+}
+
+
+Couple::Couple(string key, tuple tuple)
+    :key(key)
+{
+    for(int i = 0; i < tuple.size(); i++) {
+        values.push_back(tuple[i].c_str());
+    }
 }
 
 bool operator==(const Couple &lhs, const string key)

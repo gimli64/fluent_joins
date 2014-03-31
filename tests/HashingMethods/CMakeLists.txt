@@ -15,6 +15,7 @@ target_link_libraries (BucketTests
 
 target_link_libraries (DirectoryTests
                        Directory
+                       BucketFactory
                        HybridDirectory
                        HashingMethod
                        ${Boost_FILESYSTEM_LIBRARY}
@@ -24,6 +25,7 @@ target_link_libraries (DirectoryTests
 
 target_link_libraries (HashingMethodTests
                        HashingMethod
+                       BucketFactory
                        ExtendibleHashing
                        LinearHashing
                        HybridHashing

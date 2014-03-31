@@ -32,7 +32,7 @@ private:
     vector<HybridDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 
-    virtual string getValue(size_t hash, string key);
+    virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
     HybridDirectory& getHybridDirectory(size_t hash);

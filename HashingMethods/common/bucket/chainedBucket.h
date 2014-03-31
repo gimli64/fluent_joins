@@ -10,7 +10,7 @@ class ChainedBucket : public Bucket
 {
 public:
     ChainedBucket();
-    string getValue(string key);
+    vector<string> getValue(string key);
     void putCouple(Couple couple);
     int getChainCount();
     vector<Couple> getAllValues();

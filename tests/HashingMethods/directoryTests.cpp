@@ -15,14 +15,18 @@ BOOST_AUTO_TEST_CASE(directory_test)
     Directory directory;
     BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
     size_t key = hasher->getHash("0");
-    directory.putCouple(key, Couple("0", "0"));
-    BOOST_CHECK_EQUAL("0", directory.getValue(key, "0"));
+    vector<string> values;
+    values.push_back("0");
+    values.push_back("1");
+    directory.putCouple(key, Couple("0", values));
+    BucketFactory<DepthBucket>::getInstance()->writeAll(directory.getBuckets());
+    BOOST_CHECK_EQUAL("1", directory.getValue(key, "0").at(1));
 
     for (int i = 1; i < Bucket::BUCKET_SIZE; i++) {
-        directory.putCouple(key, Couple("0", "0"));
+        directory.putCouple(key, Couple("0", values));
     }
     BOOST_CHECK_EQUAL(0, directory.getGlobalDepth());
-    directory.putCouple(key, Couple("0", "0"));
+    directory.putCouple(key, Couple("0", values));
     BOOST_CHECK_EQUAL(1, directory.getGlobalDepth());
 }
 
@@ -31,10 +35,14 @@ BOOST_AUTO_TEST_CASE(HybridDirectory_test)
     HashingMethod *hasher = HashingMethod::getInstance();
     HybridDirectory directory = HybridDirectory(hasher);
     size_t key = hasher->getHash("0");
+    vector<string> values;
+    values.push_back("0");
+    values.push_back("1");
     for (int i = 0; i < Bucket::BUCKET_SIZE; i++) {
-        directory.putCouple(key, Couple("0", "0"));
+        directory.putCouple(key, Couple("0", values));
     }
 
-    BOOST_CHECK_EQUAL("0", directory.getValue(key, "0"));
+    BucketFactory<DepthBucket>::getInstance()->writeAll(directory.getBuckets());
+    BOOST_CHECK_EQUAL("1", directory.getValue(key, "0").at(1));
     // Todo, reimplement the whole test
 }

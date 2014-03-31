@@ -6,15 +6,14 @@ Bucket::Bucket()
     elements.reserve(BUCKET_SIZE);
 }
 
-string Bucket::getValue(string key)
+vector<string> Bucket::getValue(string key)
 {
     vector<Couple>::iterator it = find(elements.begin(), elements.end(), key);
     if (it != elements.end()) {
-        return (*it).value;
+        return (*it).values;
     } else {
         throw string("Value wasn't found");
     }
-    return NULL;
 }
 
 void Bucket::putCouple(Couple couple)
@@ -52,7 +51,7 @@ ostream& Bucket::dump(ostream &strm) const
 {
     string output = className() + name + " : [";
     for(int i = 0; i < elements.size(); i++) {
-        output += elements.at(i).value;
+        output += elements.at(i).key;
         if (i < elements.size() - 1)
             output += ", ";
     }

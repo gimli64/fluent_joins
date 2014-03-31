@@ -12,19 +12,18 @@ LinearHashing::LinearHashing()
     bucketNames.push_back(bucket->name);
 }
 
-string LinearHashing::getValue(size_t hash, string key)
+vector<string> LinearHashing::getValue(size_t hash, string key)
 {
-    string result;
     ChainedBucket *bucket = getBucketFromName(hash);
     try {
-        result = bucket->getValue(key);
+        vector<string> result = bucket->getValue(key);
+        delete bucket;
+        return result;
+
     } catch (string &e) {
         delete bucket;
         throw e;
     }
-
-    delete bucket;
-    return result;
 }
 
 void LinearHashing::putCouple(size_t hash, Couple couple)

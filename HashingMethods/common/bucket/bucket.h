@@ -15,7 +15,7 @@ public:
     string name;
 
     Bucket();
-    string getValue(string key);
+    vector<string> getValue(string key);
     void putCouple(Couple couple);
     bool isFull();
     int size();

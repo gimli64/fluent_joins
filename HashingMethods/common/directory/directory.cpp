@@ -9,19 +9,18 @@ Directory::Directory()
     bucketNames.push_back(bucket->name);
 }
 
-string Directory::getValue(size_t hash, string key)
+vector<string> Directory::getValue(size_t hash, string key)
 {
-    string result;
     DepthBucket *bucket = getBucketFromName(hash);
     try {
-        result = bucket->getValue(key);
+        vector<string> result = bucket->getValue(key);
+        delete bucket;
+        return result;
+
     } catch (string &e) {
         delete bucket;
         throw e;
     }
-
-    delete bucket;
-    return result;
 }
 
 void Directory::putCouple(size_t hash, Couple couple)

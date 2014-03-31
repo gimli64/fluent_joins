@@ -10,7 +10,7 @@ HybridHashing::HybridHashing()
     directories.push_back(HybridDirectory(this));
 }
 
-string HybridHashing::getValue(size_t hash, string key)
+vector<string> HybridHashing::getValue(size_t hash, string key)
 {
     try {
         return getHybridDirectory(hash).getValue(hash, key);

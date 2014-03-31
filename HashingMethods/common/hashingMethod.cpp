@@ -19,7 +19,7 @@ size_t HashingMethod::getHash(string key)
     return hasher(key);
 }
 
-string HashingMethod::get(string key)
+vector<string> HashingMethod::get(string key)
 {
     try {
         return getValue(getHash(key), key);
@@ -33,7 +33,7 @@ void HashingMethod::put(Couple couple)
     putCouple(getHash(couple.key), couple);
 }
 
-string HashingMethod::getValue(size_t hash, string key)
+vector<string> HashingMethod::getValue(size_t hash, string key)
 {
     throw string("Value wasn't found");
 }

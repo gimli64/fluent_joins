@@ -20,7 +20,7 @@ public:
 
 private:
     Directory directory;
-    virtual string getValue(size_t hash, string key);
+    virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 };
 

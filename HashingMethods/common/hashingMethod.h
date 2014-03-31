@@ -15,7 +15,7 @@ public:
     HashingMethod();
     static HashingMethod* getInstance();
     size_t getHash(string key);
-    string get(string key);
+    vector<string> get(string key);
     void put(Couple couple);
 
     virtual int getNumberDirEntries();
@@ -25,7 +25,7 @@ private:
     boost::hash<string> hasher;
     static HashingMethod *instance;
 
-    virtual string getValue(size_t hash, string key);
+    virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
 protected:

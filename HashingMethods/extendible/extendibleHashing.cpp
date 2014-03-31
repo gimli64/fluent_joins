@@ -5,7 +5,7 @@ ExtendibleHashing::ExtendibleHashing()
 {
 }
 
-string ExtendibleHashing::getValue(size_t hash, string key)
+vector<string> ExtendibleHashing::getValue(size_t hash, string key)
 {
     try {
         return directory.getValue(hash, key);

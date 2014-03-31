@@ -5,23 +5,21 @@ ChainedBucket::ChainedBucket()
 {
 }
 
-string ChainedBucket::getValue(string key)
+vector<string> ChainedBucket::getValue(string key)
 {
-    string result;
     try {
-        result = Bucket::getValue(key);
+        return Bucket::getValue(key);
     } catch(string &e) {
         if (!nextBucket) {
             throw e;
         } else {
             try {
-                result = nextBucket->getValue(key);
+                return nextBucket->getValue(key);
             } catch (string &e) {
                 throw e;
             }
         }
     }
-    return result;
 }
 
 void ChainedBucket::putCouple(Couple couple) {

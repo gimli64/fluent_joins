@@ -2,17 +2,20 @@
 #define COUPLE_H
 
 #include <string>
-#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
+#include <pqxx/pqxx>
 
 using namespace std;
+using namespace pqxx;
 
 class Couple
 {
 public:
     Couple();
-    Couple(string key, string value);
+    Couple(string key, tuple tuple);
+    Couple(string key, vector<string> &values);
     string key;
-    string value;
+    vector<string> values;
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
@@ -23,7 +26,7 @@ private:
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & key;
-        ar & value;
+        ar & values;
     }
 };
 

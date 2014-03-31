@@ -8,11 +8,10 @@
 #include <vector>
 #include <fstream>
 #include <sys/resource.h>
+#include <pqxx/pqxx>
 
-using std::ifstream;
-using std::string;
-using std::getline;
-using std::cout; using std::endl;
+using namespace std;
+using namespace pqxx;
 
 class Comparer
 {

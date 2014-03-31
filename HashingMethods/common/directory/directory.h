@@ -19,7 +19,7 @@ public:
     Directory();
 
     void init();
-    string getValue(size_t hash, string key);
+    vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
     int getGlobalDepth();
     int getSize();
