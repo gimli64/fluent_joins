@@ -14,12 +14,11 @@ HybridDirectory::HybridDirectory(HashingMethod *hasher)
 vector<Couple> HybridDirectory::popAllValues()
 {
     vector<Couple> elements;
-    set<string> uniqueBuckets = set<string>(buckets.begin(), buckets.end());
-    for(set<string>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
-        DepthBucket* bucket = factory->readBucket(*it);
-        vector<Couple>& values = bucket->getAllValues();
+    set<DepthBucket*> uniqueBuckets = set<DepthBucket*>(buckets.begin(), buckets.end());
+    for(set<DepthBucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
+        vector<Couple>& values = (*it)->getAllValues();
         elements.insert(elements.end(), values.begin(), values.end());
-        factory->deleteBucket(bucket);
+        factory->deleteBucket(*it);
     }
 
     return elements;

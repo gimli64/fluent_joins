@@ -5,6 +5,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/lexical_cast.hpp>
+#include <vector>
 
 using namespace std;
 using namespace boost;
@@ -20,15 +21,17 @@ public:
     void writeBucket(T *bucket);
 
     T* newBucket();     // Creation without serialization
-    T* createBucket();  // Creation and serialization
-    void deleteBucket(T *bucket);   // Remove and change number buckets
-    void removeBucket(T *bucket);   // Remove without changing number buckets
+    void deleteBucket(T *bucket);   // Delete on memory change number buckets
+    void removeBucket(T *bucket);   // Remove on disk and change number buckets
+
+    // Used at the end of a hash table initialization, serialize all its buckets
+    // and delete the memory objects
+    void writeAll(vector<T*> buckets);
     void removeAll();
 
     int getBucketCount();
     int getNumberBuckets();
     void setNumberBuckets(int number);
-    void decreaseNumberBuckets(int number);
 
 private:
     BucketFactory();
@@ -87,23 +90,16 @@ T* BucketFactory<T>::newBucket()
 }
 
 template<class T>
-T* BucketFactory<T>::createBucket()
-{
-    T *bucket = newBucket();
-    writeBucket(bucket);
-    return bucket;
-}
-
-template<class T>
 void BucketFactory<T>::deleteBucket(T *bucket)
 {
     numberBuckets -= bucket->getChainCount();
-    removeBucket(bucket);
+    delete bucket;
 }
 
 template<class T>
 void BucketFactory<T>::removeBucket(T *bucket)
 {
+    numberBuckets -= bucket->getChainCount();
     remove(bucket->name.c_str());
     delete bucket;
 }
@@ -114,6 +110,14 @@ void BucketFactory<T>::removeAll()
     numberBuckets = 0;
     bucketCount = 0;
     system("exec rm /tmp/buckets/*");
+}
+
+template<class T>
+void BucketFactory<T>::writeAll(vector<T*> buckets)
+{
+    for(typename vector<T*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+        writeBucket(*it);
+    }
 }
 
 template<class T>
@@ -132,11 +136,5 @@ template<class T>
 void BucketFactory<T>::setNumberBuckets(int number)
 {
     numberBuckets = number;
-}
-
-template<class T>
-void BucketFactory<T>::decreaseNumberBuckets(int number)
-{
-    numberBuckets -= number;
 }
 #endif // BUCKETFACTORY_H

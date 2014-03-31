@@ -79,6 +79,24 @@ void HybridHashing::split()
         put(*it);
 }
 
+vector<DepthBucket *> HybridHashing::getBuckets()
+{
+    vector<DepthBucket*> buckets;
+    for(int i = 0; i < directories.size(); i++) {
+        vector<DepthBucket*> &dir_buckets = directories.at(i).getBuckets();
+        buckets.insert(buckets.end(), dir_buckets.begin(), dir_buckets.end());
+    }
+
+    return buckets;
+}
+
+void HybridHashing::clearBuckets()
+{
+    for(int i = 0; i < directories.size(); i++) {
+        directories.at(i).clearBuckets();
+    }
+}
+
 int HybridHashing::getNumberDirEntries()
 {
     return numberDirEntries;

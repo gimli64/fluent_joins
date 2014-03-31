@@ -14,6 +14,16 @@ string ExtendibleHashing::getValue(size_t hash, string key)
     }
 }
 
+vector<DepthBucket *> ExtendibleHashing::getBuckets()
+{
+    return directory.getBuckets();
+}
+
+void ExtendibleHashing::clearBuckets()
+{
+    directory.clearBuckets();
+}
+
 void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 {
     directory.putCouple(hash, couple);

@@ -13,6 +13,9 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
+    vector<DepthBucket *> getBuckets();
+    void clearBuckets();
+
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
     double getAverageSize();

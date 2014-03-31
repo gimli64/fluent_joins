@@ -15,6 +15,9 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
+    vector<DepthBucket*> getBuckets();
+    void clearBuckets();
+
 private:
     Directory directory;
     virtual string getValue(size_t hash, string key);

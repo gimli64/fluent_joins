@@ -24,15 +24,21 @@ public:
     int getGlobalDepth();
     int getSize();
 
+    vector<DepthBucket*> &getBuckets();
+    void clearBuckets();
+
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
 protected:
     int globalDepth;
-    BucketFactory<DepthBucket>* factory;
-    vector<string> buckets;
+    BucketFactory<DepthBucket> *factory;
+    vector<DepthBucket*> buckets;
+    vector<string> bucketNames;
 
     DepthBucket *getBucket(size_t hash);
+    DepthBucket *getBucketFromName(size_t hash);
+
     virtual void doubleSize();
     virtual void split(DepthBucket *bucket);
 };
