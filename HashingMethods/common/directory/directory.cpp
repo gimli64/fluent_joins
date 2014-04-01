@@ -1,7 +1,11 @@
 #include "directory.h"
 
 Directory::Directory()
-    :globalDepth(0), buckets()
+{
+}
+
+Directory::Directory(HashingMethod *hasher)
+    :hasher(hasher), globalDepth(0), buckets()
 {
     factory = BucketFactory<DepthBucket>::getInstance();
     DepthBucket *bucket = factory->newBucket();
@@ -45,7 +49,7 @@ DepthBucket* Directory::getBucket(size_t hash)
 
 DepthBucket* Directory::getBucketFromName(size_t hash)
 {
-    return factory->readBucket(bucketNames.at(hash & ((1 << globalDepth) - 1)));
+    return factory->readBucket(hasher->getBucketPath() + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
 
@@ -65,7 +69,6 @@ void Directory::split(DepthBucket* bucket)
 {
     DepthBucket *newBucket1 = factory->newBucket();
     DepthBucket *newBucket2 = factory->newBucket();
-    HashingMethod *hasher = HashingMethod::getInstance();
     vector<Couple>& values = bucket->getAllValues();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {

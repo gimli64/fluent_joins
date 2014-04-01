@@ -17,6 +17,7 @@ class Directory
 {
 public:
     Directory();
+    Directory(HashingMethod *hasher);
 
     void init();
     vector<string> getValue(size_t hash, string key);
@@ -31,16 +32,19 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
 protected:
-    int globalDepth;
     BucketFactory<DepthBucket> *factory;
+    HashingMethod *hasher;
     vector<DepthBucket*> buckets;
+    virtual void doubleSize();
+    virtual void split(DepthBucket *bucket);
+
+private:
+    int globalDepth;
     vector<string> bucketNames;
+    string bucketPath;
 
     DepthBucket *getBucket(size_t hash);
     DepthBucket *getBucketFromName(size_t hash);
-
-    virtual void doubleSize();
-    virtual void split(DepthBucket *bucket);
 };
 
 ostream& operator<<(ostream&, const Directory&);

@@ -18,7 +18,7 @@ public:
     static BucketFactory<T>* getInstance();
 
     T* readBucket(string bucketFile) const;
-    void writeBucket(T *bucket);
+    void writeBucket(T *bucket, string &bucketPrefix);
 
     T* newBucket();     // Creation without serialization
     void deleteBucket(T *bucket);   // Delete on memory change number buckets
@@ -26,8 +26,8 @@ public:
 
     // Used at the end of a hash table initialization, serialize all its buckets
     // and delete the memory objects
-    void writeAll(vector<T*> buckets);
-    void removeAll();
+    void writeAll(vector<T*> buckets, string bucketPrefix);
+    void removeAll(string bucketPrefix);
 
     int getBucketCount();
     int getNumberBuckets();
@@ -41,7 +41,6 @@ private:
     int bucketCount;
     int numberBuckets;
     const string constPrefix;
-    string bucketNamePrefix;
 };
 
 template<class T>
@@ -57,7 +56,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketNamePrefix()
+    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/")
 {
 }
 
@@ -66,7 +65,7 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 {
     T* bucket = new T();
     {
-        ifstream ifs((constPrefix + bucketNamePrefix + bucketFile).c_str());
+        ifstream ifs((constPrefix + bucketFile).c_str());
         text_iarchive ia(ifs);
         ia >> *bucket;
     }
@@ -74,9 +73,9 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 }
 
 template<class T>
-void BucketFactory<T>::writeBucket(T *bucket)
+void BucketFactory<T>::writeBucket(T *bucket, string &bucketPrefix)
 {
-    ofstream ofs((constPrefix + bucketNamePrefix + bucket->name).c_str());
+    ofstream ofs((constPrefix + bucketPrefix + bucket->name).c_str());
     {
         text_oarchive oa(ofs);
         oa << *bucket;
@@ -109,18 +108,18 @@ void BucketFactory<T>::removeBucket(T *bucket)
 }
 
 template<class T>
-void BucketFactory<T>::removeAll()
+void BucketFactory<T>::removeAll(string bucketPrefix)
 {
     numberBuckets = 0;
     bucketCount = 0;
-    system(("exec find " + constPrefix + bucketNamePrefix + " -name 'bucket*' | xargs rm").c_str());
+    system(("exec find " + constPrefix + bucketPrefix + " -name 'bucket*' | xargs rm").c_str());
 }
 
 template<class T>
-void BucketFactory<T>::writeAll(vector<T*> buckets)
+void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPrefix)
 {
     for(typename vector<T*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        writeBucket(*it);
+        writeBucket(*it, bucketPrefix);
     }
 }
 
@@ -142,10 +141,5 @@ void BucketFactory<T>::setNumberBuckets(int number)
     numberBuckets = number;
 }
 
-template<class T>
-void BucketFactory<T>::setBucketNamePrefix(string prefix)
-{
-    bucketNamePrefix = prefix;
-}
 
 #endif // BUCKETFACTORY_H

@@ -23,14 +23,14 @@ int main()
         cout << "\n### Extendible Hashing ###" << endl;
         tStart = clock();
         ExtendibleHashing ext_hasher = ExtendibleHashing();
+        ext_hasher.setBucketPath("extendible/");
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             ext_hasher.put(Couple(row[0].c_str(), row));
         }
         cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
         cout << "serializing" << endl;
-        depthFactory->setBucketNamePrefix("extendible/");
-        depthFactory->writeAll(ext_hasher.getBuckets());
+        depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
         ext_hasher.clearBuckets();
 
         cout << "Getting all values" << endl;
@@ -43,20 +43,20 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        depthFactory->removeAll();
+//        depthFactory->removeAll();
 
 
         cout << "\n\n### Hybrid Hashing ###" << endl;
         tStart = clock();
         HybridHashing hyb_hasher = HybridHashing();
+        hyb_hasher.setBucketPath("hybrid/");
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             hyb_hasher.put(Couple(row[0].c_str(), row));
         }
         cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
         cout << "serializing" << endl;
-        depthFactory->setBucketNamePrefix("hybrid/");
-        depthFactory->writeAll(hyb_hasher.getBuckets());
+        depthFactory->writeAll(hyb_hasher.getBuckets(), hyb_hasher.getBucketPath());
         hyb_hasher.clearBuckets();
 
         cout << "Getting all values" << endl;
@@ -69,21 +69,21 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        depthFactory->removeAll();
+//        depthFactory->removeAll();
 
 
 
         cout << "\n\n### Linear Hashing ###" << endl;
         tStart = clock();
         LinearHashing lin_hasher = LinearHashing();
+        lin_hasher.setBucketPath("linear/");
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             lin_hasher.put(Couple(row[0].c_str(), row));
         }
         cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
         cout << "serializing" << endl;
-        chainedFactory->setBucketNamePrefix("linear/");
-        chainedFactory->writeAll(lin_hasher.getBuckets());
+        chainedFactory->writeAll(lin_hasher.getBuckets(), lin_hasher.getBucketPath());
         lin_hasher.clearBuckets();
 
         cout << "Getting all values" << endl;
@@ -96,7 +96,7 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        chainedFactory->removeAll();
+//        chainedFactory->removeAll();
 
 
         cout << "Operation done successfully" << endl;

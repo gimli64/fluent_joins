@@ -22,7 +22,7 @@ public:
 
 private:
     int numberBuckets;
-    HashingMethod *hasher;
+
     virtual void split(DepthBucket* bucket);
     virtual void doubleSize();
     void notifyNumberBuckets(int number);

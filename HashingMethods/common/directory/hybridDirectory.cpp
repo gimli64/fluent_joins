@@ -6,7 +6,7 @@ HybridDirectory::HybridDirectory()
 }
 
 HybridDirectory::HybridDirectory(HashingMethod *hasher)
-    :numberBuckets(1), Directory(), hasher(hasher)
+    :numberBuckets(1), Directory(hasher)
 {
     hasher->setNumberDirEntries(hasher->getNumberDirEntries() + 1);
 }

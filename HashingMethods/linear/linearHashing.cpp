@@ -8,6 +8,7 @@ LinearHashing::LinearHashing()
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
     ChainedBucket *bucket = factory->newBucket();
+    bucket->bucketPath = bucketPath;
     buckets.push_back(bucket);
     bucketNames.push_back(bucket->name);
 }
@@ -51,7 +52,7 @@ ChainedBucket *LinearHashing::getBucketFromName(size_t hash)
     if (bucketIndex < nextSplitIndex)
         bucketIndex = hash & ((1 << level + 1) - 1);
 
-    return factory->readBucket(bucketNames.at(bucketIndex));
+    return factory->readBucket(bucketPath + bucketNames.at(bucketIndex));
 }
 
 double LinearHashing::getRatio()
@@ -75,7 +76,9 @@ void LinearHashing::split()
     vector<Couple> values = bucketToSplit->getAllValues();
 
     ChainedBucket *newBucket1 = factory->newBucket();
+    newBucket1->bucketPath = bucketPath;
     ChainedBucket *newBucket2 = factory->newBucket();
+    newBucket2->bucketPath = bucketPath;
     buckets.at(nextSplitIndex) = newBucket1;
     buckets.push_back(newBucket2);
     bucketNames.at(nextSplitIndex) = newBucket1->name;
@@ -92,7 +95,12 @@ void LinearHashing::split()
 
 vector<ChainedBucket*> LinearHashing::getBuckets()
 {
-    return buckets;
+    vector<ChainedBucket *> allBuckets;
+    for(vector<ChainedBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+        vector<ChainedBucket *> chain = (*it)->getChain();
+        allBuckets.insert(allBuckets.end(), chain.begin(), chain.end());
+    }
+    return allBuckets;
 }
 
 void LinearHashing::clearBuckets()

@@ -1,17 +1,8 @@
 #include "hashingMethod.h"
 
-HashingMethod* HashingMethod::instance = 0;
-
 HashingMethod::HashingMethod()
     :numberItems(0)
 {
-}
-
-HashingMethod* HashingMethod::getInstance()
-{
-    if (!instance)
-        instance = new HashingMethod();
-    return instance;
 }
 
 size_t HashingMethod::getHash(string key)
@@ -49,4 +40,14 @@ int HashingMethod::getNumberDirEntries()
 
 void HashingMethod::setNumberDirEntries(int number)
 {
+}
+
+string HashingMethod::getBucketPath()
+{
+    return bucketPath;
+}
+
+void HashingMethod::setBucketPath(string path)
+{
+    bucketPath = path;
 }

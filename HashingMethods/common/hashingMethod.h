@@ -13,7 +13,6 @@ class HashingMethod
 {
 public:
     HashingMethod();
-    static HashingMethod* getInstance();
     size_t getHash(string key);
     vector<string> get(string key);
     void put(Couple couple);
@@ -21,9 +20,14 @@ public:
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
 
+    string getBucketPath();
+    void setBucketPath(string path);
+
+protected:
+    string bucketPath;
+
 private:
     boost::hash<string> hasher;
-    static HashingMethod *instance;
 
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);

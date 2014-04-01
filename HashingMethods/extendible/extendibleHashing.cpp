@@ -1,7 +1,7 @@
 #include "extendibleHashing.h"
 
 ExtendibleHashing::ExtendibleHashing()
-    :directory(Directory()), HashingMethod()
+    :directory(Directory(this)), HashingMethod()
 {
 }
 

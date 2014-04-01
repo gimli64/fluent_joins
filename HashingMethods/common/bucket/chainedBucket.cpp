@@ -5,27 +5,39 @@ ChainedBucket::ChainedBucket()
 {
 }
 
+ChainedBucket::~ChainedBucket()
+{
+    delete nextBucket;
+}
+
 vector<string> ChainedBucket::getValue(string key)
 {
+    vector<string> result;
     try {
-        return Bucket::getValue(key);
+        result = Bucket::getValue(key);
     } catch(string &e) {
-        if (!nextBucket) {
+        if (nextBucketName == "") {
             throw e;
         } else {
             try {
-                return nextBucket->getValue(key);
+                ChainedBucket *bucket = BucketFactory<ChainedBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
+                result = bucket->getValue(key);
+                delete bucket;
             } catch (string &e) {
                 throw e;
+//                delete bucket;
             }
         }
     }
+    return result;
 }
 
 void ChainedBucket::putCouple(Couple couple) {
     if (this->isFull()) {
         if (!nextBucket) {
             nextBucket = BucketFactory<ChainedBucket>::getInstance()->newBucket();
+            nextBucket->bucketPath = bucketPath;
+            nextBucketName = nextBucket->name;
         }
         nextBucket->putCouple(couple);
     } else {
@@ -39,6 +51,16 @@ int ChainedBucket::getChainCount() {
     } else {
         return 1;
     }
+}
+
+vector<ChainedBucket *> ChainedBucket::getChain() {
+    vector<ChainedBucket *> chain;
+    chain.push_back(this);
+    if (nextBucket) {
+        vector<ChainedBucket *> nextChain = nextBucket->getChain();
+        chain.insert(chain.end(), nextChain.begin(), nextChain.end());
+    }
+    return chain;
 }
 
 vector<Couple> ChainedBucket::getAllValues() {
