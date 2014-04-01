@@ -15,7 +15,7 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
-    vector<DepthBucket*> getBuckets();
+    vector<DepthBucket *> &getBuckets();
     void clearBuckets();
 
 private:

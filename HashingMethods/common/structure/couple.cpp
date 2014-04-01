@@ -10,7 +10,7 @@ Couple::Couple(string key, vector<string>& values)
 }
 
 
-Couple::Couple(string key, tuple tuple)
+Couple::Couple(string key, const tuple &tuple)
     :key(key)
 {
     for(int i = 0; i < tuple.size(); i++) {

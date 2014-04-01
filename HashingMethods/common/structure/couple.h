@@ -12,7 +12,7 @@ class Couple
 {
 public:
     Couple();
-    Couple(string key, tuple tuple);
+    Couple(string key, const tuple &tuple);
     Couple(string key, vector<string> &values);
     string key;
     vector<string> values;

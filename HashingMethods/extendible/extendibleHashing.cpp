@@ -14,7 +14,7 @@ vector<string> ExtendibleHashing::getValue(size_t hash, string key)
     }
 }
 
-vector<DepthBucket *> ExtendibleHashing::getBuckets()
+vector<DepthBucket *> &ExtendibleHashing::getBuckets()
 {
     return directory.getBuckets();
 }

@@ -33,11 +33,14 @@ public:
     int getNumberBuckets();
     void setNumberBuckets(int number);
 
+    void setBucketNamePrefix(string postfix);
+
 private:
     BucketFactory();
     static BucketFactory<T>* instance;
     int bucketCount;
     int numberBuckets;
+    string bucketNamePrefix;
 };
 
 template<class T>
@@ -53,7 +56,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0)
+    :bucketCount(0), numberBuckets(0), bucketNamePrefix()
 {
 }
 
@@ -72,7 +75,7 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 template<class T>
 void BucketFactory<T>::writeBucket(T *bucket)
 {
-    ofstream ofs(bucket->name.c_str());
+    ofstream ofs(("/tmp/buckets/" + bucketNamePrefix + bucket->name).c_str());
     {
         text_oarchive oa(ofs);
         oa << *bucket;
@@ -137,4 +140,11 @@ void BucketFactory<T>::setNumberBuckets(int number)
 {
     numberBuckets = number;
 }
+
+template<class T>
+void BucketFactory<T>::setBucketNamePrefix(string prefix)
+{
+    bucketNamePrefix = prefix;
+}
+
 #endif // BUCKETFACTORY_H
