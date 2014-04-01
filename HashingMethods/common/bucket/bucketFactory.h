@@ -40,6 +40,7 @@ private:
     static BucketFactory<T>* instance;
     int bucketCount;
     int numberBuckets;
+    const string constPrefix;
     string bucketNamePrefix;
 };
 
@@ -56,7 +57,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0), bucketNamePrefix()
+    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketNamePrefix()
 {
 }
 
@@ -65,7 +66,7 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 {
     T* bucket = new T();
     {
-        ifstream ifs(bucketFile.c_str());
+        ifstream ifs((constPrefix + bucketNamePrefix + bucketFile).c_str());
         text_iarchive ia(ifs);
         ia >> *bucket;
     }
@@ -75,7 +76,7 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 template<class T>
 void BucketFactory<T>::writeBucket(T *bucket)
 {
-    ofstream ofs(("/tmp/buckets/" + bucketNamePrefix + bucket->name).c_str());
+    ofstream ofs((constPrefix + bucketNamePrefix + bucket->name).c_str());
     {
         text_oarchive oa(ofs);
         oa << *bucket;
@@ -86,7 +87,7 @@ template<class T>
 T* BucketFactory<T>::newBucket()
 {
     T *bucket = new T();
-    bucket->name += lexical_cast<string>(bucketCount);
+    bucket->name += "bucket" + lexical_cast<string>(bucketCount);
     bucketCount++;
     numberBuckets++;
     return bucket;
@@ -112,7 +113,7 @@ void BucketFactory<T>::removeAll()
 {
     numberBuckets = 0;
     bucketCount = 0;
-    system("exec rm /tmp/buckets/*");
+    system(("exec find " + constPrefix + bucketNamePrefix + " -name 'bucket*' | xargs rm").c_str());
 }
 
 template<class T>

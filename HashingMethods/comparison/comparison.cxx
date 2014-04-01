@@ -7,6 +7,7 @@ int main()
         Comparer comparer = Comparer();
         BucketFactory<DepthBucket> *depthFactory = BucketFactory<DepthBucket>::getInstance();
         BucketFactory<ChainedBucket> *chainedFactory = BucketFactory<ChainedBucket>::getInstance();
+        clock_t tStart;
 
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
@@ -19,26 +20,30 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM CUSTOMER" ));
 
-        clock_t tStart = clock();
-
         cout << "\n### Extendible Hashing ###" << endl;
+        tStart = clock();
         ExtendibleHashing ext_hasher = ExtendibleHashing();
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             ext_hasher.put(Couple(row[0].c_str(), row));
         }
+        cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        cout << "Finished building table, serializing" << endl;
-        depthFactory->setBucketNamePrefix("extendible/bucket");
+        cout << "serializing" << endl;
+        depthFactory->setBucketNamePrefix("extendible/");
         depthFactory->writeAll(ext_hasher.getBuckets());
         ext_hasher.clearBuckets();
 
-        //    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        //        try {
-        //            ext_hasher.get(*it);
-        //        } catch (string &e) {
-        //            cout << e << endl;
-        //        }
-        //    }
+        cout << "Getting all values" << endl;
+        tStart = clock();
+        for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
+            try {
+                ext_hasher.get(row[0].c_str());
+            } catch (string &e) {
+                cout << e << endl;
+            }
+        }
+        printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        depthFactory->removeAll();
 
 
         cout << "\n\n### Hybrid Hashing ###" << endl;
@@ -47,18 +52,25 @@ int main()
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             hyb_hasher.put(Couple(row[0].c_str(), row));
         }
-        cout << "Finished building table, serializing" << endl;
+        cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        depthFactory->setBucketNamePrefix("hybrid/bucket");
+        cout << "serializing" << endl;
+        depthFactory->setBucketNamePrefix("hybrid/");
         depthFactory->writeAll(hyb_hasher.getBuckets());
+        hyb_hasher.clearBuckets();
 
-        //    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        //        try {
-        //            hyb_hasher.get(*it);
-        //        } catch (string &e) {
-        //            cout << e << endl;
-        //        }
-        //    }
+        cout << "Getting all values" << endl;
+        tStart = clock();
+        for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
+            try {
+                hyb_hasher.get(row[0].c_str());
+            } catch (string &e) {
+                cout << e << endl;
+            }
+        }
+        printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        depthFactory->removeAll();
+
 
 
         cout << "\n\n### Linear Hashing ###" << endl;
@@ -67,18 +79,24 @@ int main()
         for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
             lin_hasher.put(Couple(row[0].c_str(), row));
         }
-        cout << "Finished building table, serializing" << endl;
+        cout << "Finished building table" << endl;
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-        chainedFactory->setBucketNamePrefix("linear/bucket");
+        cout << "serializing" << endl;
+        chainedFactory->setBucketNamePrefix("linear/");
         chainedFactory->writeAll(lin_hasher.getBuckets());
+        lin_hasher.clearBuckets();
 
-        //    for (vector<string>::iterator it = values.begin(); it != values.end(); ++it) {
-        //        try {
-        //            lin_hasher.get(*it);
-        //        } catch (string &e) {
-        //            cout << e << endl;
-        //        }
-        //    }
+        cout << "Getting all values" << endl;
+        tStart = clock();
+        for (pqxx::result::const_iterator row = R.begin(); row != R.end(); ++row) {
+            try {
+                lin_hasher.get(row[0].c_str());
+            } catch (string &e) {
+                cout << e << endl;
+            }
+        }
+        printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        chainedFactory->removeAll();
 
 
         cout << "Operation done successfully" << endl;
