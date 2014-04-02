@@ -20,6 +20,9 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM CUSTOMER" ));
 
+        cout << "\nComparing three dynamic hash tables algorithms" << endl;
+        cout << "Bucket size : " << Bucket::BUCKET_SIZE << endl;
+
         cout << "\n### Extendible Hashing ###" << endl;
         tStart = clock();
         ExtendibleHashing ext_hasher = ExtendibleHashing();

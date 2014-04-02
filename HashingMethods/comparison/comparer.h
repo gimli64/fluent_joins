@@ -4,6 +4,7 @@
 #include "linear/linearHashing.h"
 #include "hybrid/hybridHashing.h"
 #include "common/bucket/bucketFactory.h"
+#include "common/bucket/bucket.h"
 
 #include <vector>
 #include <fstream>
