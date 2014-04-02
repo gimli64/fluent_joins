@@ -18,30 +18,33 @@ public:
     static BucketFactory<T>* getInstance();
 
     T* readBucket(string bucketFile) const;
-    void writeBucket(T *bucket, string &bucketPrefix);
+    void writeBucket(T *bucket, string bucketPrefix);
 
-    T* newBucket();     // Creation without serialization
+    T* newBucket();                 // Creation without serialization
     void deleteBucket(T *bucket);   // Delete on memory change number buckets
     void removeBucket(T *bucket);   // Remove on disk and change number buckets
+
+    void reset();                   // Reset the factory variables for new initialization
 
     // Used at the end of a hash table initialization, serialize all its buckets
     // and delete the memory objects
     void writeAll(vector<T*> buckets, string bucketPrefix);
+
+    // Remove all buckets from disk
     void removeAll(string bucketPrefix);
 
     int getBucketCount();
     int getNumberBuckets();
-    void setNumberBuckets(int number);
 
-    void setBucketNamePrefix(string postfix);
 
 private:
     BucketFactory();
     static BucketFactory<T>* instance;
-    int bucketCount;
-    int numberBuckets;
-    const string constPrefix;
+    int bucketCount;           // Used as a postfix for the bucket names
+    int numberBuckets;         // Actual number of buckets (for building phase)
+    const string constPrefix;  // Beginning of path to the buckets
 };
+
 
 template<class T>
 BucketFactory<T>* BucketFactory<T>::instance = 0;
@@ -73,7 +76,7 @@ T* BucketFactory<T>::readBucket(string bucketFile) const
 }
 
 template<class T>
-void BucketFactory<T>::writeBucket(T *bucket, string &bucketPrefix)
+void BucketFactory<T>::writeBucket(T *bucket, string bucketPrefix)
 {
     ofstream ofs((constPrefix + bucketPrefix + bucket->name).c_str());
     {
@@ -108,10 +111,16 @@ void BucketFactory<T>::removeBucket(T *bucket)
 }
 
 template<class T>
-void BucketFactory<T>::removeAll(string bucketPrefix)
+void BucketFactory<T>::reset()
 {
     numberBuckets = 0;
     bucketCount = 0;
+}
+
+template<class T>
+void BucketFactory<T>::removeAll(string bucketPrefix)
+{
+    reset();
     system(("exec find " + constPrefix + bucketPrefix + " -name 'bucket*' | xargs rm").c_str());
 }
 
@@ -133,12 +142,6 @@ template<class T>
 int BucketFactory<T>::getNumberBuckets()
 {
     return numberBuckets;
-}
-
-template<class T>
-void BucketFactory<T>::setNumberBuckets(int number)
-{
-    numberBuckets = number;
 }
 
 

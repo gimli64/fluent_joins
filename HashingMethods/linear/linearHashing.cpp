@@ -8,7 +8,7 @@ LinearHashing::LinearHashing()
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
     ChainedBucket *bucket = factory->newBucket();
-    bucket->bucketPath = bucketPath;
+    bucket->setBucketPath(bucketPath);
     buckets.push_back(bucket);
     bucketNames.push_back(bucket->name);
 }
@@ -76,9 +76,9 @@ void LinearHashing::split()
     vector<Couple> values = bucketToSplit->getAllValues();
 
     ChainedBucket *newBucket1 = factory->newBucket();
-    newBucket1->bucketPath = bucketPath;
+    newBucket1->setBucketPath(bucketPath);
     ChainedBucket *newBucket2 = factory->newBucket();
-    newBucket2->bucketPath = bucketPath;
+    newBucket2->setBucketPath(bucketPath);
     buckets.at(nextSplitIndex) = newBucket1;
     buckets.push_back(newBucket2);
     bucketNames.at(nextSplitIndex) = newBucket1->name;
@@ -96,8 +96,9 @@ void LinearHashing::split()
 vector<ChainedBucket*> LinearHashing::getBuckets()
 {
     vector<ChainedBucket *> allBuckets;
-    for(vector<ChainedBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        vector<ChainedBucket *> chain = (*it)->getChain();
+    vector<ChainedBucket *>::iterator bucket;
+    for(bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
+        vector<ChainedBucket *> chain = (*bucket)->getChain();
         allBuckets.insert(allBuckets.end(), chain.begin(), chain.end());
     }
     return allBuckets;
@@ -105,7 +106,8 @@ vector<ChainedBucket*> LinearHashing::getBuckets()
 
 void LinearHashing::clearBuckets()
 {
-    for(vector<ChainedBucket*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+    vector<ChainedBucket*>::iterator it;
+    for(it = buckets.begin(); it != buckets.end(); ++it) {
         delete *it;
     }
     buckets.clear();

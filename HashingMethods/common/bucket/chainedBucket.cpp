@@ -19,13 +19,14 @@ vector<string> ChainedBucket::getValue(string key)
         if (nextBucketName == "") {
             throw e;
         } else {
+            ChainedBucket *bucket;
             try {
-                ChainedBucket *bucket = BucketFactory<ChainedBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
+                bucket = BucketFactory<ChainedBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
                 result = bucket->getValue(key);
                 delete bucket;
             } catch (string &e) {
                 throw e;
-//                delete bucket;
+                delete bucket;
             }
         }
     }
@@ -36,8 +37,8 @@ void ChainedBucket::putCouple(Couple couple) {
     if (this->isFull()) {
         if (!nextBucket) {
             nextBucket = BucketFactory<ChainedBucket>::getInstance()->newBucket();
-            nextBucket->bucketPath = bucketPath;
             nextBucketName = nextBucket->name;
+            nextBucket->setBucketPath(bucketPath);
         }
         nextBucket->putCouple(couple);
     } else {
@@ -51,6 +52,11 @@ int ChainedBucket::getChainCount() {
     } else {
         return 1;
     }
+}
+
+void ChainedBucket::setBucketPath(string path)
+{
+    bucketPath = path;
 }
 
 vector<ChainedBucket *> ChainedBucket::getChain() {

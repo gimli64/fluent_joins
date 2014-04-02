@@ -20,13 +20,15 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 
+    void setBucketPath(string path);
+
+    // Returns the complete chain of buckets (for writing after initialization)
     vector<ChainedBucket *> getChain();
 
+private:
     string bucketPath;
     string nextBucketName;
     ChainedBucket* nextBucket;
-
-private:
 
     friend class boost::serialization::access;
     template<class Archive>
