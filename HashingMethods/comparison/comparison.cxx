@@ -43,8 +43,7 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//        depthFactory->removeAll();
-
+        depthFactory->reset();
 
         cout << "\n\n### Hybrid Hashing ###" << endl;
         tStart = clock();
@@ -69,7 +68,7 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//        depthFactory->removeAll();
+        depthFactory->reset();
 
 
 
@@ -96,7 +95,7 @@ int main()
             }
         }
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//        chainedFactory->removeAll();
+        chainedFactory->reset();
 
 
         cout << "Operation done successfully" << endl;
