@@ -11,7 +11,7 @@ using namespace std;
 class Bucket
 {
 public:
-    static const int BUCKET_SIZE = 10;
+    static const int BUCKET_SIZE = 8;
     string name;
 
     Bucket();

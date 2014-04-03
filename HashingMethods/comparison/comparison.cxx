@@ -19,7 +19,6 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM CUSTOMER" ));
         vector<int> sizes;
-        sizes.push_back(5000);
         sizes.push_back(10000);
         sizes.push_back(20000);
         sizes.push_back(30000);
@@ -56,7 +55,7 @@ int main()
                 }
             }
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            depthFactory->reset();
+            depthFactory->removeAll(ext_hasher.getBucketPath());
 
 
             cout << "\n### Hybrid Hashing ###" << endl;
@@ -82,7 +81,7 @@ int main()
                 }
             }
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            depthFactory->reset();
+            depthFactory->removeAll(hyb_hasher.getBucketPath());
 
 
             cout << "\n### Linear Hashing ###" << endl;
@@ -108,7 +107,7 @@ int main()
                 }
             }
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            chainedFactory->reset();
+            chainedFactory->removeAll(lin_hasher.getBucketPath());
         }
 
 
