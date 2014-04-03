@@ -19,8 +19,9 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM CUSTOMER" ));
         vector<int> sizes;
-        sizes.push_back(10000);
-        sizes.push_back(20000);
+//        sizes.push_back(5000);
+//        sizes.push_back(10000);
+//        sizes.push_back(20000);
         sizes.push_back(30000);
         sizes.push_back(40000);
         sizes.push_back(50000);

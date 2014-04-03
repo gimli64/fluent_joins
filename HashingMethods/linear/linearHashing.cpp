@@ -98,7 +98,7 @@ vector<ChainedBucket*> LinearHashing::getBuckets()
 {
     vector<ChainedBucket *> allBuckets;
     vector<ChainedBucket *>::iterator bucket;
-    int totalChainLength;
+    int totalChainLength = 0;
     for(bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
         vector<ChainedBucket *> chain = (*bucket)->getChain();
         totalChainLength += (*bucket)->getChainCount();
