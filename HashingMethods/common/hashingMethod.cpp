@@ -7,7 +7,7 @@ HashingMethod::HashingMethod()
 
 size_t HashingMethod::getHash(string key)
 {
-    return hasher(key);
+    return CityHash32(key.c_str(), key.size());
 }
 
 vector<string> HashingMethod::get(string key)

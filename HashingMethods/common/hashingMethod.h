@@ -2,12 +2,9 @@
 #define HASHINGMETHOD_H
 
 #include "common/structure/couple.h"
-#include <boost/functional/hash.hpp>
+#include <city.h>
 
-using std::cout;
-using std::endl;
-using std::string;
-using std::size_t;
+using namespace std;
 
 class HashingMethod
 {
@@ -27,8 +24,6 @@ protected:
     string bucketPath;
 
 private:
-    boost::hash<string> hasher;
-
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 

@@ -9,7 +9,7 @@ using namespace std;
 class HybridDirectory : public Directory
 {
 public:
-    static const int CAPA = 32;
+    static const int CAPA = 16;
 
     HybridDirectory();
     HybridDirectory(HashingMethod *hasher);
