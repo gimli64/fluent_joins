@@ -18,7 +18,7 @@ int main()
         }
 
         nontransaction N(C);
-        result R( N.exec( "SELECT * FROM CUSTOMER" ));
+        result R( N.exec( "SELECT * FROM PART" ));
 
         cout << "\nComparing three dynamic hash tables algorithms" << endl;
         cout << "Bucket size : " << Bucket::BUCKET_SIZE << endl;

@@ -57,7 +57,7 @@ ChainedBucket *LinearHashing::getBucketFromName(size_t hash)
 
 double LinearHashing::getRatio()
 {
-    return ((double) numberItems) / (bucketCapacity * factory->getNumberBuckets());
+    return ((double) numberItems) / (bucketCapacity * buckets.size());
 }
 
 void LinearHashing::incrementSplitIndex()
@@ -97,10 +97,13 @@ vector<ChainedBucket*> LinearHashing::getBuckets()
 {
     vector<ChainedBucket *> allBuckets;
     vector<ChainedBucket *>::iterator bucket;
+    int totalChainLength;
     for(bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
         vector<ChainedBucket *> chain = (*bucket)->getChain();
+        totalChainLength += (*bucket)->getChainCount();
         allBuckets.insert(allBuckets.end(), chain.begin(), chain.end());
     }
+    cout << "Load factor : " << (double) totalChainLength / buckets.size() << endl;
     return allBuckets;
 }
 

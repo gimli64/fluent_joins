@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <sys/resource.h>
+#include <boost/algorithm/string/join.hpp>
 #include <pqxx/pqxx>
 
 using namespace std;
