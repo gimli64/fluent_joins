@@ -77,11 +77,12 @@ void LinearHashing::split()
 
     ChainedBucket *newBucket1 = factory->newBucket();
     newBucket1->setBucketPath(bucketPath);
+    bucketNames.at(nextSplitIndex) = newBucket1->name;
+    buckets.at(nextSplitIndex) = newBucket1;
+
     ChainedBucket *newBucket2 = factory->newBucket();
     newBucket2->setBucketPath(bucketPath);
-    buckets.at(nextSplitIndex) = newBucket1;
     buckets.push_back(newBucket2);
-    bucketNames.at(nextSplitIndex) = newBucket1->name;
     bucketNames.push_back(newBucket2->name);
 
     numberItems -= values.size();

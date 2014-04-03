@@ -41,7 +41,6 @@ protected:
 private:
     int globalDepth;
     vector<string> bucketNames;
-    string bucketPath;
 
     DepthBucket *getBucket(size_t hash);
     DepthBucket *getBucketFromName(size_t hash);
