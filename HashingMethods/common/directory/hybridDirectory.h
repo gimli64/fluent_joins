@@ -15,7 +15,6 @@ public:
     HybridDirectory(HashingMethod *hasher);
 
     int getNumberBuckets();
-    int getChainCount();
     vector<Couple> popAllValues();
 
     virtual string className() const;

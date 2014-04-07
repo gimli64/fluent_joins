@@ -5,6 +5,11 @@ ExtendibleHashing::ExtendibleHashing()
 {
 }
 
+ExtendibleHashing::ExtendibleHashing(string name)
+    :directory(Directory(this)), HashingMethod(name)
+{
+}
+
 vector<string> ExtendibleHashing::getValue(size_t hash, string key)
 {
     try {
