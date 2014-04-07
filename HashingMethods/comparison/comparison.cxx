@@ -4,7 +4,7 @@
 int main()
 {
     try {
-        Comparer<HybridHashing> comparer;
+        Comparer<ExtendibleHashing> comparer;
         BucketFactory<DepthBucket> *depthFactory = BucketFactory<DepthBucket>::getInstance();
         BucketFactory<ChainedBucket> *chainedFactory = BucketFactory<ChainedBucket>::getInstance();
         clock_t tStart;
@@ -34,30 +34,31 @@ int main()
 //            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
 //            cout << "Input size : " << sizes[i] << endl;
 
-//            cout << "\n### Extendible Hashing ###" << endl;
-//            tStart = clock();
-//            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible");
-//            for (int j = 0; j < sizes[i]; j++) {
-//                ext_hasher.put(Couple(R[j][0].c_str(), R[j]));
-//            }
-//            cout << "Finished building table" << endl;
-//            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//            cout << "serializing" << endl;
-//            depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
-//            ext_hasher.clearBuckets();
+            cout << "\n### Extendible Hashing ###" << endl;
+            tStart = clock();
+            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible");
+            for (int j = 0; j < sizes[i]; j++) {
+                ext_hasher.put(Couple(R[j][0].c_str(), R[j]));
+            }
+            cout << "Finished building table" << endl;
+            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+            cout << "serializing" << endl;
+            depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
+            ext_hasher.clearBuckets();
+            comparer.writeTable(&ext_hasher);
 
-//            cout << "Getting all values" << endl;
-//            tStart = clock();
-//            for (int j = 0; j < sizes[i]; j++) {
-//                try {
-//                    ext_hasher.get(R[j][0].c_str());
-//                } catch (string &e) {
-//                    cout << e << endl;
-//                }
-//            }
-//            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//            depthFactory->removeAll(ext_hasher.getBucketPath());
+            ExtendibleHashing *new_ext_hasher = comparer.readTable("extendible");
 
+            cout << "Getting all values" << endl;
+            tStart = clock();
+            for (int j = 0; j < sizes[i]; j++) {
+                try {
+                    new_ext_hasher->get(R[j][0].c_str());
+                } catch (string &e) {
+                    cout << e << endl;
+                }
+            }
+            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
             cout << "\n### Hybrid Hashing ###" << endl;
             tStart = clock();
