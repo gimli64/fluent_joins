@@ -12,18 +12,19 @@ class ChainedBucket : public Bucket
 public:
     ChainedBucket();
     ~ChainedBucket();
+
     vector<string> getValue(string key);
     void putCouple(Couple couple);
+
     int getChainCount();
-    vector<Couple> getAllValues();
+    void setBucketPath(string path);
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 
-    void setBucketPath(string path);
-
-    // Returns the complete chain of buckets (for writing after initialization)
-    vector<ChainedBucket *> getChain();
+    bool hasNext();
+    ChainedBucket *next();
+    string nextName();
 
 private:
     string bucketPath;

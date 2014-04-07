@@ -16,7 +16,7 @@ vector<string> ChainedBucket::getValue(string key)
     try {
         result = Bucket::getValue(key);
     } catch(string &e) {
-        if (nextBucketName == "") {
+        if (!hasNext()) {
             throw e;
         } else {
             ChainedBucket *bucket;
@@ -59,23 +59,19 @@ void ChainedBucket::setBucketPath(string path)
     bucketPath = path;
 }
 
-vector<ChainedBucket *> ChainedBucket::getChain() {
-    vector<ChainedBucket *> chain;
-    chain.push_back(this);
-    if (nextBucket) {
-        vector<ChainedBucket *> nextChain = nextBucket->getChain();
-        chain.insert(chain.end(), nextChain.begin(), nextChain.end());
-    }
-    return chain;
+bool ChainedBucket::hasNext()
+{
+    return nextBucketName != "";
 }
 
-vector<Couple> ChainedBucket::getAllValues() {
-    vector<Couple> values = Bucket::getAllValues();
-    if (nextBucket) {
-        vector<Couple> nextBucketValues = nextBucket->getAllValues();
-        values.insert(values.end(), nextBucketValues.begin(), nextBucketValues.end());
-    }
-    return values;
+ChainedBucket *ChainedBucket::next()
+{
+    return nextBucket;
+}
+
+string ChainedBucket::nextName()
+{
+    return nextBucketName;
 }
 
 string ChainedBucket::className() const
