@@ -4,6 +4,9 @@
 #include "common/hashingMethod.h"
 #include "common/bucket/chainedBucket.h"
 #include "common/bucket/bucketFactory.h"
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
 
 using namespace std;
 
@@ -11,6 +14,7 @@ class LinearHashing : public HashingMethod
 {
 public:
     LinearHashing();
+    LinearHashing(string name);
     virtual ostream& dump(ostream& strm) const;
 
     vector<ChainedBucket*> getBuckets();
@@ -35,6 +39,16 @@ private:
     double getRatio();
     void incrementSplitIndex();
     void split();
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<HashingMethod>(*this);
+        ar & level;
+        ar & nextSplitIndex;
+        ar & bucketNames;
+    }
 };
 
 ostream& operator<<(ostream&, const LinearHashing&);

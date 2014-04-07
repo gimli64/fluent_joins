@@ -7,6 +7,13 @@ LinearHashing::LinearHashing()
       bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod()
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
+}
+
+LinearHashing::LinearHashing(string name)
+    :level(0), nextSplitIndex(0), initialNumberBuckets(1),
+      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod(name)
+{
+    factory = BucketFactory<ChainedBucket>::getInstance();
     ChainedBucket *bucket = factory->newBucket();
     bucket->setBucketPath(bucketPath);
     buckets.push_back(bucket);
@@ -75,6 +82,12 @@ void LinearHashing::split()
     ChainedBucket *bucketToSplit = buckets.at(nextSplitIndex);
     vector<Couple> values = bucketToSplit->getAllValues();
 
+    ChainedBucket *nextBucket = bucketToSplit;
+    while (nextBucket->hasNext()) {
+        nextBucket = nextBucket->next();
+        values.insert(values.end(), nextBucket->getAllValues().begin(), nextBucket->getAllValues().end());
+    }
+
     ChainedBucket *newBucket1 = factory->newBucket();
     newBucket1->setBucketPath(bucketPath);
     bucketNames.at(nextSplitIndex) = newBucket1->name;
@@ -97,14 +110,15 @@ void LinearHashing::split()
 vector<ChainedBucket*> LinearHashing::getBuckets()
 {
     vector<ChainedBucket *> allBuckets;
-    vector<ChainedBucket *>::iterator bucket;
-    int totalChainLength = 0;
-    for(bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
-        vector<ChainedBucket *> chain = (*bucket)->getChain();
-        totalChainLength += (*bucket)->getChainCount();
-        allBuckets.insert(allBuckets.end(), chain.begin(), chain.end());
+    ChainedBucket * bucket;
+    for(int i = 0; i < buckets.size(); i++) {
+        bucket = buckets.at(i);
+        allBuckets.push_back(bucket);
+        while (bucket->hasNext()) {
+            bucket = bucket->next();
+            allBuckets.push_back(bucket);
+        }
     }
-    cout << "Load factor : " << (double) totalChainLength / buckets.size() << endl;
     return allBuckets;
 }
 
@@ -125,11 +139,11 @@ std::ostream& LinearHashing::dump(std::ostream& strm) const
     ostream& output = strm;
     output << "LinearHashing " + ss.str() + " : \n";
 
-    ChainedBucket* bucket;
-    for(int i = 0; i < buckets.size(); i++) {
-        bucket = buckets.at(i);
-        output << "#### " << *bucket;
-        if (i < buckets.size() - 1)
+//    ChainedBucket* bucket;
+    for(int i = 0; i < bucketNames.size(); i++) {
+//        bucket = buckets.at(i);
+        output << "#### " << bucketNames.at(i);
+        if (i < bucketNames.size() - 1)
             output << "\n";
     }
 

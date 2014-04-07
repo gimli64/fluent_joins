@@ -15,11 +15,44 @@
 using namespace std;
 using namespace pqxx;
 
-class Comparer
+template<class T> class Comparer
 {
 public:
     Comparer();
-    vector<string> fetchData(string inputFile);
+
+    void writeTable(T* table);
+    T *readTable(string name);
+
+private:
+    string constPrefix;
 };
+
+template<class T>
+Comparer<T>::Comparer()
+    :constPrefix("/tmp/tables/")
+{
+}
+
+template<class T>
+void Comparer<T>::writeTable(T *table)
+{
+    ofstream ofs((constPrefix + table->getName() + ".table").c_str());
+    {
+        text_oarchive oa(ofs);
+        oa << *table;
+    }
+}
+
+template<class T>
+T *Comparer<T>::readTable(string name)
+{
+    T* table = new T();
+    {
+        ifstream ifs((constPrefix + name + ".table").c_str());
+        text_iarchive ia(ifs);
+        ia >> *table;
+    }
+    return table;
+}
 
 #endif // COMPARER_H

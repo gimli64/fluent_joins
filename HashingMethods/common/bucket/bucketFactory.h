@@ -36,7 +36,6 @@ public:
     int getBucketCount();
     int getNumberBuckets();
 
-
 private:
     BucketFactory();
     static BucketFactory<T>* instance;

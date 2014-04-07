@@ -5,6 +5,12 @@ HashingMethod::HashingMethod()
 {
 }
 
+HashingMethod::HashingMethod(string name)
+    :numberItems(0), name(name)
+{
+    bucketPath = name + "/";
+}
+
 size_t HashingMethod::getHash(string key)
 {
     return CityHash32(key.c_str(), key.size());
@@ -33,6 +39,11 @@ void HashingMethod::putCouple(size_t hash, Couple couple)
 {
 }
 
+string HashingMethod::getName()
+{
+    return name;
+}
+
 int HashingMethod::getNumberDirEntries()
 {
     return 0;
@@ -45,9 +56,4 @@ void HashingMethod::setNumberDirEntries(int number)
 string HashingMethod::getBucketPath()
 {
     return bucketPath;
-}
-
-void HashingMethod::setBucketPath(string path)
-{
-    bucketPath = path;
 }
