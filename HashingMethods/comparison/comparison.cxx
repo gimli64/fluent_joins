@@ -4,7 +4,7 @@
 int main()
 {
     try {
-        Comparer<LinearHashing> comparer;
+        Comparer<HybridHashing> comparer;
         BucketFactory<DepthBucket> *depthFactory = BucketFactory<DepthBucket>::getInstance();
         BucketFactory<ChainedBucket> *chainedFactory = BucketFactory<ChainedBucket>::getInstance();
         clock_t tStart;
@@ -36,8 +36,7 @@ int main()
 
 //            cout << "\n### Extendible Hashing ###" << endl;
 //            tStart = clock();
-//            ExtendibleHashing ext_hasher = ExtendibleHashing();
-//            ext_hasher.setBucketPath("extendible/");
+//            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible");
 //            for (int j = 0; j < sizes[i]; j++) {
 //                ext_hasher.put(Couple(R[j][0].c_str(), R[j]));
 //            }
@@ -60,10 +59,9 @@ int main()
 //            depthFactory->removeAll(ext_hasher.getBucketPath());
 
 
-//            cout << "\n### Hybrid Hashing ###" << endl;
-//            tStart = clock();
-//            HybridHashing hyb_hasher = HybridHashing();
-//            hyb_hasher.setBucketPath("hybrid/");
+            cout << "\n### Hybrid Hashing ###" << endl;
+            tStart = clock();
+//            HybridHashing hyb_hasher = HybridHashing("hybrid");
 //            for (int j = 0; j < sizes[i]; j++) {
 //                hyb_hasher.put(Couple(R[j][0].c_str(), R[j]));
 //            }
@@ -72,45 +70,46 @@ int main()
 //            cout << "serializing" << endl;
 //            depthFactory->writeAll(hyb_hasher.getBuckets(), hyb_hasher.getBucketPath());
 //            hyb_hasher.clearBuckets();
+//            comparer.writeTable(&hyb_hasher);
+
+//            HybridHashing *new_hybrid_hasher = comparer.readTable("hybrid");
 
 //            cout << "Getting all values" << endl;
 //            tStart = clock();
 //            for (int j = 0; j < sizes[i]; j++) {
 //                try {
-//                    hyb_hasher.get(R[j][0].c_str());
+//                    new_hybrid_hasher->get(R[j][0].c_str());
 //                } catch (string &e) {
 //                    cout << e << endl;
 //                }
 //            }
 //            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//            depthFactory->removeAll(hyb_hasher.getBucketPath());
 
 
-            cout << "\n### Linear Hashing ###" << endl;
-/*            tStart = clock();
-            LinearHashing lin_hasher = LinearHashing("linear");
-            for (int j = 0; j < sizes[i]; j++) {
-                lin_hasher.put(Couple(R[j][0].c_str(), R[j]));
-            }
-            cout << "Finished building table" << endl;
-            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            cout << "serializing" << endl;
-            chainedFactory->writeAll(lin_hasher.getBuckets(), lin_hasher.getBucketPath());
-            lin_hasher.clearBuckets();
-            comparer.writeTable(&lin_hasher)*/;
+//            cout << "\n### Linear Hashing ###" << endl;
+//            tStart = clock();
+//            LinearHashing lin_hasher = LinearHashing("linear");
+//            for (int j = 0; j < sizes[i]; j++) {
+//                lin_hasher.put(Couple(R[j][0].c_str(), R[j]));
+//            }
+//            cout << "Finished building table" << endl;
+//            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//            cout << "serializing" << endl;
+//            chainedFactory->writeAll(lin_hasher.getBuckets(), lin_hasher.getBucketPath());
+//            lin_hasher.clearBuckets();
+//            comparer.writeTable(&lin_hasher);
 
-            LinearHashing *new_lin_hasher = comparer.readTable("linear");
-            cout << "Getting all values" << endl;
-            tStart = clock();
-            for (int j = 0; j < sizes[i]; j++) {
-                try {
-                    new_lin_hasher->get(R[j][0].c_str());
-                } catch (string &e) {
-                    cout << e << endl;
-                }
-            }
-            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-//            chainedFactory->removeAll(lin_hasher.getBucketPath());
+//            LinearHashing *new_lin_hasher = comparer.readTable("linear");
+//            cout << "Getting all values" << endl;
+//            tStart = clock();
+//            for (int j = 0; j < sizes[i]; j++) {
+//                try {
+//                    new_lin_hasher->get(R[j][0].c_str());
+//                } catch (string &e) {
+//                    cout << e << endl;
+//                }
+//            }
+//            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
         }
 
 

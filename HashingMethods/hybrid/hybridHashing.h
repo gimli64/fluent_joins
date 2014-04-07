@@ -2,14 +2,15 @@
 #define HYBRIDHASHING_H
 #include "common/hashingMethod.h"
 #include "common/directory/hybridDirectory.h"
+#include <boost/serialization/string.hpp>
 
-using std::cout;
-using std::endl;
+using namespace std;
 
 class HybridHashing : public HashingMethod
 {
 public:
     HybridHashing();
+    HybridHashing(string name);
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -40,6 +41,17 @@ private:
     void incrementSplitIndex();
     double getRatio();
     void split();
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<HashingMethod>(*this);
+        ar & level;
+        ar & mask;
+        ar & nextSplitIndex;
+        ar & directories;
+    }
 };
 
 ostream& operator<<(ostream&, const HybridHashing&);

@@ -4,6 +4,8 @@
 #include "common/bucket/depthBucket.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/hashingMethod.h"
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include <iostream>
 #include <algorithm>
@@ -41,9 +43,19 @@ protected:
 private:
     int globalDepth;
     vector<string> bucketNames;
+    string bucketPath;
 
     DepthBucket *getBucket(size_t hash);
     DepthBucket *getBucketFromName(size_t hash);
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & globalDepth;
+        ar & bucketPath;
+        ar & bucketNames;
+    }
 };
 
 ostream& operator<<(ostream&, const Directory&);

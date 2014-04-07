@@ -2,12 +2,14 @@
 
 Directory::Directory()
 {
+    factory = BucketFactory<DepthBucket>::getInstance();
 }
 
 Directory::Directory(HashingMethod *hasher)
     :hasher(hasher), globalDepth(0), buckets()
 {
     factory = BucketFactory<DepthBucket>::getInstance();
+    bucketPath = hasher->getBucketPath();
     DepthBucket *bucket = factory->newBucket();
     buckets.push_back(bucket);
     bucketNames.push_back(bucket->name);
@@ -49,7 +51,7 @@ DepthBucket* Directory::getBucket(size_t hash)
 
 DepthBucket* Directory::getBucketFromName(size_t hash)
 {
-    return factory->readBucket(hasher->getBucketPath() + bucketNames.at(hash & ((1 << globalDepth) - 1)));
+    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
 
