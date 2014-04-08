@@ -7,6 +7,9 @@ int main()
         Comparer<HybridHashing, DepthBucket> comparer;
         clock_t tStart;
 
+        cout << "Fluent joins experiment" << endl;
+        cout << "Bucket size : " << Bucket::BUCKET_SIZE << endl;
+
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "Opened database successfully: " << C.dbname() << endl;
@@ -15,29 +18,22 @@ int main()
             return 1;
         }
 
-        nontransaction N(C);
-        result R( N.exec( "SELECT * FROM customer" ));
-
-        cout << "Bucket size : " << Bucket::BUCKET_SIZE << endl;
-
+        cout << "\nCreating the tables" << endl;
         tStart = clock();
-        comparer.createTable(R, "customer", 90);
+        nontransaction N(C);
+        result R( N.exec( "SELECT * FROM supplier" ));
+        comparer.createTable(R, "supplier");
+
+        R = result( N.exec( "SELECT * FROM nation" ));
+        comparer.createTable(R, "nation");
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        HybridHashing *hasher = comparer.readTable("customer");
+        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        HybridHashing *supplierTable = comparer.readTable("supplier");
+        HybridHashing *nationTable = comparer.readTable("nation");
+        comparer.binaryJoin(supplierTable, nationTable);
 
-//        cout << "Getting all values" << endl;
-//        tStart = clock();
-//        for (int j = 0; j < R.size(); j++) {
-//            try {
-//                hasher->get(R[j][0].c_str());
-//            } catch (string &e) {
-//                cout << e << endl;
-//            }
-//        }
-//        printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-        cout << "Operation done successfully" << endl;
+        cout << "\nOperation done successfully" << endl;
         C.disconnect ();
     } catch (const std::exception &e){
         cerr << e.what() << std::endl;

@@ -25,6 +25,8 @@ public:
     void writeTable(T* table);
     T *readTable(string name);
 
+    vector<string> binaryJoin(T* table1, T* table2, int foreignKey);
+
 private:
     string constPrefix;
 };
@@ -76,6 +78,12 @@ T *Comparer<T, B>::readTable(string name)
         ia >> *table;
     }
     return table;
+}
+
+template<class T, class B>
+vector<string> Comparer<T, B>::binaryJoin(T *table1, T *table2, int foreignKey)
+{
+
 }
 
 #endif // COMPARER_H
