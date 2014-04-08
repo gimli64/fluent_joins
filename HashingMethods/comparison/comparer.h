@@ -42,6 +42,7 @@ void Comparer<T, B>::createTable(result relation, string name, int size)
     if (size > 0) {
         for (int i = 0; i < size; i++) {
             table.put(Couple(relation[i][0].c_str(), relation[i]));
+            cout << table << endl;
         }
     } else {
         for (int i = 0; i < relation.size(); i++) {

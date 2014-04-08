@@ -42,6 +42,7 @@ private:
     int bucketCount;           // Used as a postfix for the bucket names
     int numberBuckets;         // Actual number of buckets (for building phase)
     const string constPrefix;  // Beginning of path to the buckets
+    const string bucketPrefix;
 };
 
 
@@ -58,7 +59,7 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/")
+    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketPrefix("b")
 {
 }
 
@@ -88,7 +89,7 @@ template<class T>
 T* BucketFactory<T>::newBucket()
 {
     T *bucket = new T();
-    bucket->name += "bucket" + lexical_cast<string>(bucketCount);
+    bucket->name += bucketPrefix + lexical_cast<string>(bucketCount);
     bucketCount++;
     numberBuckets++;
     return bucket;
@@ -120,7 +121,7 @@ template<class T>
 void BucketFactory<T>::removeAll(string bucketPath)
 {
     reset();
-    system(("exec find " + constPrefix + bucketPath + " -name 'bucket*' | xargs rm").c_str());
+    system(("exec find " + constPrefix + bucketPath + " -name '" + bucketPrefix + "*' | xargs rm").c_str());
 }
 
 template<class T>

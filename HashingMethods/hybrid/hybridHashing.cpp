@@ -126,7 +126,7 @@ std::ostream& HybridHashing::dump(std::ostream& strm) const
     stringstream ss;
     ss << address;
     ostream& output = strm;
-    output << className() + ss.str() + " : \n";
+    output << "\n\n" << className() + ss.str() + " : \n";
     for(int i = 0; i < directories.size(); i++) {
         output << "\n## " << directories.at(i);
         if (i < directories.size() - 1)
