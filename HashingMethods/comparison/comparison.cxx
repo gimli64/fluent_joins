@@ -4,9 +4,7 @@
 int main()
 {
     try {
-        Comparer<ExtendibleHashing> comparer;
-        BucketFactory<DepthBucket> *depthFactory = BucketFactory<DepthBucket>::getInstance();
-        BucketFactory<ChainedBucket> *chainedFactory = BucketFactory<ChainedBucket>::getInstance();
+        Comparer<ExtendibleHashing, DepthBucket> comparer;
         clock_t tStart;
 
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
@@ -31,21 +29,13 @@ int main()
 //        cout << "\nComparing three dynamic hash tables algorithms" << endl;
 
         for(int i = 0; i < sizes.size(); i++) {
-//            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
-//            cout << "Input size : " << sizes[i] << endl;
+            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
+            cout << "Input size : " << sizes[i] << endl;
 
             cout << "\n### Extendible Hashing ###" << endl;
             tStart = clock();
-            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible");
-            for (int j = 0; j < sizes[i]; j++) {
-                ext_hasher.put(Couple(R[j][0].c_str(), R[j]));
-            }
-            cout << "Finished building table" << endl;
+            comparer.createTable(R, "extendible", sizes[i]);
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            cout << "serializing" << endl;
-            depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
-            ext_hasher.clearBuckets();
-            comparer.writeTable(&ext_hasher);
 
             ExtendibleHashing *new_ext_hasher = comparer.readTable("extendible");
 

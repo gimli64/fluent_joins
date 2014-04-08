@@ -15,10 +15,12 @@
 using namespace std;
 using namespace pqxx;
 
-template<class T> class Comparer
+template<class T, class B> class Comparer
 {
 public:
     Comparer();
+
+    void createTable(result relation, string name, int size = 0);
 
     void writeTable(T* table);
     T *readTable(string name);
@@ -27,14 +29,34 @@ private:
     string constPrefix;
 };
 
-template<class T>
-Comparer<T>::Comparer()
+template<class T, class B>
+Comparer<T, B>::Comparer()
     :constPrefix("/tmp/tables/")
 {
 }
 
-template<class T>
-void Comparer<T>::writeTable(T *table)
+template<class T, class B>
+void Comparer<T, B>::createTable(result relation, string name, int size)
+{
+    T table(name);
+    if (size > 0) {
+        for (int i = 0; i < size; i++) {
+            table.put(Couple(relation[i][0].c_str(), relation[i]));
+        }
+    } else {
+        for (int i = 0; i < relation.size(); i++) {
+            table.put(Couple(relation[i][0].c_str(), relation[i]));
+        }
+    }
+    cout << "Finished building table " << name << endl;
+    cout << "serializing table " << name << endl;
+    BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
+    table.clearBuckets();
+    writeTable(&table);
+}
+
+template<class T, class B>
+void Comparer<T, B>::writeTable(T *table)
 {
     ofstream ofs((constPrefix + table->getName() + ".table").c_str());
     {
@@ -43,8 +65,8 @@ void Comparer<T>::writeTable(T *table)
     }
 }
 
-template<class T>
-T *Comparer<T>::readTable(string name)
+template<class T, class B>
+T *Comparer<T, B>::readTable(string name)
 {
     T* table = new T();
     {
