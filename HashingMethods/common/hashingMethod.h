@@ -2,7 +2,9 @@
 #define HASHINGMETHOD_H
 
 #include "common/structure/couple.h"
+#include <vector>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
 #include <city.h>
 
 using namespace std;
@@ -10,8 +12,7 @@ using namespace std;
 class HashingMethod
 {
 public:
-    HashingMethod();
-    HashingMethod(string name);
+    HashingMethod(string name = "", vector<int> keysRepartition = vector<int>());
     size_t getHash(string key);
     vector<string> get(string key);
     void put(Couple couple);
@@ -26,6 +27,7 @@ protected:
     string bucketPath;
     string name;
     int numberItems;
+    vector<int> keysRepartition;
 
 private:
     virtual vector<string> getValue(size_t hash, string key);
@@ -37,6 +39,7 @@ private:
     {
         ar & name;
         ar & bucketPath;
+        ar & keysRepartition;
     }
 };
 

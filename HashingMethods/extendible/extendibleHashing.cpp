@@ -1,12 +1,7 @@
 #include "extendibleHashing.h"
 
-ExtendibleHashing::ExtendibleHashing()
-    :directory(Directory(this)), HashingMethod()
-{
-}
-
-ExtendibleHashing::ExtendibleHashing(string name)
-    :directory(Directory(this)), HashingMethod(name)
+ExtendibleHashing::ExtendibleHashing(string name, vector<int> keysRepartition)
+    :directory(Directory(this)), HashingMethod(name, keysRepartition)
 {
 }
 

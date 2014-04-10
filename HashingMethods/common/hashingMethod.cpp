@@ -1,12 +1,7 @@
 #include "hashingMethod.h"
 
-HashingMethod::HashingMethod()
-    :numberItems(0)
-{
-}
-
-HashingMethod::HashingMethod(string name)
-    :numberItems(0), name(name)
+HashingMethod::HashingMethod(string name, vector<int> keysRepartition)
+    :numberItems(0), name(name), keysRepartition(keysRepartition)
 {
     bucketPath = name + "/";
 }

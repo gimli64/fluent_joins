@@ -31,8 +31,8 @@ int main()
 //        cout << "\nComparing three dynamic hash tables algorithms" << endl;
 
         for(int i = 0; i < sizes.size(); i++) {
-//            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
-//            cout << "Input size : " << sizes[i] << endl;
+            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
+            cout << "Input size : " << sizes[i] << endl;
 
             cout << "\n### Extendible Hashing ###" << endl;
             tStart = clock();

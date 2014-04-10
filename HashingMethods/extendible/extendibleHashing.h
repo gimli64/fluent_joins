@@ -11,8 +11,7 @@ class Directory;
 class ExtendibleHashing : public HashingMethod
 {
 public:
-    ExtendibleHashing();
-    ExtendibleHashing(string name);
+    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 

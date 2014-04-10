@@ -13,8 +13,7 @@ using namespace std;
 class LinearHashing : public HashingMethod
 {
 public:
-    LinearHashing();
-    LinearHashing(string name);
+    LinearHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual ostream& dump(ostream& strm) const;
 
     vector<ChainedBucket*> getBuckets();
