@@ -28,15 +28,29 @@ void HashingMethod::insert(Couple couple)
 
 size_t HashingMethod::interleaveHashes(vector<size_t> &hashes)
 {
-    bitset<32> bits;
-    int bitIndex = 0;
-    for (int i = 0; i < hashes.size(); i++) {
-        for (int j = 1; j <= keysRepartition[i]; j++) {
-            bits[bitIndex] = (hashes[i] & ((1 << j) - 1));
-            bitIndex++;
-        }
+//    bitset<32> bits;
+//    int bitIndex = 0;
+    size_t key = 0;
+//    for (int i = 0; i < hashes.size(); i++) {
+//        cout << "Hash : " << hashes[i] << endl;
+//        cout << "number Keys : " << keysRepartition[i] << endl;
+//        for (int j = 0; j < keysRepartition[i]; j++) {
+//            cout << ((hashes[i] & (1 << j)) >> j) << endl;
+//            bits[bitIndex] = (hashes[i] & (1 << j)) >> j;
+//            bitIndex++;
+//        }
+//        cout << bits.to_ulong() << endl;
+//    }
+
+    for (int i = 0; i < hashes.size() - 1; i++) {
+        key += hashes[i] & ((1 << keysRepartition[i]) - 1);
+        key <<= keysRepartition[i + 1];
     }
-    return bits.to_ulong();
+    key += hashes[hashes.size() - 1] & ((1 << keysRepartition[hashes.size() - 1]) - 1);
+
+    size_t result = 0;
+    MurmurHash3_x86_32(&key, sizeof(size_t), (uint32_t) 0, &result );
+    return result;
 }
 
 vector<string> HashingMethod::get(string key)
@@ -65,6 +79,11 @@ void HashingMethod::putCouple(size_t hash, Couple couple)
 string HashingMethod::getName()
 {
     return name;
+}
+
+int HashingMethod::getRelationSize()
+{
+    return relationSize;
 }
 
 int HashingMethod::getNumberDirEntries()

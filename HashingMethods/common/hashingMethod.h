@@ -7,6 +7,7 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <city.h>
+#include "common/MurmurHash3.h"
 
 using namespace std;
 
@@ -30,6 +31,8 @@ public:
 
     string getBucketPath();
     string getName();
+
+    int getRelationSize();
 
 protected:
     string bucketPath;
