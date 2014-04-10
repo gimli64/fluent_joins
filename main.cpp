@@ -13,44 +13,4 @@ using namespace std;
 
 int main()
 {
-    LinearHashing hasher = LinearHashing();
-    vector<string> values;
-    values.push_back("0");
-    values.push_back("1");
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
-    hasher.put(Couple("0", values));
-    cout << hasher << endl;
 }

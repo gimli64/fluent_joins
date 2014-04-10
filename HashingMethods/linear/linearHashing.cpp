@@ -2,9 +2,9 @@
 
 const double LinearHashing::SPLIT_RATIO = 0.75;
 
-LinearHashing::LinearHashing(string name, vector<int> keysRepartition)
+LinearHashing::LinearHashing(string name, vector<int> keysRepartition, int relationSize)
     :level(0), nextSplitIndex(0), initialNumberBuckets(1),
-      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod(name, keysRepartition)
+      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod(name, keysRepartition, relationSize)
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
 

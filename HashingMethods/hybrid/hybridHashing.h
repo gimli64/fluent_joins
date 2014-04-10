@@ -9,7 +9,7 @@ using namespace std;
 class HybridHashing : public HashingMethod
 {
 public:
-    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>());
+    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
