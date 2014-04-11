@@ -52,17 +52,6 @@ int main()
             }
 
             vector<size_t> hashes = ext_hasher.getHashes("AUTOMOBILE", 6);
-            cout << hashes[0] << endl;
-            cout << *(ext_hasher.getBucket(hashes[0])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[1])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[2])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[3])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[4])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[5])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[6])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[7])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[8])) << endl;
-            cout << *(ext_hasher.getBucket(hashes[9])) << endl;
 
             cout << "Finished building table" << endl;
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);

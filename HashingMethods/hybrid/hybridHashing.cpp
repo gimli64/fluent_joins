@@ -30,6 +30,11 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
     }
 }
 
+Bucket *HybridHashing::getBucket(size_t hash)
+{
+    return getHybridDirectory(hash).getBucket(hash);
+}
+
 HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
 {
     hash = getLeftMostBits(hash);

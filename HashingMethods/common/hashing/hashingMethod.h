@@ -24,7 +24,7 @@ public:
 
     // Multikey extension methods
     vector<size_t> getHashes(string key, int position);
-    vector<Bucket> getBuckets(vector<size_t>);
+    vector<Bucket *> fetchBuckets(vector<size_t> hashes);
     void insert(Couple couple);
 
     virtual int getNumberDirEntries();
@@ -48,6 +48,8 @@ private:
     // Common dictionary behaviour methods
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
+
+    virtual Bucket* getBucket(size_t hash);
 
     friend class boost::serialization::access;
     template<class Archive>

@@ -49,6 +49,21 @@ vector<size_t> HashingMethod::getHashes(string key, int position)
     return hashes;
 }
 
+vector<Bucket *> HashingMethod::fetchBuckets(vector<size_t> hashes)
+{
+    vector<Bucket *> buckets;
+    for (int i = 0; i < hashes.size(); i++) {
+        buckets.push_back(getBucket(hashes[i]));
+    }
+
+    return buckets;
+}
+
+Bucket *HashingMethod::getBucket(size_t hash)
+{
+    return new Bucket();
+}
+
 void HashingMethod::insert(Couple couple)
 {
     vector<size_t> hashes;
