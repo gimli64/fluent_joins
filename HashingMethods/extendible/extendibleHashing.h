@@ -1,6 +1,6 @@
 #ifndef EXTENDIBLEHASHING_H
 #define EXTENDIBLEHASHING_H
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "common/directory/directory.h"
 #include <sstream>
 

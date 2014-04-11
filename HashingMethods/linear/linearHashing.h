@@ -1,7 +1,7 @@
 #ifndef LINEARHASHING_H
 #define LINEARHASHING_H
 
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "common/bucket/chainedBucket.h"
 #include "common/bucket/bucketFactory.h"
 #include <boost/serialization/base_object.hpp>

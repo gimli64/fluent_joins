@@ -1,6 +1,6 @@
 #ifndef HYBRIDHASHING_H
 #define HYBRIDHASHING_H
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "common/directory/hybridDirectory.h"
 #include <boost/serialization/string.hpp>
 

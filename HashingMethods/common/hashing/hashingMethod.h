@@ -7,7 +7,7 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <city.h>
-#include "common/MurmurHash3.h"
+#include "common/hashing/MurmurHash3.h"
 
 using namespace std;
 

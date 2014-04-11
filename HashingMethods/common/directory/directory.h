@@ -3,7 +3,7 @@
 
 #include "common/bucket/depthBucket.h"
 #include "common/bucket/bucketFactory.h"
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 
