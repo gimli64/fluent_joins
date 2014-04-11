@@ -4,7 +4,6 @@
 int main()
 {
     try {
-        Comparer<ExtendibleHashing> comparer;
         BucketFactory<DepthBucket> *depthFactory = BucketFactory<DepthBucket>::getInstance();
         BucketFactory<ChainedBucket> *chainedFactory = BucketFactory<ChainedBucket>::getInstance();
         clock_t tStart;
@@ -19,52 +18,69 @@ int main()
 
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM CUSTOMER" ));
+
+        vector<int> keysRepartition;
+        keysRepartition.push_back(4);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+
         vector<int> sizes;
-        sizes.push_back(5000);
+        sizes.push_back(20);
 //        sizes.push_back(10000);
 //        sizes.push_back(20000);
 //        sizes.push_back(30000);
 //        sizes.push_back(40000);
 //        sizes.push_back(50000);
-//        sizes.push_back(60000);
+//        sizes.push_back(150000);
 
 //        cout << "\nComparing three dynamic hash tables algorithms" << endl;
 
         for(int i = 0; i < sizes.size(); i++) {
-//            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
-//            cout << "Input size : " << sizes[i] << endl;
+            cout << "\n\nBucket size : " << Bucket::BUCKET_SIZE << endl;
+            cout << "Input size : " << sizes[i] << endl;
 
             cout << "\n### Extendible Hashing ###" << endl;
             tStart = clock();
-            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible");
+            ExtendibleHashing ext_hasher = ExtendibleHashing("extendible", keysRepartition);
             for (int j = 0; j < sizes[i]; j++) {
-                ext_hasher.put(Couple(R[j][0].c_str(), R[j]));
+                ext_hasher.insert(Couple(R[j][0].c_str(), R[j]));
             }
+
+            vector<size_t> hashes = ext_hasher.getHashes("AUTOMOBILE", 6);
+
             cout << "Finished building table" << endl;
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-            cout << "serializing" << endl;
-            depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
-            ext_hasher.clearBuckets();
-            comparer.writeTable(&ext_hasher);
 
-            ExtendibleHashing *new_ext_hasher = comparer.readTable("extendible");
+//            cout << "serializing" << endl;
+//            depthFactory->writeAll(ext_hasher.getBuckets(), ext_hasher.getBucketPath());
+//            ext_hasher.clearBuckets();
+//            comparer.writeTable(&ext_hasher);
+//            depthFactory->reset();
 
-            cout << "Getting all values" << endl;
-            tStart = clock();
-            for (int j = 0; j < sizes[i]; j++) {
-                try {
-                    new_ext_hasher->get(R[j][0].c_str());
-                } catch (string &e) {
-                    cout << e << endl;
-                }
-            }
-            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//            ExtendibleHashing *new_ext_hasher = comparer.readTable("extendible");
 
-            cout << "\n### Hybrid Hashing ###" << endl;
-            tStart = clock();
-//            HybridHashing hyb_hasher = HybridHashing("hybrid");
+//            cout << "Getting all values" << endl;
+//            tStart = clock();
 //            for (int j = 0; j < sizes[i]; j++) {
-//                hyb_hasher.put(Couple(R[j][0].c_str(), R[j]));
+//                try {
+//                    new_ext_hasher->getValue(R[j][0].c_str());
+//                } catch (string &e) {
+//                    cout << e << endl;
+//                }
+//            }
+//            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+//            cout << "\n### Hybrid Hashing ###" << endl;
+//            tStart = clock();
+
+//            HybridHashing hyb_hasher = HybridHashing("hybrid", keysRepartition);
+//            for (int j = 0; j < sizes[i]; j++) {
+//                hyb_hasher.insert(Couple(R[j][0].c_str(), R[j]));
 //            }
 //            cout << "Finished building table" << endl;
 //            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
@@ -72,6 +88,7 @@ int main()
 //            depthFactory->writeAll(hyb_hasher.getBuckets(), hyb_hasher.getBucketPath());
 //            hyb_hasher.clearBuckets();
 //            comparer.writeTable(&hyb_hasher);
+//            depthFactory->removeAll("hybrid");
 
 //            HybridHashing *new_hybrid_hasher = comparer.readTable("hybrid");
 
@@ -89,9 +106,9 @@ int main()
 
 //            cout << "\n### Linear Hashing ###" << endl;
 //            tStart = clock();
-//            LinearHashing lin_hasher = LinearHashing("linear");
+//            LinearHashing lin_hasher = LinearHashing("linear", keysRepartition);
 //            for (int j = 0; j < sizes[i]; j++) {
-//                lin_hasher.put(Couple(R[j][0].c_str(), R[j]));
+//                lin_hasher.insert(Couple(R[j][0].c_str(), R[j]));
 //            }
 //            cout << "Finished building table" << endl;
 //            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
@@ -99,6 +116,7 @@ int main()
 //            chainedFactory->writeAll(lin_hasher.getBuckets(), lin_hasher.getBucketPath());
 //            lin_hasher.clearBuckets();
 //            comparer.writeTable(&lin_hasher);
+//            chainedFactory->reset();
 
 //            LinearHashing *new_lin_hasher = comparer.readTable("linear");
 //            cout << "Getting all values" << endl;

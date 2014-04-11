@@ -1,6 +1,6 @@
 #ifndef HYBRIDHASHING_H
 #define HYBRIDHASHING_H
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "common/directory/hybridDirectory.h"
 #include <boost/serialization/string.hpp>
 
@@ -9,8 +9,7 @@ using namespace std;
 class HybridHashing : public HashingMethod
 {
 public:
-    HybridHashing();
-    HybridHashing(string name);
+    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -35,6 +34,8 @@ private:
 
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
+
+    virtual Bucket *getBucket(size_t hash);
 
     HybridDirectory& getHybridDirectory(size_t hash);
     int getLeftMostBits(size_t hash);

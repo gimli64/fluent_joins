@@ -2,7 +2,6 @@
 #define HYBRIDDIRECTORY_H
 
 #include "directory.h"
-#include "common/hashingMethod.h"
 
 using namespace std;
 

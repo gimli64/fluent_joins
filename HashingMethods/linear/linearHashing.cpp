@@ -2,22 +2,18 @@
 
 const double LinearHashing::SPLIT_RATIO = 0.75;
 
-LinearHashing::LinearHashing()
+LinearHashing::LinearHashing(string name, vector<int> keysRepartition, int relationSize)
     :level(0), nextSplitIndex(0), initialNumberBuckets(1),
-      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod()
+      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod(name, keysRepartition, relationSize)
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
-}
 
-LinearHashing::LinearHashing(string name)
-    :level(0), nextSplitIndex(0), initialNumberBuckets(1),
-      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashingMethod(name)
-{
-    factory = BucketFactory<ChainedBucket>::getInstance();
-    ChainedBucket *bucket = factory->newBucket();
-    bucket->setBucketPath(bucketPath);
-    buckets.push_back(bucket);
-    bucketNames.push_back(bucket->name);
+    if (name != "") {
+        ChainedBucket *bucket = factory->newBucket();
+        bucket->setBucketPath(bucketPath);
+        buckets.push_back(bucket);
+        bucketNames.push_back(bucket->name);
+    }
 }
 
 vector<string> LinearHashing::getValue(size_t hash, string key)
@@ -139,9 +135,9 @@ std::ostream& LinearHashing::dump(std::ostream& strm) const
     ostream& output = strm;
     output << "LinearHashing " + ss.str() + " : \n";
 
-//    ChainedBucket* bucket;
+    //    ChainedBucket* bucket;
     for(int i = 0; i < bucketNames.size(); i++) {
-//        bucket = buckets.at(i);
+        //        bucket = buckets.at(i);
         output << "#### " << bucketNames.at(i);
         if (i < bucketNames.size() - 1)
             output << "\n";

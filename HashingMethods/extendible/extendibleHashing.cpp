@@ -1,12 +1,7 @@
 #include "extendibleHashing.h"
 
-ExtendibleHashing::ExtendibleHashing()
-    :directory(Directory(this)), HashingMethod()
-{
-}
-
-ExtendibleHashing::ExtendibleHashing(string name)
-    :directory(Directory(this)), HashingMethod(name)
+ExtendibleHashing::ExtendibleHashing(string name, vector<int> keysRepartition, int relationSize)
+    :directory(Directory(this)), HashingMethod(name, keysRepartition, relationSize)
 {
 }
 
@@ -19,9 +14,14 @@ vector<string> ExtendibleHashing::getValue(size_t hash, string key)
     }
 }
 
-vector<DepthBucket *> &ExtendibleHashing::getBuckets()
+vector<DepthBucket *> ExtendibleHashing::getBuckets()
 {
     return directory.getBuckets();
+}
+
+Bucket *ExtendibleHashing::getBucket(size_t hash)
+{
+    return directory.getBucket(hash);
 }
 
 void ExtendibleHashing::clearBuckets()
