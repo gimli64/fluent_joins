@@ -1,4 +1,4 @@
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "extendible/extendibleHashing.h"
 #include "linear/linearHashing.h"
 #include "hybrid/hybridHashing.h"

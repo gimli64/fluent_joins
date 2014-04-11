@@ -1,7 +1,7 @@
 #ifndef LINEARHASHING_H
 #define LINEARHASHING_H
 
-#include "common/hashingMethod.h"
+#include "common/hashing/hashingMethod.h"
 #include "common/bucket/chainedBucket.h"
 #include "common/bucket/bucketFactory.h"
 #include <boost/serialization/base_object.hpp>
@@ -13,8 +13,7 @@ using namespace std;
 class LinearHashing : public HashingMethod
 {
 public:
-    LinearHashing();
-    LinearHashing(string name);
+    LinearHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
     virtual ostream& dump(ostream& strm) const;
 
     vector<ChainedBucket*> getBuckets();

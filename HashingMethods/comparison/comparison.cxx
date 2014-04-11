@@ -31,7 +31,7 @@ int main()
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         HybridHashing *supplierTable = comparer.readTable("supplier");
         HybridHashing *nationTable = comparer.readTable("nation");
-        comparer.binaryJoin(supplierTable, nationTable);
+//        comparer.binaryJoin(supplierTable, nationTable);
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();
