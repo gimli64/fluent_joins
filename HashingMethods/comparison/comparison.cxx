@@ -12,26 +12,40 @@ int main()
 
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
-            cout << "Opened database successfully: " << C.dbname() << endl;
+            cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
-            cout << "Can't open database" << endl;
+            cout << "\nCan't open database" << endl;
             return 1;
         }
 
-        cout << "\nCreating the tables" << endl;
+        cout << "\nCreating the tables\n" << endl;
         tStart = clock();
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM supplier" ));
-        comparer.createTable(R, "supplier");
+        vector<int> keysRepartition;
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
 
+        comparer.createTable(R, "supplier", keysRepartition);
+
+        keysRepartition.clear();
         R = result( N.exec( "SELECT * FROM nation" ));
-        comparer.createTable(R, "nation");
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(1);
+        comparer.createTable(R, "nation", keysRepartition);
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         HybridHashing *supplierTable = comparer.readTable("supplier");
         HybridHashing *nationTable = comparer.readTable("nation");
-//        comparer.binaryJoin(supplierTable, nationTable);
+        comparer.binaryJoin(supplierTable, nationTable, 3, 0);
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();

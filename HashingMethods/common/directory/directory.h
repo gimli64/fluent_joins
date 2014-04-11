@@ -28,6 +28,7 @@ public:
     int getSize();
 
     DepthBucket *getBucket(size_t hash);
+    DepthBucket *getBucketFromName(size_t hash);
     vector<DepthBucket*> &getBuckets();
     void clearBuckets();
 
@@ -45,8 +46,6 @@ private:
     int globalDepth;
     vector<string> bucketNames;
     string bucketPath;
-
-    DepthBucket *getBucketFromName(size_t hash);
 
     friend class boost::serialization::access;
     template<class Archive>

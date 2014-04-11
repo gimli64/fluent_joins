@@ -30,9 +30,9 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
     }
 }
 
-Bucket *HybridHashing::getBucket(size_t hash)
+Bucket *HybridHashing::fetchBucket(size_t hash)
 {
-    return getHybridDirectory(hash).getBucket(hash);
+    return getHybridDirectory(hash).getBucketFromName(hash);
 }
 
 HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)

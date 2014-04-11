@@ -24,8 +24,6 @@ private:
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
-    virtual Bucket *getBucket(size_t hash);
-
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

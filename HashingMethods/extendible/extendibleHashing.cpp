@@ -19,11 +19,6 @@ vector<DepthBucket *> ExtendibleHashing::getBuckets()
     return directory.getBuckets();
 }
 
-Bucket *ExtendibleHashing::getBucket(size_t hash)
-{
-    return directory.getBucket(hash);
-}
-
 void ExtendibleHashing::clearBuckets()
 {
     directory.clearBuckets();
