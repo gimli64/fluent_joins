@@ -16,6 +16,7 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
     vector<DepthBucket *> &getBuckets();
+    Bucket *getBucket(size_t hash);
     void clearBuckets();
 
 private:
