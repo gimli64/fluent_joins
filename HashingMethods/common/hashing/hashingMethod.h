@@ -24,10 +24,12 @@ public:
 
     // Multikey extension methods
     vector<Bucket *> fetchBuckets(size_t keyHash, int position);
+    size_t getComplexHash(Couple couple);
     void insert(Couple couple);
 
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
+    int getNumberBucketFetch();
 
     string getBucketPath();
     string getName();
@@ -40,6 +42,7 @@ protected:
     int numberItems;
     vector<int> keysRepartition;
     const int relationSize;
+    int numberBucketFetch;
 
 private:
     void getHashes(size_t keyHash, int position, vector<size_t> &hashes);
