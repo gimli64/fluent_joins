@@ -32,6 +32,7 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
 
 Bucket *HybridHashing::fetchBucket(size_t hash)
 {
+    numberBucketFetch++;
     return getHybridDirectory(hash).getBucketFromName(hash);
 }
 
