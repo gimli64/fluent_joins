@@ -21,31 +21,36 @@ int main()
         cout << "\nCreating the tables\n" << endl;
         tStart = clock();
         nontransaction N(C);
-        result R( N.exec( "SELECT * FROM supplier" ));
+        result R( N.exec( "SELECT * FROM supplier limit 50" ));
         vector<int> keysRepartition;
         keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(2);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
 
         comparer.createTable(R, "supplier", keysRepartition);
 
-        keysRepartition.clear();
         R = result( N.exec( "SELECT * FROM nation" ));
-        keysRepartition.push_back(2);
+        keysRepartition.clear();
         keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
         keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
         comparer.createTable(R, "nation", keysRepartition);
+
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        tStart = clock();
         HybridHashing *supplierTable = comparer.readTable("supplier");
         HybridHashing *nationTable = comparer.readTable("nation");
         comparer.binaryJoin(supplierTable, nationTable, 3, 0);
+        printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation :" << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();
