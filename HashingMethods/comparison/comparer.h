@@ -52,6 +52,7 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
     } else {
         for (int i = 0; i < relation.size(); i++) {
             table.insert(Couple(relation[i][0].c_str(), relation[i]));
+            cout << table << endl;
         }
     }
     cout << "Finished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;

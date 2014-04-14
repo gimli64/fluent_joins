@@ -36,7 +36,7 @@ int main()
         R = result( N.exec( "SELECT * FROM nation" ));
         keysRepartition.clear();
         keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
+        keysRepartition.push_back(1);
         keysRepartition.push_back(1);
         keysRepartition.push_back(0);
         comparer.createTable(R, "nation", keysRepartition);

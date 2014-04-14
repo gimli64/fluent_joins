@@ -40,8 +40,8 @@ void HashingMethod::getHashes(size_t keyHash, int position, vector<size_t> &hash
         hash += keyHash;
         hash <<= numberBitsRight;
         hash += i & ((1 << numberBitsRight) - 1);
-        MurmurHash3_x86_32(&hash, sizeof(size_t), (uint32_t) 0, &result );
-        hashes.push_back(result);
+//        MurmurHash3_x86_32(&hash, sizeof(size_t), (uint32_t) 0, &result );
+        hashes.push_back(simple_hasher(hash));
     }
 }
 
@@ -90,10 +90,10 @@ size_t HashingMethod::interleaveHashes(vector<size_t> &hashes)
     }
     key += hashes[hashes.size() - 1] & ((1 << keysRepartition[hashes.size() - 1]) - 1);
 
-    size_t result = 0;
-    MurmurHash3_x86_32(&key, sizeof(size_t), (uint32_t) 0, &result );
-    cout << result << endl;
-    return result;
+//    size_t result = 0;
+//    MurmurHash3_x86_32(&key, sizeof(size_t), (uint32_t) 0, &result );
+    return simple_hasher(key);
+//    return result;
 }
 
 vector<string> HashingMethod::get(string key)

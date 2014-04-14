@@ -6,6 +6,7 @@
 #include <vector>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/functional/hash.hpp>
 #include <city.h>
 #include <math.h>
 #include "common/hashing/MurmurHash3.h"
@@ -45,6 +46,8 @@ protected:
     int numberBucketFetch;
 
 private:
+    boost::hash<size_t> simple_hasher;
+
     void getHashes(size_t keyHash, int position, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);
 
