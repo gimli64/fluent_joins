@@ -5,11 +5,11 @@ MultikeyHashTable::MultikeyHashTable(string name, vector<int> keysRepartition)
 {
 }
 
-vector<Bucket *> MultikeyHashTable::fetchBuckets(size_t keyHash, int position)
+vector<Bucket *> MultikeyHashTable::fetchBuckets(size_t keyHash, int keyHashSize, int position)
 {
     vector<Bucket *> buckets;
     vector<size_t> hashes;
-    getHashes(keyHash, position, hashes);
+    getHashes(keyHash, keyHashSize, position, hashes);
     for (int i = 0; i < hashes.size(); i++) {
         buckets.push_back(fetchBucket(hashes[i]));
     }
@@ -26,9 +26,9 @@ void MultikeyHashTable::put(Couple couple)
     putCouple(getHash(couple), couple);
 }
 
-void MultikeyHashTable::getHashes(size_t keyHash, int position, vector<size_t> &hashes)
+void MultikeyHashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes)
 {
-    int numberBitsToSet = keysRepartition[position];
+    int numberBitsToSet = keyHashSize;
 
     int numberBitsUnset = 0;
     int numberBitsLeft = 0;
@@ -36,6 +36,8 @@ void MultikeyHashTable::getHashes(size_t keyHash, int position, vector<size_t> &
         numberBitsUnset += keysRepartition[i];
         numberBitsLeft += keysRepartition[i];
     }
+    numberBitsUnset += (keysRepartition[position] - keyHashSize);
+    numberBitsLeft += (keysRepartition[position] - keyHashSize);
 
     int numberBitsRight = 0;
     for (int i = position + 1; i < keysRepartition.size(); i++) {
@@ -46,8 +48,9 @@ void MultikeyHashTable::getHashes(size_t keyHash, int position, vector<size_t> &
     size_t hash = 0;
     size_t result = 0;
     size_t leftMask = ((1 << numberBitsLeft) - 1) << (numberBitsRight);
-    hashes.reserve(numberBitsToSet + numberBitsUnset);
-    for (int i = (int) pow(2.0, (double) numberBitsUnset) - 1; i >= 0; i--) {
+    int numberHashes = (int) pow(2.0, (double) numberBitsUnset) - 1;
+    hashes.reserve(numberHashes);
+    for (int i = numberHashes; i >= 0; i--) {
         hash = 0;
         result = 0;
         hash += ((i & leftMask) >> numberBitsRight);

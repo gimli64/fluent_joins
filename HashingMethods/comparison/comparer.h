@@ -90,9 +90,10 @@ set<string> Comparer<T, B>::binaryJoin(T *table1, T *table2, int primaryPosition
     set<string> result;
     vector<Bucket *>::iterator bucket1;
     vector<Bucket *>::iterator bucket2;
-    for (size_t keyHash = 0; keyHash < 4; keyHash++) {
-        vector<Bucket *> buckets1 = table1->fetchBuckets(keyHash, primaryPosition);
-        vector<Bucket *> buckets2 = table2->fetchBuckets(keyHash, foreignPosition);
+    int keyHashSize = 2;
+    for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
+        vector<Bucket *> buckets1 = table1->fetchBuckets(keyHash, keyHashSize, primaryPosition);
+        vector<Bucket *> buckets2 = table2->fetchBuckets(keyHash, keyHashSize, foreignPosition);
 
         for (bucket1 = buckets1.begin(); bucket1 != buckets1.end(); ++bucket1) {
             for (bucket2 = buckets2.begin(); bucket2 != buckets2.end(); ++bucket2) {

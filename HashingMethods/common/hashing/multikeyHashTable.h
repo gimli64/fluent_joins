@@ -13,13 +13,13 @@ public:
     using HashTable::getHash;
     virtual size_t getHash(Couple couple);
 
-    vector<Bucket *> fetchBuckets(size_t keyHash, int position);
+    vector<Bucket *> fetchBuckets(size_t keyHash, int keyHashSize, int position);
     virtual void put(Couple couple);
 
 private:
     vector<int> keysRepartition;
 
-    void getHashes(size_t keyHash, int position, vector<size_t> &hashes);
+    void getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);
     unsigned int MurmurHash2(const void * key, int len, unsigned int seed);
 

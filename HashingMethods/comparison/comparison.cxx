@@ -23,13 +23,13 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM supplier" ));
         vector<int> keysRepartition;
-        keysRepartition.push_back(4);
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
         keysRepartition.push_back(2);
         keysRepartition.push_back(1);
         keysRepartition.push_back(1);
+        keysRepartition.push_back(3);
         keysRepartition.push_back(1);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(2);
 
         comparer.createTable(R, "supplier", keysRepartition);
 
