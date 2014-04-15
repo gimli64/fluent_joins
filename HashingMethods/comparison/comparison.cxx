@@ -21,23 +21,23 @@ int main()
         cout << "\nCreating the tables\n" << endl;
         tStart = clock();
         nontransaction N(C);
-        result R( N.exec( "SELECT * FROM supplier limit 50" ));
+        result R( N.exec( "SELECT * FROM supplier" ));
         vector<int> keysRepartition;
         keysRepartition.push_back(2);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(2);
         keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(1);
 
         comparer.createTable(R, "supplier", keysRepartition);
 
         R = result( N.exec( "SELECT * FROM nation" ));
         keysRepartition.clear();
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(2);
         keysRepartition.push_back(0);
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         comparer.createTable(R, "nation", keysRepartition);
 

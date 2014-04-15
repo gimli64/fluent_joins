@@ -52,7 +52,6 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
     } else {
         for (int i = 0; i < relation.size(); i++) {
             table.insert(Couple(relation[i][0].c_str(), relation[i]));
-            cout << table << endl;
         }
     }
     cout << "Finished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
@@ -91,23 +90,18 @@ set<string> Comparer<T, B>::binaryJoin(T *table1, T *table2, int primaryPosition
     set<string> result;
     vector<Bucket *>::iterator bucket1;
     vector<Bucket *>::iterator bucket2;
-    for (size_t keyHash = 0; keyHash < 2; keyHash++) {
+    for (size_t keyHash = 0; keyHash < 4; keyHash++) {
         vector<Bucket *> buckets1 = table1->fetchBuckets(keyHash, primaryPosition);
         vector<Bucket *> buckets2 = table2->fetchBuckets(keyHash, foreignPosition);
 
         for (bucket1 = buckets1.begin(); bucket1 != buckets1.end(); ++bucket1) {
-            cout << "supplier : "<< (*bucket1)->name << endl;
             for (bucket2 = buckets2.begin(); bucket2 != buckets2.end(); ++bucket2) {
-                cout << (*bucket2)->name << endl;
                 compareBuckets((*bucket1)->getAllValues(), (*bucket2)->getAllValues(), primaryPosition, foreignPosition, result);
             }
         }
     }
 
-//    for(int i = 0; i < 100; i++)
-//        cout << result[i] << endl;
     cout << result.size() << endl;
-
     return result;
 }
 
