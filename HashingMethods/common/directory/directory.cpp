@@ -31,7 +31,6 @@ vector<string> Directory::getValue(size_t hash, string key)
 
 void Directory::putCouple(size_t hash, Couple couple)
 {
-    cout << couple.key << endl;
     DepthBucket *bucket = getBucket(hash);
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() == globalDepth) {
@@ -47,17 +46,11 @@ void Directory::putCouple(size_t hash, Couple couple)
 
 DepthBucket* Directory::getBucket(size_t hash)
 {
-    cout << hash << endl;
-    cout << globalDepth << endl;
-    cout << (hash & ((1 << globalDepth) - 1)) << endl;
     return buckets.at(hash & ((1 << globalDepth) - 1));
 }
 
 DepthBucket* Directory::getBucketFromName(size_t hash)
 {
-    cout << hash << endl;
-    cout << globalDepth << endl;
-    cout << (hash & ((1 << globalDepth) - 1)) << endl;
     return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
@@ -81,10 +74,6 @@ void Directory::split(DepthBucket* bucket)
     vector<Couple>& values = bucket->getAllValues();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
-        cout << (*it).key << endl;
-        cout << (hasher->getComplexHash((*it))) << endl;
-        cout << globalDepth << endl;
-        cout << (hasher->getComplexHash((*it)) & ((1 << globalDepth) - 1)) << endl;
         size_t h = hasher->getComplexHash((*it)) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
             newBucket2->putCouple(*it);
