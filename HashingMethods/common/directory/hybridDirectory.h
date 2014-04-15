@@ -11,7 +11,7 @@ public:
     static const int CAPA = 16;
 
     HybridDirectory();
-    HybridDirectory(HashingMethod *hasher);
+    HybridDirectory(HashTable *hasher);
 
     int getNumberBuckets();
     vector<Couple> popAllValues();
@@ -21,6 +21,7 @@ public:
 private:
     int numberBuckets;
 
+    virtual size_t getHash(Couple couple);
     virtual void split(DepthBucket* bucket);
     virtual void doubleSize();
     void notifyNumberBuckets(int number);

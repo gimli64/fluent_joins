@@ -46,12 +46,12 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
     T table(name, keysRepartition);
     if (size > 0) {
         for (int i = 0; i < size; i++) {
-            table.insert(Couple(relation[i][0].c_str(), relation[i]));
+            table.put(Couple(relation[i][0].c_str(), relation[i]));
             cout << table << endl;
         }
     } else {
         for (int i = 0; i < relation.size(); i++) {
-            table.insert(Couple(relation[i][0].c_str(), relation[i]));
+            table.put(Couple(relation[i][0].c_str(), relation[i]));
         }
     }
     cout << "Finished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;

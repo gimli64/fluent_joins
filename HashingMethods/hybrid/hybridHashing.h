@@ -1,15 +1,15 @@
 #ifndef HYBRIDHASHING_H
 #define HYBRIDHASHING_H
-#include "common/hashing/hashingMethod.h"
+#include "common/hashing/multikeyHashTable.h"
 #include "common/directory/hybridDirectory.h"
 #include <boost/serialization/string.hpp>
 
 using namespace std;
 
-class HybridHashing : public HashingMethod
+class HybridHashing : public MultikeyHashTable
 {
 public:
-    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
+    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -47,7 +47,7 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & boost::serialization::base_object<HashingMethod>(*this);
+        ar & boost::serialization::base_object<MultikeyHashTable>(*this);
         ar & level;
         ar & mask;
         ar & nextSplitIndex;

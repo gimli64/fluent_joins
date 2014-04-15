@@ -16,14 +16,3 @@ add_test(NAME hashingMethodTest COMMAND HashingMethodTests)
 
 include_directories(${PROJECT_SOURCE_DIR}/HashingMethods)
 add_executable(main main.cpp)
-
-target_link_libraries (main
-                       Bucket
-                       ChainedBucket
-                       DepthBucket
-                       Directory
-                       HybridDirectory
-                       HashingMethod
-                       LinearHashing
-                       ExtendibleHashing
-                       HybridHashing)

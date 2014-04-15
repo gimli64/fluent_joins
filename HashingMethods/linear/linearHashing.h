@@ -1,7 +1,7 @@
 #ifndef LINEARHASHING_H
 #define LINEARHASHING_H
 
-#include "common/hashing/hashingMethod.h"
+#include "common/hashing/hashTable.h"
 #include "common/bucket/chainedBucket.h"
 #include "common/bucket/bucketFactory.h"
 #include <boost/serialization/base_object.hpp>
@@ -10,10 +10,10 @@
 
 using namespace std;
 
-class LinearHashing : public HashingMethod
+class LinearHashing : public HashTable
 {
 public:
-    LinearHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
+    LinearHashing(string name = "");
     virtual ostream& dump(ostream& strm) const;
 
     vector<ChainedBucket*> getBuckets();
@@ -43,7 +43,7 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & boost::serialization::base_object<HashingMethod>(*this);
+        ar & boost::serialization::base_object<HashTable>(*this);
         ar & level;
         ar & nextSplitIndex;
         ar & bucketNames;

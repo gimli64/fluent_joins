@@ -1,6 +1,6 @@
 #ifndef EXTENDIBLEHASHING_H
 #define EXTENDIBLEHASHING_H
-#include "common/hashing/hashingMethod.h"
+#include "common/hashing/hashTable.h"
 #include "common/directory/directory.h"
 #include <sstream>
 
@@ -8,10 +8,10 @@ using std::ostream;
 
 class Directory;
 
-class ExtendibleHashing : public HashingMethod
+class ExtendibleHashing : public HashTable
 {
 public:
-    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>(), int relationSize = 0);
+    ExtendibleHashing(string name = "");
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -28,7 +28,7 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & boost::serialization::base_object<HashingMethod>(*this);
+        ar & boost::serialization::base_object<HashTable>(*this);
         ar & directory;
     }
 };

@@ -5,7 +5,7 @@ HybridDirectory::HybridDirectory()
 {
 }
 
-HybridDirectory::HybridDirectory(HashingMethod *hasher)
+HybridDirectory::HybridDirectory(HashTable *hasher)
     :numberBuckets(1), Directory(hasher)
 {
     hasher->setNumberDirEntries(hasher->getNumberDirEntries() + 1);
@@ -28,6 +28,11 @@ void HybridDirectory::split(DepthBucket* bucket)
 {
     Directory::split(bucket);
     numberBuckets++;
+}
+
+size_t HybridDirectory::getHash(Couple couple)
+{
+    return hasher->getHash(couple);
 }
 
 void HybridDirectory::doubleSize()
