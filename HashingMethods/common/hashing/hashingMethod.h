@@ -6,6 +6,7 @@
 #include <vector>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/functional/hash.hpp>
 #include <city.h>
 #include <math.h>
 #include "common/hashing/MurmurHash3.h"
@@ -23,12 +24,13 @@ public:
     void put(Couple couple);
 
     // Multikey extension methods
-    vector<size_t> getHashes(string key, int position);
-    vector<Bucket *> fetchBuckets(vector<size_t> hashes);
+    vector<Bucket *> fetchBuckets(size_t keyHash, int position);
+    size_t getComplexHash(Couple couple);
     void insert(Couple couple);
 
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
+    int getNumberBucketFetch();
 
     string getBucketPath();
     string getName();
@@ -41,15 +43,19 @@ protected:
     int numberItems;
     vector<int> keysRepartition;
     const int relationSize;
+    int numberBucketFetch;
 
 private:
+    boost::hash<size_t> simple_hasher;
+
+    void getHashes(size_t keyHash, int position, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);
 
     // Common dictionary behaviour methods
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
-    virtual Bucket* getBucket(size_t hash);
+    virtual Bucket* fetchBucket(size_t hash);
 
     friend class boost::serialization::access;
     template<class Archive>

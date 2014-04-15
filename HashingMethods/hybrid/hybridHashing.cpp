@@ -30,9 +30,10 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
     }
 }
 
-Bucket *HybridHashing::getBucket(size_t hash)
+Bucket *HybridHashing::fetchBucket(size_t hash)
 {
-    return getHybridDirectory(hash).getBucket(hash);
+    numberBucketFetch++;
+    return getHybridDirectory(hash).getBucketFromName(hash);
 }
 
 HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
@@ -125,7 +126,7 @@ std::ostream& HybridHashing::dump(std::ostream& strm) const
     stringstream ss;
     ss << address;
     ostream& output = strm;
-    output << className() + ss.str() + " : \n";
+    output << "\n\n" << className() + ss.str() + " : \n";
     for(int i = 0; i < directories.size(); i++) {
         output << "\n## " << directories.at(i);
         if (i < directories.size() - 1)

@@ -1,7 +1,7 @@
 #include "hashingMethod.h"
 
 HashingMethod::HashingMethod(string name, vector<int> keysRepartition, int relationSize)
-    :numberItems(0), name(name), keysRepartition(keysRepartition), relationSize(relationSize)
+    :numberItems(0), name(name), keysRepartition(keysRepartition), numberBucketFetch(0), relationSize(relationSize)
 {
     bucketPath = name + "/";
 }
@@ -11,11 +11,9 @@ size_t HashingMethod::getHash(string key)
     return CityHash32(key.c_str(), key.size());
 }
 
-vector<size_t> HashingMethod::getHashes(string key, int position)
+void HashingMethod::getHashes(size_t keyHash, int position, vector<size_t> &hashes)
 {
-    vector<size_t> hashes;
     int numberBitsToSet = keysRepartition[position];
-    size_t keyHash = getHash(key) & ((1 << numberBitsToSet) - 1);
 
     int numberBitsUnset = 0;
     int numberBitsLeft = 0;
@@ -33,7 +31,7 @@ vector<size_t> HashingMethod::getHashes(string key, int position)
     size_t hash = 0;
     size_t result = 0;
     size_t leftMask = ((1 << numberBitsLeft) - 1) << (numberBitsRight);
-    hashes.reserve(numberBitsLeft);
+    hashes.reserve(numberBitsToSet + numberBitsUnset);
     for (int i = (int) pow(2.0, (double) numberBitsUnset) - 1; i >= 0; i--) {
         hash = 0;
         result = 0;
@@ -42,35 +40,44 @@ vector<size_t> HashingMethod::getHashes(string key, int position)
         hash += keyHash;
         hash <<= numberBitsRight;
         hash += i & ((1 << numberBitsRight) - 1);
-        MurmurHash3_x86_32(&hash, sizeof(size_t), (uint32_t) 0, &result );
-        hashes.push_back(result);
+//        MurmurHash3_x86_32(&hash, sizeof(size_t), (uint32_t) 0, &result );
+        hashes.push_back(simple_hasher(hash));
     }
-
-    return hashes;
 }
 
-vector<Bucket *> HashingMethod::fetchBuckets(vector<size_t> hashes)
+vector<Bucket *> HashingMethod::fetchBuckets(size_t keyHash, int position)
 {
     vector<Bucket *> buckets;
+    vector<size_t> hashes;
+    getHashes(keyHash, position, hashes);
     for (int i = 0; i < hashes.size(); i++) {
-        buckets.push_back(getBucket(hashes[i]));
+        buckets.push_back(fetchBucket(hashes[i]));
     }
-
     return buckets;
 }
 
-Bucket *HashingMethod::getBucket(size_t hash)
+Bucket *HashingMethod::fetchBucket(size_t hash)
 {
     return new Bucket();
 }
 
+int HashingMethod::getNumberBucketFetch()
+{
+    return numberBucketFetch;
+}
+
 void HashingMethod::insert(Couple couple)
+{
+    putCouple(getComplexHash(couple), couple);
+}
+
+size_t HashingMethod::getComplexHash(Couple couple)
 {
     vector<size_t> hashes;
     for (int i = 0; i < couple.values.size(); i++)
         hashes.push_back(getHash(couple.values[i]));
 
-    putCouple(interleaveHashes(hashes), couple);
+    return interleaveHashes(hashes);
 }
 
 size_t HashingMethod::interleaveHashes(vector<size_t> &hashes)
@@ -83,9 +90,10 @@ size_t HashingMethod::interleaveHashes(vector<size_t> &hashes)
     }
     key += hashes[hashes.size() - 1] & ((1 << keysRepartition[hashes.size() - 1]) - 1);
 
-    size_t result = 0;
-    MurmurHash3_x86_32(&key, sizeof(size_t), (uint32_t) 0, &result );
-    return result;
+//    size_t result = 0;
+//    MurmurHash3_x86_32(&key, sizeof(size_t), (uint32_t) 0, &result );
+    return simple_hasher(key);
+//    return result;
 }
 
 vector<string> HashingMethod::get(string key)
@@ -99,7 +107,7 @@ vector<string> HashingMethod::get(string key)
 
 void HashingMethod::put(Couple couple)
 {
-    putCouple(getHash(couple.key), couple);
+    putCouple(getComplexHash(couple), couple);
 }
 
 vector<string> HashingMethod::getValue(size_t hash, string key)

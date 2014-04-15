@@ -74,7 +74,7 @@ void Directory::split(DepthBucket* bucket)
     vector<Couple>& values = bucket->getAllValues();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
-        size_t h = hasher->getHash((*it).key) & ((1 << globalDepth) - 1);
+        size_t h = hasher->getComplexHash((*it)) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
             newBucket2->putCouple(*it);
         else
