@@ -5,7 +5,7 @@ Directory::Directory()
     factory = BucketFactory<DepthBucket>::getInstance();
 }
 
-Directory::Directory(HashingMethod *hasher)
+Directory::Directory(HashTable *hasher)
     :hasher(hasher), globalDepth(0), buckets()
 {
     factory = BucketFactory<DepthBucket>::getInstance();
@@ -74,7 +74,7 @@ void Directory::split(DepthBucket* bucket)
     vector<Couple>& values = bucket->getAllValues();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
-        size_t h = hasher->getComplexHash((*it)) & ((1 << globalDepth) - 1);
+        size_t h = getHash(*it) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
             newBucket2->putCouple(*it);
         else
@@ -111,6 +111,11 @@ int Directory::getGlobalDepth()
 vector<DepthBucket *> &Directory::getBuckets()
 {
     return buckets;
+}
+
+size_t Directory::getHash(Couple couple)
+{
+    return hasher->getHash(couple.key);
 }
 
 void Directory::clearBuckets()

@@ -3,7 +3,7 @@
 
 #include "common/bucket/depthBucket.h"
 #include "common/bucket/bucketFactory.h"
-#include "common/hashing/hashingMethod.h"
+#include "common/hashing/hashTable.h"
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 
@@ -19,7 +19,7 @@ class Directory
 {
 public:
     Directory();
-    Directory(HashingMethod *hasher);
+    Directory(HashTable *hasher);
 
     void init();
     vector<string> getValue(size_t hash, string key);
@@ -37,8 +37,8 @@ public:
 
 protected:
     BucketFactory<DepthBucket> *factory;
-    HashingMethod *hasher;
     vector<DepthBucket*> buckets;
+    HashTable *hasher;
     virtual void doubleSize();
     virtual void split(DepthBucket *bucket);
 
@@ -46,6 +46,8 @@ private:
     int globalDepth;
     vector<string> bucketNames;
     string bucketPath;
+
+    virtual size_t getHash(Couple couple);
 
     friend class boost::serialization::access;
     template<class Archive>
