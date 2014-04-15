@@ -54,8 +54,8 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
             table.put(Couple(relation[i][0].c_str(), relation[i]));
         }
     }
-    cout << "Finished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
-    cout << table << endl;
+    cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
+//    cout << table << endl;
     cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
     table.clearBuckets();

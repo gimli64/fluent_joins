@@ -9,7 +9,6 @@
 #include <boost/functional/hash.hpp>
 #include <city.h>
 #include <math.h>
-#include "common/hashing/MurmurHash3.h"
 
 using namespace std;
 
@@ -40,8 +39,6 @@ protected:
     virtual void putCouple(size_t hash, Couple couple);
 
 private:
-    boost::hash<size_t> simple_hasher;
-
     virtual vector<string> getValue(size_t hash, string key);
 
     friend class boost::serialization::access;
