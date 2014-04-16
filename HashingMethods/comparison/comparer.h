@@ -21,7 +21,7 @@ template<class T, class B> class Comparer
 public:
     Comparer();
 
-    void createTable(result relation, string name, vector<int> keysRepartition, int size = 0);
+    void createTable(result relation, string name, vector<int> keysRepartition);
 
     void writeTable(T* table);
     T *readTable(string name);
@@ -40,22 +40,15 @@ Comparer<T, B>::Comparer()
 }
 
 template<class T, class B>
-void Comparer<T, B>::createTable(result relation, string name, vector<int> keysRepartition, int size)
+void Comparer<T, B>::createTable(result relation, string name, vector<int> keysRepartition)
 {
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition);
-    if (size > 0) {
-        for (int i = 0; i < size; i++) {
-            table.put(Couple(relation[i][0].c_str(), relation[i]));
-            cout << table << endl;
-        }
-    } else {
-        for (int i = 0; i < relation.size(); i++) {
-            table.put(Couple(relation[i][0].c_str(), relation[i]));
-        }
+    for (int i = 0; i < relation.size(); i++) {
+        table.put(Couple(relation[i][0].c_str(), relation[i]));
     }
+    cout << table << endl;
     cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
-//    cout << table << endl;
     cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
     table.clearBuckets();
@@ -90,7 +83,7 @@ set<string> Comparer<T, B>::binaryJoin(T *table1, T *table2, int primaryPosition
     set<string> result;
     vector<Bucket *>::iterator bucket1;
     vector<Bucket *>::iterator bucket2;
-    int keyHashSize = 2;
+    int keyHashSize = min(table1->keysRepartition[primaryPosition], table2->keysRepartition[foreignPosition]);
     for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
         vector<Bucket *> buckets1 = table1->fetchBuckets(keyHash, keyHashSize, primaryPosition);
         vector<Bucket *> buckets2 = table2->fetchBuckets(keyHash, keyHashSize, foreignPosition);
@@ -102,7 +95,7 @@ set<string> Comparer<T, B>::binaryJoin(T *table1, T *table2, int primaryPosition
         }
     }
 
-    cout << result.size() << endl;
+    cout << result.size() << " values successfully joined" << endl;
     return result;
 }
 

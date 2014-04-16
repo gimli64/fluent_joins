@@ -10,6 +10,8 @@ class MultikeyHashTable : public HashTable
 public:
     MultikeyHashTable(string name = "", vector<int> keysRepartition = vector<int>());
 
+    vector<int> keysRepartition;
+
     using HashTable::getHash;
     virtual size_t getHash(Couple couple);
 
@@ -17,8 +19,6 @@ public:
     virtual void put(Couple couple);
 
 private:
-    vector<int> keysRepartition;
-
     void getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);
     unsigned int MurmurHash2(const void * key, int len, unsigned int seed);
