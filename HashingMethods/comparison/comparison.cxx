@@ -4,7 +4,7 @@
 int main()
 {
     try {
-        Comparer<HybridHashing, DepthBucket> comparer;
+        Comparer<MultikeyHybridHashing, DepthBucket> comparer;
         clock_t tStart;
 
         cout << "Fluent joins experiment" << endl;
@@ -45,8 +45,8 @@ int main()
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         tStart = clock();
-        HybridHashing *supplierTable = comparer.readTable("supplier");
-        HybridHashing *nationTable = comparer.readTable("nation");
+        MultikeyHybridHashing *supplierTable = comparer.readTable("supplier");
+        MultikeyHybridHashing *nationTable = comparer.readTable("nation");
         comparer.binaryJoin(supplierTable, nationTable, 3, 0);
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;

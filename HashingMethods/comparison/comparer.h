@@ -3,6 +3,7 @@
 #include "extendible/extendibleHashing.h"
 #include "linear/linearHashing.h"
 #include "hybrid/hybridHashing.h"
+#include "hybrid/multikeyHybridHashing.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"
 

@@ -1,10 +1,10 @@
-#include "hybridHashing.h"
+#include "multikeyHybridHashing.h"
 
-const double HybridHashing::SPLIT_RATIO = 0.75;
+const double MultikeyHybridHashing::SPLIT_RATIO = 0.75;
 
-HybridHashing::HybridHashing(string name)
+MultikeyHybridHashing::MultikeyHybridHashing(string name, vector<int> keysRepartition)
     :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
-      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), HashTable(name)
+      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), MultikeyHashTable(name, keysRepartition)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
 
@@ -12,7 +12,7 @@ HybridHashing::HybridHashing(string name)
         directories.push_back(HybridDirectory(this));
 }
 
-vector<string> HybridHashing::getValue(size_t hash, string key)
+vector<string> MultikeyHybridHashing::getValue(size_t hash, string key)
 {
     try {
         return getHybridDirectory(hash).getValue(hash, key);
@@ -21,7 +21,7 @@ vector<string> HybridHashing::getValue(size_t hash, string key)
     }
 }
 
-void HybridHashing::putCouple(size_t hash, Couple couple)
+void MultikeyHybridHashing::putCouple(size_t hash, Couple couple)
 {
     getHybridDirectory(hash).putCouple(hash, couple);
     numberItems++;
@@ -30,7 +30,13 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
     }
 }
 
-HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
+Bucket *MultikeyHybridHashing::fetchBucket(size_t hash)
+{
+    numberBucketFetch++;
+    return getHybridDirectory(hash).getBucketFromName(hash);
+}
+
+HybridDirectory &MultikeyHybridHashing::getHybridDirectory(size_t hash)
 {
     hash = getLeftMostBits(hash);
     int pageIndex = hash & mask;
@@ -40,7 +46,7 @@ HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
     return directories.at(pageIndex);
 }
 
-int HybridHashing::getLeftMostBits(size_t hash)
+int MultikeyHybridHashing::getLeftMostBits(size_t hash)
 {
     unsigned int newKey = 0;
     for (int i = 31; i >= level-1; i--) {
@@ -50,7 +56,7 @@ int HybridHashing::getLeftMostBits(size_t hash)
     return newKey;
 }
 
-void HybridHashing::incrementSplitIndex()
+void MultikeyHybridHashing::incrementSplitIndex()
 {
     nextSplitIndex++;
     if (nextSplitIndex == initialNumberDirectories) {  // we start a new round
@@ -61,12 +67,12 @@ void HybridHashing::incrementSplitIndex()
     }
 }
 
-double HybridHashing::getRatio()
+double MultikeyHybridHashing::getRatio()
 {
     return ((double) numberItems * numberDirEntries) / (bucketCapacity * factory->getNumberBuckets() * dirCapa * directories.size());
 }
 
-void HybridHashing::split()
+void MultikeyHybridHashing::split()
 {
     HybridDirectory directoryToSplit = directories.at(nextSplitIndex);
     vector<Couple> values = directoryToSplit.popAllValues();
@@ -81,7 +87,7 @@ void HybridHashing::split()
         put(*it);
 }
 
-vector<DepthBucket *> HybridHashing::getBuckets()
+vector<DepthBucket *> MultikeyHybridHashing::getBuckets()
 {
     vector<DepthBucket*> buckets;
     for(int i = 0; i < directories.size(); i++) {
@@ -92,29 +98,29 @@ vector<DepthBucket *> HybridHashing::getBuckets()
     return buckets;
 }
 
-void HybridHashing::clearBuckets()
+void MultikeyHybridHashing::clearBuckets()
 {
     for(int i = 0; i < directories.size(); i++) {
         directories.at(i).clearBuckets();
     }
 }
 
-int HybridHashing::getNumberDirEntries()
+int MultikeyHybridHashing::getNumberDirEntries()
 {
     return numberDirEntries;
 }
 
-void HybridHashing::setNumberDirEntries(int number)
+void MultikeyHybridHashing::setNumberDirEntries(int number)
 {
     numberDirEntries = number;
 }
 
-string HybridHashing::className() const
+string MultikeyHybridHashing::className() const
 {
-    return "HybridHashing ";
+    return "MultikeyHybridHashing ";
 }
 
-std::ostream& HybridHashing::dump(std::ostream& strm) const
+std::ostream& MultikeyHybridHashing::dump(std::ostream& strm) const
 {
     const void * address = static_cast<const void*>(this);
     stringstream ss;
@@ -129,12 +135,12 @@ std::ostream& HybridHashing::dump(std::ostream& strm) const
     return output;
 }
 
-ostream& operator<<(ostream& strm, const HybridHashing& dir)
+ostream& operator<<(ostream& strm, const MultikeyHybridHashing& dir)
 {
     return dir.dump(strm);
 }
 
-double HybridHashing::getAverageSize()
+double MultikeyHybridHashing::getAverageSize()
 {
     int sizes = 0;
     for(int i = 0; i < directories.size(); i++) {
