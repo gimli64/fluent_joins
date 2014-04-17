@@ -38,7 +38,7 @@ private:
     virtual Bucket *fetchBucket(size_t hash);
 
     HybridDirectory& getHybridDirectory(size_t hash);
-    int getLeftMostBits(size_t hash);
+    size_t getLeftMostBits(size_t hash);
     void incrementSplitIndex();
     double getRatio();
     void split();

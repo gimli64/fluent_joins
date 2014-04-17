@@ -11,6 +11,7 @@ public:
     MultikeyHashTable(string name = "", vector<int> keysRepartition = vector<int>());
 
     vector<int> keysRepartition;
+    int leftMostBitIndex;
 
     using HashTable::getHash;
     virtual size_t getHash(Couple couple);
@@ -31,6 +32,7 @@ private:
     {
         ar & boost::serialization::base_object<HashTable>(*this);
         ar & keysRepartition;
+        ar & leftMostBitIndex;
     }
 };
 
