@@ -35,6 +35,7 @@ protected:
     string name;
     int numberItems;
     int numberBucketFetch;
+    boost::hash<string> simple_hasher;
 
     virtual void putCouple(size_t hash, Couple couple);
 
