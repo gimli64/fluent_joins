@@ -36,7 +36,7 @@ private:
     virtual void putCouple(size_t hash, Couple couple);
 
     HybridDirectory& getHybridDirectory(size_t hash);
-    int getLeftMostBits(size_t hash);
+    size_t getLeftMostBits(size_t hash);
     void incrementSplitIndex();
     double getRatio();
     void split();
