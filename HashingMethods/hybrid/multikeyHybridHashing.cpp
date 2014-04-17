@@ -3,10 +3,11 @@
 const double MultikeyHybridHashing::SPLIT_RATIO = 0.75;
 
 MultikeyHybridHashing::MultikeyHybridHashing(string name, vector<int> keysRepartition)
-    :level(32), mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
+    :mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
       dirCapa(HybridDirectory::CAPA), numberDirEntries(0), MultikeyHashTable(name, keysRepartition)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
+    level = leftMostBitIndex;
 
     if (name != "")
         directories.push_back(HybridDirectory(this));
@@ -40,18 +41,20 @@ HybridDirectory &MultikeyHybridHashing::getHybridDirectory(size_t hash)
 {
     hash = getLeftMostBits(hash);
     int pageIndex = hash & mask;
-    if (pageIndex < nextSplitIndex)
-        pageIndex = hash & (mask | (1 << (31 - (level - 1))));
+    if (pageIndex < nextSplitIndex) {
+        pageIndex = hash & (mask | (1 << (leftMostBitIndex - level)));
+    }
 
     return directories.at(pageIndex);
 }
 
 int MultikeyHybridHashing::getLeftMostBits(size_t hash)
 {
-    unsigned int newKey = 0;
-    for (int i = 31; i >= level-1; i--) {
-        newKey |= ((unsigned int)(hash & (1 << 31)) >> i);
-        hash <<=  1;
+    size_t newKey = 0;
+    size_t bit = 0;
+    for (int i = leftMostBitIndex; i >= level; i--) {
+        bit = (hash & (1 << i)) >> i;
+        newKey |= (bit << (leftMostBitIndex - i));
     }
     return newKey;
 }
@@ -61,8 +64,8 @@ void MultikeyHybridHashing::incrementSplitIndex()
     nextSplitIndex++;
     if (nextSplitIndex == initialNumberDirectories) {  // we start a new round
         nextSplitIndex = 0;
+        mask |= (1 << (leftMostBitIndex - level));
         level -= 1;
-        mask |= (1 << (31 - level));
         initialNumberDirectories = directories.size();
     }
 }

@@ -2,12 +2,11 @@
 
 const double HybridHashing::SPLIT_RATIO = 0.75;
 
-HybridHashing::HybridHashing(string name, vector<int> keysRepartition)
+HybridHashing::HybridHashing(string name)
     :mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
-      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), MultikeyHashTable(name, keysRepartition)
+      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), HashTable(name)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
-    level = leftMostBitIndex;
 
     if (name != "")
         directories.push_back(HybridDirectory(this));
@@ -33,35 +32,35 @@ void HybridHashing::putCouple(size_t hash, Couple couple)
 
 HybridDirectory &HybridHashing::getHybridDirectory(size_t hash)
 {
-    hash = getLeftMostBits(hash);
-    int pageIndex = hash & mask;
-    if (pageIndex < nextSplitIndex) {
-        pageIndex = hash & (mask | (1 << (leftMostBitIndex - level)));
-    }
+//    hash = getLeftMostBits(hash);
+//    int pageIndex = hash & mask;
+//    if (pageIndex < nextSplitIndex) {
+//        pageIndex = hash & (mask | (1 << (leftMostBitIndex - level)));
+//    }
 
-    return directories.at(pageIndex);
+//    return directories.at(pageIndex);
 }
 
 size_t HybridHashing::getLeftMostBits(size_t hash)
 {
-    size_t newKey = 0;
-    size_t bit = 0;
-    for (int i = leftMostBitIndex; i >= level; i--) {
-        bit = (hash & (1 << i)) >> i;
-        newKey |= (bit << (leftMostBitIndex - i));
-    }
-    return newKey;
+//    size_t newKey = 0;
+//    size_t bit = 0;
+//    for (int i = leftMostBitIndex; i >= level; i--) {
+//        bit = (hash & (1 << i)) >> i;
+//        newKey |= (bit << (leftMostBitIndex - i));
+//    }
+//    return newKey;
 }
 
 void HybridHashing::incrementSplitIndex()
 {
-    nextSplitIndex++;
-    if (nextSplitIndex == initialNumberDirectories) {  // we start a new round
-        nextSplitIndex = 0;
-        mask |= (1 << (leftMostBitIndex - level));
-        level -= 1;
-        initialNumberDirectories = directories.size();
-    }
+//    nextSplitIndex++;
+//    if (nextSplitIndex == initialNumberDirectories) {  // we start a new round
+//        nextSplitIndex = 0;
+//        mask |= (1 << (leftMostBitIndex - level));
+//        level -= 1;
+//        initialNumberDirectories = directories.size();
+//    }
 }
 
 double HybridHashing::getRatio()
