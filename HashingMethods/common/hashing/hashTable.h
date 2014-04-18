@@ -7,7 +7,6 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
-#include <city.h>
 #include <math.h>
 
 using namespace std;
