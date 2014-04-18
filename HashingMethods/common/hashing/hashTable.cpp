@@ -21,6 +21,11 @@ int HashTable::getNumberBucketFetch()
     return numberBucketFetch;
 }
 
+void HashTable::setNumberBucketFetch(int bucketFetch)
+{
+    numberBucketFetch = bucketFetch;
+}
+
 vector<string> HashTable::get(string key)
 {
     try {

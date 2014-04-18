@@ -26,6 +26,7 @@ public:
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
     int getNumberBucketFetch();
+    void setNumberBucketFetch(int bucketFetch);
 
     string getBucketPath();
     string getName();
