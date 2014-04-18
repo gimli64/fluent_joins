@@ -7,7 +7,6 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
-#include <city.h>
 #include <math.h>
 
 using namespace std;
@@ -26,6 +25,7 @@ public:
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
     int getNumberBucketFetch();
+    void setNumberBucketFetch(int bucketFetch);
 
     string getBucketPath();
     string getName();
@@ -35,6 +35,7 @@ protected:
     string name;
     int numberItems;
     int numberBucketFetch;
+    boost::hash<string> simple_hasher;
 
     virtual void putCouple(size_t hash, Couple couple);
 

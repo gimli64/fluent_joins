@@ -8,7 +8,7 @@ HashTable::HashTable(string name)
 
 size_t HashTable::getHash(string key)
 {
-    return CityHash32(key.c_str(), key.size());
+    return simple_hasher(key.c_str());
 }
 
 size_t HashTable::getHash(Couple couple)
@@ -19,6 +19,11 @@ size_t HashTable::getHash(Couple couple)
 int HashTable::getNumberBucketFetch()
 {
     return numberBucketFetch;
+}
+
+void HashTable::setNumberBucketFetch(int bucketFetch)
+{
+    numberBucketFetch = bucketFetch;
 }
 
 vector<string> HashTable::get(string key)

@@ -63,6 +63,7 @@ Bucket *MultikeyHashTable::fetchBucket(size_t hash)
 
 void MultikeyHashTable::put(Couple couple)
 {
+//    cout << getHash(couple) << endl;
     putCouple(getHash(couple), couple);
 }
 
@@ -85,5 +86,20 @@ size_t MultikeyHashTable::interleaveHashes(vector<size_t> &hashes)
         key <<= keysRepartition[i + 1];
     }
     key += hashes[hashes.size() - 1] & ((1 << keysRepartition[hashes.size() - 1]) - 1);
+    return key;
+
+//    vector<int> repartition = keysRepartition;
+//    int hashIndex = 0;
+//    int bitIndex = 0;
+//    while (bitIndex <= leftMostBitIndex) {
+//        if (repartition[hashIndex] > 0) {
+//            key |= ((hashes[hashIndex] & 1) << bitIndex);
+//            bitIndex += 1;
+//            hashes[hashIndex] >>= 1;
+//            repartition[hashIndex] -= 1;
+//        }
+//        hashIndex = (hashIndex + 1) % hashes.size();
+//    }
+
     return key;
 }

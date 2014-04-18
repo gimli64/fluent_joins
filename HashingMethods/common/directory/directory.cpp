@@ -113,6 +113,18 @@ vector<DepthBucket *> &Directory::getBuckets()
     return buckets;
 }
 
+vector<DepthBucket *> Directory::getBucketsFromName()
+{
+    set<string> uniqueNames = set<string>(bucketNames.begin(), bucketNames.end());
+    vector<DepthBucket *> buckets;
+    buckets.reserve(uniqueNames.size());
+    for (set<string>::iterator it = uniqueNames.begin(); it != uniqueNames.end(); ++it) {
+        buckets.push_back(factory->readBucket(bucketPath + *it));
+    }
+
+    return buckets;
+}
+
 size_t Directory::getHash(Couple couple)
 {
     return hasher->getHash(couple.key);
