@@ -9,20 +9,21 @@ MultikeyHashTable::MultikeyHashTable(string name, vector<int> keysRepartition)
     }
 }
 
-vector<Bucket *> MultikeyHashTable::fetchBuckets(size_t keyHash, int keyHashSize, int position)
+vector<Bucket *> MultikeyHashTable::fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
 {
     vector<Bucket *> buckets;
     vector<size_t> hashes;
-    getHashes(keyHash, keyHashSize, position, hashes);
+    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
     for (int i = 0; i < hashes.size(); i++) {
         buckets.push_back(fetchBucket(hashes[i]));
     }
     return buckets;
 }
 
-void MultikeyHashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes)
+void MultikeyHashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes)
 {
     int numberBitsToSet = keyHashSize;
+    int numberBitsToSet2 = keyHashSize2;
 
     int numberBitsUnset = 0;
     int numberBitsLeft = 0;
@@ -33,23 +34,40 @@ void MultikeyHashTable::getHashes(size_t keyHash, int keyHashSize, int position,
     numberBitsUnset += (keysRepartition[position] - keyHashSize);
     numberBitsLeft += (keysRepartition[position] - keyHashSize);
 
+    int numberBitsMiddle = 0;
+    if (position2 > 0) {
+        for (int i = position + 1; i < position2; i++) {
+            numberBitsUnset += keysRepartition[i];
+            numberBitsMiddle += keysRepartition[i];
+        }
+        numberBitsUnset += (keysRepartition[position2] - keyHashSize2);
+        numberBitsMiddle += (keysRepartition[position2] - keyHashSize2);
+    } else {
+        position2 = position;
+    }
+
     int numberBitsRight = 0;
-    for (int i = position + 1; i < keysRepartition.size(); i++) {
+    for (int i = position2 + 1; i < keysRepartition.size(); i++) {
         numberBitsUnset += keysRepartition[i];
         numberBitsRight += keysRepartition[i];
     }
 
     size_t hash = 0;
     size_t result = 0;
-    size_t leftMask = ((1 << numberBitsLeft) - 1) << (numberBitsRight);
+    size_t leftMask = ((1 << numberBitsLeft) - 1) << (numberBitsMiddle + numberBitsRight);
+    size_t middleMask = ((1 << numberBitsMiddle) - 1) << (numberBitsRight);
     int numberHashes = (int) pow(2.0, (double) numberBitsUnset) - 1;
     hashes.reserve(numberHashes);
     for (int i = numberHashes; i >= 0; i--) {
         hash = 0;
         result = 0;
-        hash += ((i & leftMask) >> numberBitsRight);
+        hash += ((i & leftMask) >> (numberBitsMiddle + numberBitsRight));
         hash <<= numberBitsToSet;
         hash += keyHash;
+        hash <<= numberBitsMiddle;
+        hash += ((i & middleMask)) >> (numberBitsRight);
+        hash <<= numberBitsToSet2;
+        hash += keyHash2;
         hash <<= numberBitsRight;
         hash += i & ((1 << numberBitsRight) - 1);
         hashes.push_back(hash);

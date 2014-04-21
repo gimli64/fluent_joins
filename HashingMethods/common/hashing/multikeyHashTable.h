@@ -16,11 +16,11 @@ public:
     using HashTable::getHash;
     virtual size_t getHash(Couple couple);
 
-    vector<Bucket *> fetchBuckets(size_t keyHash, int keyHashSize, int position);
+    vector<Bucket *> fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
     virtual void put(Couple couple);
 
 private:
-    void getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes);
+    void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);
     unsigned int MurmurHash2(const void * key, int len, unsigned int seed);
 
