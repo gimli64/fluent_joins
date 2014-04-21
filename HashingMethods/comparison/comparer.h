@@ -31,9 +31,10 @@ public:
     void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, set<string> &result);
 
     set<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
-    void joinBuckets(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result);
+    void binaryJoinBuckets(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result);
 
-    set<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position2, int position3);
+    set<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
+    void threeWayJoinBuckets(vector<Couple> &values1, vector<Couple> &values2, vector<Couple> &values3, int position1, int position1_2, int position2_3, int position3, set<string> &result);
 
 private:
     string constPrefix;
@@ -154,7 +155,7 @@ set<string> Comparer<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPos
 
         for (bucket1 = buckets1.begin(); bucket1 != buckets1.end(); ++bucket1) {
             for (bucket2 = buckets2.begin(); bucket2 != buckets2.end(); ++bucket2) {
-                joinBuckets((*bucket1)->getAllValues(), (*bucket2)->getAllValues(), leftPosition, rightPosition, result);
+                binaryJoinBuckets((*bucket1)->getAllValues(), (*bucket2)->getAllValues(), leftPosition, rightPosition, result);
             }
         }
     }
@@ -164,25 +165,7 @@ set<string> Comparer<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPos
 }
 
 template<class T, class B>
-set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position2, int position3)
-{
-    table1->setNumberBucketFetch(0);
-    table2->setNumberBucketFetch(0);
-    cout << "Using multikeyThreeWayJoin" << endl;
-
-    set<string> result;
-    vector<Bucket *>::iterator bucket1;
-    vector<Bucket *>::iterator bucket2;
-    vector<Bucket *>::iterator bucket3;
-    int key_1_2_size = min(table1->keysRepartition[position1], table2->keysRepartition[position2]);
-    int key_2_3_size = min(table2->keysRepartition[position2], table3->keysRepartition[position3]);
-    for (size_t key_1_2_hash = 0; key_1_2_hash < (int) pow(2.0, (double) key_1_2_size); key_1_2_hash++) {
-        vector<Bucket *> buckets1 = table1->fetchBuckets(key_1_2_hash, key_1_2_size, position1);
-    }
-}
-
-template<class T, class B>
-void Comparer<T, B>::joinBuckets(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result)
+void Comparer<T, B>::binaryJoinBuckets(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result)
 {
     vector<Couple>::iterator value1;
     vector<Couple>::iterator value2;
@@ -190,6 +173,58 @@ void Comparer<T, B>::joinBuckets(vector<Couple> &values1, vector<Couple> &values
         for (value2 = values2.begin(); value2 != values2.end(); ++value2) {
             if ((*value1).values[leftPosition] == (*value2).values[rightPosition]) {
                 result.insert(join((*value1).values, "|") + "$$$" + join((*value2).values, "|"));
+            }
+        }
+    }
+}
+
+template<class T, class B>
+set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3)
+{
+    table1->setNumberBucketFetch(0);
+    table2->setNumberBucketFetch(0);
+    table3->setNumberBucketFetch(0);
+    cout << "Using multikeyThreeWayJoin" << endl;
+
+    set<string> result;
+    vector<Bucket *>::iterator bucket1;
+    vector<Bucket *>::iterator bucket2;
+    vector<Bucket *>::iterator bucket3;
+    int key_1_2_size = min(table1->keysRepartition[position1], table2->keysRepartition[position1_2]);
+    int key_2_3_size = min(table2->keysRepartition[position2_3], table3->keysRepartition[position3]);
+    for (size_t key_1_2_hash = 0; key_1_2_hash < (int) pow(2.0, (double) key_1_2_size); key_1_2_hash++) {
+        vector<Bucket *> buckets1 = table1->fetchBuckets(key_1_2_hash, key_1_2_size, position1);
+
+        for (size_t key_2_3_hash = 0; key_2_3_hash < (int) pow(2.0, (double) key_2_3_size); key_2_3_hash++) {
+            vector<Bucket *> buckets2 = table2->fetchBuckets(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
+            vector<Bucket *> buckets3 = table3->fetchBuckets(key_2_3_hash, key_2_3_size, position3);
+
+            for (bucket1 = buckets1.begin(); bucket1 != buckets1.end(); ++bucket1) {
+                for (bucket2 = buckets2.begin(); bucket2 != buckets2.end(); ++bucket2) {
+                    for (bucket3 = buckets3.begin(); bucket3 != buckets3.end(); ++bucket3) {
+                        threeWayJoinBuckets((*bucket1)->getAllValues(), (*bucket2)->getAllValues(), (*bucket3)->getAllValues(), position1, position1_2, position2_3, position3, result);
+                    }
+                }
+            }
+        }
+    }
+
+    cout << result.size() << " values successfully joined" << endl;
+    return result;
+}
+
+template<class T, class B>
+void Comparer<T, B>::threeWayJoinBuckets(vector<Couple> &values1, vector<Couple> &values2, vector<Couple> &values3, int position1, int position1_2, int position2_3, int position3, set<string> &result)
+{
+    vector<Couple>::iterator value1;
+    vector<Couple>::iterator value2;
+    vector<Couple>::iterator value3;
+    for (value1 = values1.begin(); value1 != values1.end(); ++value1) {
+        for (value2 = values2.begin(); value2 != values2.end(); ++value2) {
+            for (value3 = values3.begin(); value3 != values3.end(); ++value3) {
+                if ((*value1).values[position1] == (*value2).values[position1_2] and (*value2).values[position2_3] == (*value3).values[position3]) {
+                    result.insert(join((*value1).values, "|") + "$$$" + join((*value2).values, "|") + "$$$" + join((*value3).values, "|"));
+                }
             }
         }
     }
