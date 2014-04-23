@@ -20,6 +20,20 @@ vector<Bucket *> MultikeyHashTable::fetchBuckets(size_t keyHash, int keyHashSize
     return buckets;
 }
 
+vector<Couple> MultikeyHashTable::fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
+{
+    Bucket *bucket;
+    vector<Couple> couples;
+    vector<size_t> hashes;
+    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
+    for (int i = 0; i < hashes.size(); i++) {
+        bucket = fetchBucket(hashes[i]);
+        couples.insert(couples.end(), bucket->getAllValues().begin(), bucket->getAllValues().end());
+    }
+    delete bucket;
+    return couples;
+}
+
 void MultikeyHashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes)
 {
     int numberBitsToSet = keyHashSize;
@@ -81,7 +95,6 @@ Bucket *MultikeyHashTable::fetchBucket(size_t hash)
 
 void MultikeyHashTable::put(Couple couple)
 {
-//    cout << getHash(couple) << endl;
     putCouple(getHash(couple), couple);
 }
 
@@ -93,7 +106,6 @@ size_t MultikeyHashTable::getHash(Couple couple)
 
     return interleaveHashes(hashes);
 }
-
 
 size_t MultikeyHashTable::interleaveHashes(vector<size_t> &hashes)
 {
