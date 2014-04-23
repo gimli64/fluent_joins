@@ -77,7 +77,14 @@ int main()
         comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation :" << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+        tStart = clock();
+        comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation :" << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nOperation done successfully" << endl;

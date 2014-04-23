@@ -14,8 +14,9 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
     vector<DepthBucket *> getBuckets();
-    vector<Couple> getCouples();
     void clearBuckets();
+
+    vector<Couple> getCouples();
 
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
