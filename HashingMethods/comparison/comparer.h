@@ -102,7 +102,6 @@ set<string> Comparer<T, B>::sortMergeBinaryJoin(T *table1, T *table2, int leftPo
     sort(couples1.begin(), couples1.end(), comparator);
     comparator = Comparator(rightPosition);
     sort(couples2.begin(), couples2.end(), comparator);
-    cout << "Couples successfully sorted" << endl;
 
     mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
     cout << result.size() << " values successfully joined" << endl;
@@ -272,7 +271,6 @@ set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3
         for (size_t key_2_3_hash = 0; key_2_3_hash < (int) pow(2.0, (double) key_2_3_size); key_2_3_hash++) {
             vector<Bucket *> buckets2 = table2->fetchBuckets(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
             vector<Bucket *> buckets3 = table3->fetchBuckets(key_2_3_hash, key_2_3_size, position3);
-
             for (bucket1 = buckets1.begin(); bucket1 != buckets1.end(); ++bucket1) {
                 for (bucket2 = buckets2.begin(); bucket2 != buckets2.end(); ++bucket2) {
                     for (bucket3 = buckets3.begin(); bucket3 != buckets3.end(); ++bucket3) {
@@ -295,9 +293,11 @@ void Comparer<T, B>::threeWayJoinBuckets(vector<Couple> &values1, vector<Couple>
     vector<Couple>::iterator value3;
     for (value1 = values1.begin(); value1 != values1.end(); ++value1) {
         for (value2 = values2.begin(); value2 != values2.end(); ++value2) {
-            for (value3 = values3.begin(); value3 != values3.end(); ++value3) {
-                if ((*value1).values[position1] == (*value2).values[position1_2] and (*value2).values[position2_3] == (*value3).values[position3]) {
-                    result.insert(join((*value1).values, "|") + "$$$" + join((*value2).values, "|") + "$$$" + join((*value3).values, "|"));
+            if ((*value1).values[position1] == (*value2).values[position1_2]) {
+                for (value3 = values3.begin(); value3 != values3.end(); ++value3) {
+                    if ((*value2).values[position2_3] == (*value3).values[position3]) {
+                        result.insert(join((*value1).values, "|") + "$$$" + join((*value2).values, "|") + "$$$" + join((*value3).values, "|"));
+                    }
                 }
             }
         }
