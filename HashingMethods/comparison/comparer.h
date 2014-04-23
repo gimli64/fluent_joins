@@ -37,7 +37,7 @@ public:
     void binaryJoinCouples(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result);
 
     set<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
-    void threeWayJoinCouples(vector<Couple> &values1, vector<Couple> &values2, int position1, int position1_2, vector<Couple> &interCouples);
+    void threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, set<string> &result);
 
 private:
     string constPrefix;
@@ -57,7 +57,7 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
     for (int i = 0; i < relation.size(); i++) {
         table.put(Couple(relation[i][0].c_str(), relation[i]));
     }
-//    cout << table << endl;
+    //    cout << table << endl;
     cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
     cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
@@ -268,9 +268,7 @@ set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3
             vector<Couple> couples2 = table2->fetchCouples(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
             vector<Couple> couples3 = table3->fetchCouples(key_2_3_hash, key_2_3_size, position3);
 
-             vector<Couple> interCouples = vector<Couple>();
-             threeWayJoinCouples(couples2, couples1, position1_2, position1, interCouples);
-             binaryJoinCouples(interCouples, couples3, position2_3, position3, result);
+            threeWayJoinCouples(couples3, couples2, couples1, position3, position2_3, position1_2, position1, result);
         }
     }
 
@@ -279,17 +277,19 @@ set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3
 }
 
 template<class T, class B>
-void Comparer<T, B>::threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, int position1, int position1_2, vector<Couple> &interCouples)
+void Comparer<T, B>::threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, set<string> &result)
 {
     vector<Couple>::iterator couple1;
     vector<Couple>::iterator couple2;
+    vector<Couple>::iterator couple3;
     for (couple1 = couples1.begin(); couple1 != couples1.end(); ++couple1) {
         for (couple2 = couples2.begin(); couple2 != couples2.end(); ++couple2) {
             if ((*couple1).values[position1] == (*couple2).values[position1_2]) {
-                Couple couple = Couple();
-                couple.values = (*couple1).values;
-                couple.values.insert(couple.values.end(), (*couple2).values.begin(), (*couple2).values.end());
-                interCouples.push_back(couple);
+                for (couple3 = couples3.begin(); couple3 != couples3.end(); ++couple3) {
+                    if ((*couple2).values[position2_3] == (*couple3).values[position3]) {
+                        result.insert(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|") +  "$$$" + join((*couple3).values, "|"));
+                    }
+                }
             }
         }
     }

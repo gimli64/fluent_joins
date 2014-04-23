@@ -23,24 +23,24 @@ int main()
         nontransaction N(C);
         result R( N.exec( "SELECT * FROM supplier" ));
         vector<int> keysRepartition;
-        keysRepartition.push_back(4);
+        keysRepartition.push_back(5);
         keysRepartition.push_back(1);
         keysRepartition.push_back(1);
         keysRepartition.push_back(2);
         keysRepartition.push_back(1);
         keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
         comparer.createTable(R, "supplier", keysRepartition);
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
         R = result( N.exec("SELECT * from partsupp limit 9000"));
         keysRepartition.clear();
+        keysRepartition.push_back(6);
         keysRepartition.push_back(5);
-        keysRepartition.push_back(3);
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
         comparer.createTable(R, "partsupp", keysRepartition);
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
@@ -49,7 +49,7 @@ int main()
         keysRepartition.clear();
         keysRepartition.push_back(2);
         keysRepartition.push_back(0);
-        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         comparer.createTable(R, "nation", keysRepartition);
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
@@ -77,14 +77,14 @@ int main()
         comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-        cout << "table nation :" << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
         comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-        cout << "table nation :" << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nOperation done successfully" << endl;
