@@ -1,7 +1,7 @@
 #include "depthbucket.h"
 
-DepthBucket::DepthBucket()
-    :localDepth(0), Bucket()
+DepthBucket::DepthBucket(string name)
+    :localDepth(0), Bucket(name)
 {
 }
 

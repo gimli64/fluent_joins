@@ -10,7 +10,7 @@
 class ChainedBucket : public Bucket
 {
 public:
-    ChainedBucket();
+    ChainedBucket(string name = "");
     ~ChainedBucket();
 
     vector<string> getValue(string key);

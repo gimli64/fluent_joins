@@ -1,7 +1,7 @@
 #include "chainedBucket.h"
 
-ChainedBucket::ChainedBucket()
-    :nextBucket(0), Bucket()
+ChainedBucket::ChainedBucket(string name)
+    :nextBucket(0), Bucket(name)
 {
 }
 

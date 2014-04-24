@@ -14,7 +14,7 @@ public:
     static const int BUCKET_SIZE = 10;
     string name;
 
-    Bucket();
+    Bucket(string name = "");
     vector<string> getValue(string key);
     void putCouple(Couple couple);
     bool isFull();

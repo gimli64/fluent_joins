@@ -88,8 +88,7 @@ void BucketFactory<T>::writeBucket(T *bucket, string bucketPath)
 template<class T>
 T* BucketFactory<T>::newBucket()
 {
-    T *bucket = new T();
-    bucket->name += bucketPrefix + lexical_cast<string>(bucketCount);
+    T *bucket = new T(bucketPrefix + lexical_cast<string>(bucketCount));
     bucketCount++;
     numberBuckets++;
     return bucket;

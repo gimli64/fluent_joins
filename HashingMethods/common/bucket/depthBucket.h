@@ -8,7 +8,7 @@
 class DepthBucket : public Bucket
 {
 public:
-    DepthBucket();
+    DepthBucket(string name = "");
 
     int getLocalDepth();
     void setLocalDepth(int depth);
