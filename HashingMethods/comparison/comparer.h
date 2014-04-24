@@ -190,7 +190,7 @@ void Comparer<T, B>::threeWayMergeCouples(vector<Couple> &couples1, vector<Coupl
             vector<Couple>::iterator couple1_temp = next(couple1);
             while (couple1_temp != couples1.end() and (*couple1_temp).values[leftPosition] == (*couple2).values[rightPosition]) {
                 Couple couple = Couple();
-                couple.values = (*couple1).values;
+                couple.values = (*couple1_temp).values;
                 couple.values.insert(couple.values.end(), (*couple2).values.begin(), (*couple2).values.end());
                 interCouples.push_back(couple);
                 couple1_temp = next(couple1_temp);
@@ -200,7 +200,7 @@ void Comparer<T, B>::threeWayMergeCouples(vector<Couple> &couples1, vector<Coupl
             while (couple2_temp != couples2.end() and (*couple1).values[leftPosition] == (*couple2_temp).values[rightPosition]) {
                 Couple couple = Couple();
                 couple.values = (*couple1).values;
-                couple.values.insert(couple.values.end(), (*couple2).values.begin(), (*couple2).values.end());
+                couple.values.insert(couple.values.end(), (*couple2_temp).values.begin(), (*couple2_temp).values.end());
                 interCouples.push_back(couple);
                 couple2_temp = next(couple2_temp);
             }
