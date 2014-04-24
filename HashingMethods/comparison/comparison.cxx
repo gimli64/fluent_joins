@@ -25,8 +25,8 @@ int main()
 
         R = result( N.exec("SELECT * from partsupp limit 9000"));
         keysRepartition.clear();
-        keysRepartition.push_back(6);
         keysRepartition.push_back(5);
+        keysRepartition.push_back(6);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
@@ -76,15 +76,15 @@ int main()
         cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         MultikeyHybridHashing *partsuppTable = comparer.readTable("partsupp");
 
-//        tStart = clock();
-//        comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
-//        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        tStart = clock();
+        comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 0, 0, 3, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
-        comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+        comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 0, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
