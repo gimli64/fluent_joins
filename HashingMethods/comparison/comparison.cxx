@@ -73,9 +73,22 @@ int main()
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
         MultikeyHybridHashing *partsuppTable = comparer.readTable("partsupp");
 
+        tStart = clock();
+        comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+        tStart = clock();
+        comparer.sortMergeBinaryJoin(partsuppTable, supplierTable, 1, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         tStart = clock();
         comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
