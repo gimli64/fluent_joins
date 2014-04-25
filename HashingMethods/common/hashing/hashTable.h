@@ -14,16 +14,23 @@ using namespace std;
 class HashTable
 {
 public:
-    HashTable(string name = "");
+    vector<int> keysRepartition;
+
+    HashTable(string name = "", vector<int> keysRepartition = vector<int>());
 
     size_t getHash(string key);
-    virtual size_t getHash(Couple couple);
+    virtual size_t getMultikeyHash(Couple couple);
 
     vector<string> get(string key);
     virtual void put(Couple couple);
 
+    void putMultikey(Couple couple);
+    vector<Bucket *> fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
+    vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
+
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
+
     int getNumberBucketFetch();
     void setNumberBucketFetch(int bucketFetch);
 
@@ -34,12 +41,16 @@ protected:
     string bucketPath;
     string name;
     int numberItems;
-    int numberBucketFetch;
     boost::hash<string> simple_hasher;
-
-    virtual void putCouple(size_t hash, Couple couple);
+    int leftMostBitIndex;
+    int numberBucketFetch;
 
 private:
+    void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
+    size_t interleaveHashes(vector<size_t> &hashes);
+    virtual Bucket* fetchBucket(size_t hash);
+
+    virtual void putCouple(size_t hash, Couple couple);
     virtual vector<string> getValue(size_t hash, string key);
 
     friend class boost::serialization::access;
@@ -48,6 +59,8 @@ private:
     {
         ar & name;
         ar & bucketPath;
+        ar & keysRepartition;
+        ar & leftMostBitIndex;
     }
 };
 

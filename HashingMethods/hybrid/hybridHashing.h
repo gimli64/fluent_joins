@@ -9,7 +9,7 @@ using namespace std;
 class HybridHashing : public HashTable
 {
 public:
-    HybridHashing(string name = "");
+    HybridHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -20,7 +20,7 @@ public:
     virtual void setNumberDirEntries(int number);
     double getAverageSize();
 
-private:
+protected:
     static const double SPLIT_RATIO;
     int level;
     int mask;
@@ -32,14 +32,16 @@ private:
     vector<HybridDirectory> directories;
     BucketFactory<DepthBucket> *factory;
 
+private:
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
-    HybridDirectory& getHybridDirectory(size_t hash);
-    size_t getLeftMostBits(size_t hash);
-    void incrementSplitIndex();
+    virtual HybridDirectory& getHybridDirectory(size_t hash);
+    virtual size_t getLeftMostBits(size_t hash);
+    virtual void incrementSplitIndex();
+    virtual void split();
+
     double getRatio();
-    void split();
 
     friend class boost::serialization::access;
     template<class Archive>

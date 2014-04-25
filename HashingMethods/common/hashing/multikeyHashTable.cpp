@@ -1,7 +1,7 @@
 #include "multikeyHashTable.h"
 
 MultikeyHashTable::MultikeyHashTable(string name, vector<int> keysRepartition)
-    :keysRepartition(keysRepartition), HashTable(name)
+    :keysRepartition(keysRepartition), HashTable(name), numberBucketFetch(0)
 {
     leftMostBitIndex = -1;  // coherence with 0 indexation
     for (int i = 0; i < keysRepartition.size(); i++) {
@@ -132,4 +132,14 @@ size_t MultikeyHashTable::interleaveHashes(vector<size_t> &hashes)
 //    }
 
     return key;
+}
+
+int MultikeyHashTable::getNumberBucketFetch()
+{
+    return numberBucketFetch;
+}
+
+void MultikeyHashTable::setNumberBucketFetch(int bucketFetch)
+{
+    numberBucketFetch = bucketFetch;
 }

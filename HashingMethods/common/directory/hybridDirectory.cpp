@@ -32,7 +32,7 @@ void HybridDirectory::split(DepthBucket* bucket)
 
 size_t HybridDirectory::getHash(Couple couple)
 {
-    return hasher->getHash(couple);
+    return hasher->getMultikeyHash(couple);
 }
 
 void HybridDirectory::doubleSize()

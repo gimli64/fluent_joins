@@ -20,6 +20,12 @@ public:
     vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
     virtual void put(Couple couple);
 
+    int getNumberBucketFetch();
+    void setNumberBucketFetch(int bucketFetch);
+
+protected:
+    int numberBucketFetch;
+
 private:
     void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
     size_t interleaveHashes(vector<size_t> &hashes);

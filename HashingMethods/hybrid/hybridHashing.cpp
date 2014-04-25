@@ -2,9 +2,9 @@
 
 const double HybridHashing::SPLIT_RATIO = 0.75;
 
-HybridHashing::HybridHashing(string name)
+HybridHashing::HybridHashing(string name, vector<int> keysRepartition)
     :mask(0), nextSplitIndex(0), initialNumberDirectories(1), bucketCapacity(DepthBucket::BUCKET_SIZE),
-      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), HashTable(name)
+      dirCapa(HybridDirectory::CAPA), numberDirEntries(0), HashTable(name, keysRepartition)
 {
     factory = BucketFactory<DepthBucket>::getInstance();
 
