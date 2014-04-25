@@ -11,16 +11,17 @@ class Directory;
 class ExtendibleHashing : public HashTable
 {
 public:
-    ExtendibleHashing(string name = "");
+    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
     vector<DepthBucket *> getBuckets();
     void clearBuckets();
 
-private:
+protected:
     Directory directory;
 
+private:
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 

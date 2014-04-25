@@ -4,7 +4,7 @@
 int main()
 {
     try {
-        Comparer<MultikeyHybridHashing, DepthBucket> comparer;
+        Comparer<MultikeyExtendibleHashing, DepthBucket> comparer;
         clock_t tStart;
 
         cout << "Fluent joins experiment" << endl;
@@ -58,8 +58,8 @@ int main()
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        MultikeyHybridHashing *supplierTable = comparer.readTable("supplier");
-        MultikeyHybridHashing *nationTable = comparer.readTable("nation");
+        MultikeyExtendibleHashing *supplierTable = comparer.readTable("supplier");
+        MultikeyExtendibleHashing *nationTable = comparer.readTable("nation");
 
         tStart = clock();
         comparer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
@@ -74,7 +74,7 @@ int main()
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
-        MultikeyHybridHashing *partsuppTable = comparer.readTable("partsupp");
+        MultikeyExtendibleHashing *partsuppTable = comparer.readTable("partsupp");
 
         tStart = clock();
         comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);

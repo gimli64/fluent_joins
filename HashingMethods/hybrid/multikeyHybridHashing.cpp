@@ -66,7 +66,6 @@ vector<Couple> MultikeyHybridHashing::getCouples()
     vector<DepthBucket*> buckets;
     vector<DepthBucket *>::iterator bucket;
     vector<Couple> couples;
-    couples.reserve(Bucket::BUCKET_SIZE * buckets.size());
 
     for (int i = 0; i < directories.size(); i++) {
         buckets = directories.at(i).getBucketsFromName();

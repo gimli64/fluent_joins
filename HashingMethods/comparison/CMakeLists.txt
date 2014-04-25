@@ -7,6 +7,7 @@ target_link_libraries(Comparer
                       LinearHashing
                       HybridHashing
                       MultikeyHybridHashing
+                      MultikeyExtendibleHashing
                       BucketFactory
                       )
 

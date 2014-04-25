@@ -127,7 +127,7 @@ vector<DepthBucket *> Directory::getBucketsFromName()
 
 size_t Directory::getHash(Couple couple)
 {
-    return hasher->getHash(couple.key);
+    return hasher->getMultikeyHash(couple);
 }
 
 void Directory::clearBuckets()
