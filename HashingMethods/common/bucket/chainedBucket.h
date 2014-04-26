@@ -19,6 +19,8 @@ public:
     int getChainCount();
     void setBucketPath(string path);
 
+    virtual vector<Couple> getAllValues();
+
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 

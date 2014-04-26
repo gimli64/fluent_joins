@@ -1,3 +1,4 @@
 add_library(LinearHashing linearHashing.cpp)
+add_library(MultikeyLinearHashing multikeyLinearHashing.cpp)
 
 target_link_libraries(LinearHashing ChainedBucket Directory)

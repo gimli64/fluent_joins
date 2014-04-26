@@ -4,7 +4,7 @@
 int main()
 {
     try {
-        Comparer<MultikeyExtendibleHashing, DepthBucket> comparer;
+        Comparer<MultikeyLinearHashing, ChainedBucket> comparer;
         clock_t tStart;
 
         cout << "Fluent joins experiment" << endl;
@@ -58,8 +58,8 @@ int main()
         printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        MultikeyExtendibleHashing *supplierTable = comparer.readTable("supplier");
-        MultikeyExtendibleHashing *nationTable = comparer.readTable("nation");
+        MultikeyLinearHashing *supplierTable = comparer.readTable("supplier");
+        MultikeyLinearHashing *nationTable = comparer.readTable("nation");
 
         tStart = clock();
         comparer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
@@ -74,7 +74,7 @@ int main()
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
-        MultikeyExtendibleHashing *partsuppTable = comparer.readTable("partsupp");
+        MultikeyLinearHashing *partsuppTable = comparer.readTable("partsupp");
 
         tStart = clock();
         comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
@@ -103,9 +103,9 @@ int main()
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
-        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
-        BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
+//        BucketFactory<ChainedBucket>::getInstance()->removeAll("supplier");
+//        BucketFactory<ChainedBucket>::getInstance()->removeAll("nation");
+//        BucketFactory<ChainedBucket>::getInstance()->removeAll("partsupp");
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();

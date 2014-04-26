@@ -33,6 +33,19 @@ vector<string> ChainedBucket::getValue(string key)
     return result;
 }
 
+vector<Couple> ChainedBucket::getAllValues()
+{
+    vector<Couple> values = Bucket::getAllValues();
+    if (hasNext()) {
+        ChainedBucket *bucket = BucketFactory<ChainedBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
+        vector<Couple> nextValues = bucket->getAllValues();
+        values.insert(values.end(), nextValues.begin(), nextValues.end());
+        delete bucket;
+    }
+
+    return values;
+}
+
 void ChainedBucket::putCouple(Couple couple) {
     if (this->isFull()) {
         if (!nextBucket) {

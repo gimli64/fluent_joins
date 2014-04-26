@@ -25,9 +25,9 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
 
-private:
     vector<Couple> elements;
 
+private:
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

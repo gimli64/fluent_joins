@@ -13,13 +13,13 @@ using namespace std;
 class LinearHashing : public HashTable
 {
 public:
-    LinearHashing(string name = "");
+    LinearHashing(string name = "", vector<int> keysRepartition = vector<int>());
     virtual ostream& dump(ostream& strm) const;
 
     vector<ChainedBucket*> getBuckets();
     void clearBuckets();
 
-private:
+protected:
     static const double SPLIT_RATIO;
     int level;
     int nextSplitIndex;
@@ -28,16 +28,18 @@ private:
     vector<ChainedBucket*> buckets;
     vector<string> bucketNames;
     BucketFactory<ChainedBucket> *factory;
+    ChainedBucket *getBucketFromName(size_t hash);
 
+    void incrementSplitIndex();
+
+private:
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
 
     ChainedBucket *getBucket(size_t hash);
-    ChainedBucket *getBucketFromName(size_t hash);
 
     double getRatio();
-    void incrementSplitIndex();
-    void split();
+    virtual void split();
 
     friend class boost::serialization::access;
     template<class Archive>

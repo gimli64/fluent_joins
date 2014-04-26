@@ -2,9 +2,9 @@
 
 const double LinearHashing::SPLIT_RATIO = 0.75;
 
-LinearHashing::LinearHashing(string name)
+LinearHashing::LinearHashing(string name, vector<int> keysRepartition)
     :level(0), nextSplitIndex(0), initialNumberBuckets(1),
-      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashTable(name)
+      bucketCapacity(ChainedBucket::BUCKET_SIZE), buckets(), bucketNames(), HashTable(name, keysRepartition)
 {
     factory = BucketFactory<ChainedBucket>::getInstance();
 
@@ -78,11 +78,11 @@ void LinearHashing::split()
     ChainedBucket *bucketToSplit = buckets.at(nextSplitIndex);
     vector<Couple> values = bucketToSplit->getAllValues();
 
-    ChainedBucket *nextBucket = bucketToSplit;
-    while (nextBucket->hasNext()) {
-        nextBucket = nextBucket->next();
-        values.insert(values.end(), nextBucket->getAllValues().begin(), nextBucket->getAllValues().end());
-    }
+//    ChainedBucket *nextBucket = bucketToSplit;
+//    while (nextBucket->hasNext()) {
+//        nextBucket = nextBucket->next();
+//        values.insert(values.end(), nextBucket->getAllValues().begin(), nextBucket->getAllValues().end());
+//    }
 
     ChainedBucket *newBucket1 = factory->newBucket();
     newBucket1->setBucketPath(bucketPath);
