@@ -74,7 +74,8 @@ vector<Couple> HashTable::fetchCouples(size_t keyHash, int keyHashSize, int posi
     getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
     for (int i = 0; i < hashes.size(); i++) {
         bucket = fetchBucket(hashes[i]);
-        couples.insert(couples.end(), bucket->getAllValues().begin(), bucket->getAllValues().end());
+        vector<Couple> values = bucket->getAllValues();
+        couples.insert(couples.end(), values.begin(), values.end());
     }
     delete bucket;
     return couples;

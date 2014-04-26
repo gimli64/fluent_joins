@@ -20,7 +20,7 @@ public:
     bool isFull();
     int size();
     int getChainCount();
-    vector<Couple>& getAllValues();
+    virtual vector<Couple> getAllValues();
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;

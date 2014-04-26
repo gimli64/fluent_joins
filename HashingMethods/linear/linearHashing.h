@@ -19,10 +19,11 @@ public:
     vector<ChainedBucket*> getBuckets();
     void clearBuckets();
 
-protected:
-    static const double SPLIT_RATIO;
     int level;
     int nextSplitIndex;
+
+protected:
+    static const double SPLIT_RATIO;
     int initialNumberBuckets;
     int bucketCapacity;
     vector<ChainedBucket*> buckets;

@@ -32,7 +32,7 @@ int Bucket::size()
     return elements.size();
 }
 
-vector<Couple> &Bucket::getAllValues()
+vector<Couple> Bucket::getAllValues()
 {
     return elements;
 }

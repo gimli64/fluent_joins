@@ -135,9 +135,9 @@ std::ostream& LinearHashing::dump(std::ostream& strm) const
     ostream& output = strm;
     output << "LinearHashing " + ss.str() + " : \n";
 
-    for(int i = 0; i < bucketNames.size(); i++) {
-        output << "#### " << bucketNames.at(i);
-        if (i < bucketNames.size() - 1)
+    for(int i = 0; i < buckets.size(); i++) {
+        output << "#### " << *buckets.at(i);
+        if (i < buckets.size() - 1)
             output << "\n";
     }
 

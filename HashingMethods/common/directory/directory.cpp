@@ -71,7 +71,7 @@ void Directory::split(DepthBucket* bucket)
 {
     DepthBucket *newBucket1 = factory->newBucket();
     DepthBucket *newBucket2 = factory->newBucket();
-    vector<Couple>& values = bucket->getAllValues();
+    vector<Couple> values = bucket->getAllValues();
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = getHash(*it) & ((1 << globalDepth) - 1);

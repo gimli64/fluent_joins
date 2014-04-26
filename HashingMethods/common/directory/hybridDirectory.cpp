@@ -16,7 +16,7 @@ vector<Couple> HybridDirectory::popAllValues()
     vector<Couple> elements;
     set<DepthBucket*> uniqueBuckets = set<DepthBucket*>(buckets.begin(), buckets.end());
     for(set<DepthBucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
-        vector<Couple>& values = (*it)->getAllValues();
+        vector<Couple> values = (*it)->getAllValues();
         elements.insert(elements.end(), values.begin(), values.end());
         factory->deleteBucket(*it);
     }

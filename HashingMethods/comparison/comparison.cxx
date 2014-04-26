@@ -103,9 +103,9 @@ int main()
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        BucketFactory<ChainedBucket>::getInstance()->removeAll("supplier");
-//        BucketFactory<ChainedBucket>::getInstance()->removeAll("nation");
-//        BucketFactory<ChainedBucket>::getInstance()->removeAll("partsupp");
+        BucketFactory<ChainedBucket>::getInstance()->removeAll("supplier");
+        BucketFactory<ChainedBucket>::getInstance()->removeAll("nation");
+        BucketFactory<ChainedBucket>::getInstance()->removeAll("partsupp");
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();
