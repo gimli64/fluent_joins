@@ -19,8 +19,17 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
     numberBucketFetch += buckets.size();
 
     for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
-        couples.insert(couples.end(), (*bucket)->getAllValues().begin(), (*bucket)->getAllValues().end());
+        vector<Couple> values = (*bucket)->getAllValues();
+        if (values.size() == 0)
+            numberEmptyBuckets++;
+        couples.insert(couples.end(), values.begin(), values.end());
     }
 
     return couples;
 }
+
+ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)
+{
+    return hash.dump(strm);
+}
+

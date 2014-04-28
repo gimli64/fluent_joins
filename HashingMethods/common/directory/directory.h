@@ -29,7 +29,7 @@ public:
 
     DepthBucket *getBucket(size_t hash);
     DepthBucket *getBucketFromName(size_t hash);
-    vector<DepthBucket*> &getBuckets();
+    vector<DepthBucket *> getBuckets();
     vector<DepthBucket *> getBucketsFromName();
     void clearBuckets();
 

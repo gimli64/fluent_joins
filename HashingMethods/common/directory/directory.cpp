@@ -54,7 +54,6 @@ DepthBucket* Directory::getBucketFromName(size_t hash)
     return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
-
 void Directory::doubleSize()
 {
     size_t old_size = buckets.size();
@@ -108,9 +107,12 @@ int Directory::getGlobalDepth()
     return globalDepth;
 }
 
-vector<DepthBucket *> &Directory::getBuckets()
+vector<DepthBucket *> Directory::getBuckets()
 {
-    return buckets;
+    set<DepthBucket *> uniqueBuckets = set<DepthBucket *>(buckets.begin(), buckets.end());
+    vector<DepthBucket *> result(uniqueBuckets.begin(), uniqueBuckets.end());
+
+    return result;
 }
 
 vector<DepthBucket *> Directory::getBucketsFromName()

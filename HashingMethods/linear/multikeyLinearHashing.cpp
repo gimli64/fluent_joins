@@ -14,6 +14,8 @@ vector<Couple> MultikeyLinearHashing::getCouples()
         bucketName = bucketNames.at(i);
         bucket = factory->readBucket(bucketPath + bucketNames.at(i));
         numberBucketFetch++;
+        if (bucket->elements.size() == 0)
+            numberEmptyBuckets += 1;
         couples.insert(couples.end(), bucket->elements.begin(), bucket->elements.end());
         while (bucket->hasNext()) {
             bucketName = bucket->nextName();
