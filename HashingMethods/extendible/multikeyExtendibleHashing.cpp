@@ -20,8 +20,10 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
 
     for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
         vector<Couple> values = (*bucket)->getAllValues();
-        if (values.size() == 0)
+        if (values.size() == 0) {
+            cout << (*bucket)->name << endl;
             numberEmptyBuckets++;
+        }
         couples.insert(couples.end(), values.begin(), values.end());
     }
 

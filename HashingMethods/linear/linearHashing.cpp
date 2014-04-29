@@ -78,12 +78,6 @@ void LinearHashing::split()
     ChainedBucket *bucketToSplit = buckets.at(nextSplitIndex);
     vector<Couple> values = bucketToSplit->getAllValues();
 
-//    ChainedBucket *nextBucket = bucketToSplit;
-//    while (nextBucket->hasNext()) {
-//        nextBucket = nextBucket->next();
-//        values.insert(values.end(), nextBucket->getAllValues().begin(), nextBucket->getAllValues().end());
-//    }
-
     ChainedBucket *newBucket1 = factory->newBucket();
     newBucket1->setBucketPath(bucketPath);
     bucketNames.at(nextSplitIndex) = newBucket1->name;
