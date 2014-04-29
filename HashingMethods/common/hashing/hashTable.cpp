@@ -15,7 +15,7 @@ HashTable::HashTable(string name, vector<int> keysRepartition)
 
 size_t HashTable::getHash(string key)
 {
-    return simple_hasher(atoi(key.c_str()));
+    return simple_hasher(key);
     //    return MurmurHash2(key.c_str(), key.length(), 0);
 }
 

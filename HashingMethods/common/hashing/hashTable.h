@@ -45,7 +45,7 @@ protected:
     string bucketPath;
     string name;
     int numberItems;
-    boost::hash<int> simple_hasher;
+    boost::hash<string> simple_hasher;
     int leftMostBitIndex;
     int numberBucketFetch;
 

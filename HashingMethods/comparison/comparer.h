@@ -1,8 +1,6 @@
 #ifndef COMPARER_H
 #define COMPARER_H
 #include "extendible/extendibleHashing.h"
-#include "linear/linearHashing.h"
-#include "hybrid/hybridHashing.h"
 #include "hybrid/multikeyHybridHashing.h"
 #include "extendible/multikeyExtendibleHashing.h"
 #include "linear/multikeyLinearHashing.h"
@@ -12,6 +10,7 @@
 #include <vector>
 #include <fstream>
 #include <sys/resource.h>
+#include <time.h>
 #include <boost/algorithm/string/join.hpp>
 #include <pqxx/pqxx>
 
@@ -56,15 +55,21 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
 {
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition);
+    clock_t tStart = clock();
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
+//        cout << table << "\n" << endl;
     }
-//    cout << table << endl;
+    cout << table << endl;
     cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
     table.clearBuckets();
-    writeTable(&table);
+    table.getCouples();
+    cout << table.numberEmptyBuckets << " empty buckets" << endl;
+//    writeTable(&table);
+
 }
 
 template<class T, class B>
