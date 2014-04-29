@@ -30,18 +30,22 @@ public:
 
     virtual int getNumberDirEntries();
     virtual void setNumberDirEntries(int number);
+    virtual int getLevel();
 
     int getNumberBucketFetch();
     void setNumberBucketFetch(int bucketFetch);
 
     string getBucketPath();
     string getName();
+    int getLeftMostBitIndex();
+
+    int numberEmptyBuckets;
 
 protected:
     string bucketPath;
     string name;
     int numberItems;
-    boost::hash<string> simple_hasher;
+    boost::hash<int> simple_hasher;
     int leftMostBitIndex;
     int numberBucketFetch;
 
