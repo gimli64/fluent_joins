@@ -32,7 +32,7 @@ vector<string> Directory::getValue(size_t hash, string key)
 void Directory::putCouple(size_t hash, Couple couple)
 {
     DepthBucket *bucket = getBucket(hash);
-    if (bucket->isFull()) {
+    if (bucket->isFull() and bucket->getLocalDepth() <= hasher->getLeftMostBitIndex()) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
         }

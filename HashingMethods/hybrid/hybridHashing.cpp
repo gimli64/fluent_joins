@@ -71,6 +71,7 @@ double HybridHashing::getRatio()
 void HybridHashing::split()
 {
     HybridDirectory directoryToSplit = directories.at(nextSplitIndex);
+
     vector<Couple> values = directoryToSplit.popAllValues();
     numberDirEntries -= directoryToSplit.getSize();
     numberItems -= values.size();
@@ -109,6 +110,11 @@ int HybridHashing::getNumberDirEntries()
 void HybridHashing::setNumberDirEntries(int number)
 {
     numberDirEntries = number;
+}
+
+int HybridHashing::getLevel()
+{
+    return level;
 }
 
 string HybridHashing::className() const

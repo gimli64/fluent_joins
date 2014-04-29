@@ -13,6 +13,8 @@ public:
     HybridDirectory();
     HybridDirectory(HashTable *hasher);
 
+    virtual void putCouple(size_t hash, Couple couple);
+
     int getNumberBuckets();
     vector<Couple> popAllValues();
 

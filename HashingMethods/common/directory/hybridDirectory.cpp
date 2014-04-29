@@ -11,6 +11,21 @@ HybridDirectory::HybridDirectory(HashTable *hasher)
     hasher->setNumberDirEntries(hasher->getNumberDirEntries() + 1);
 }
 
+void HybridDirectory::putCouple(size_t hash, Couple couple)
+{
+    DepthBucket *bucket = getBucket(hash);
+    if (bucket->isFull() and (hasher->getLevel() - bucket->getLocalDepth()) > 0) {
+        if (bucket->getLocalDepth() == globalDepth) {
+            doubleSize();
+        }
+        if (bucket->getLocalDepth() < globalDepth) {
+            split(bucket);
+            bucket = getBucket(hash);
+        }
+    }
+    bucket->putCouple(couple);
+}
+
 vector<Couple> HybridDirectory::popAllValues()
 {
     vector<Couple> elements;

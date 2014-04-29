@@ -23,7 +23,7 @@ public:
 
     void init();
     vector<string> getValue(size_t hash, string key);
-    void putCouple(size_t hash, Couple couple);
+    virtual void putCouple(size_t hash, Couple couple);
     int getGlobalDepth();
     int getSize();
 
@@ -37,6 +37,8 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
 protected:
+    int globalDepth;
+
     BucketFactory<DepthBucket> *factory;
     vector<DepthBucket*> buckets;
     HashTable *hasher;
@@ -44,7 +46,6 @@ protected:
     virtual void split(DepthBucket *bucket);
 
 private:
-    int globalDepth;
     vector<string> bucketNames;
     string bucketPath;
 

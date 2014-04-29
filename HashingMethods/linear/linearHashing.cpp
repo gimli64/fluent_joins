@@ -35,7 +35,7 @@ void LinearHashing::putCouple(size_t hash, Couple couple)
     ChainedBucket *bucket = getBucket(hash);
     bucket->putCouple(couple);
     numberItems++;
-    if (getRatio() > SPLIT_RATIO) {
+    if (getRatio() > SPLIT_RATIO and level <= leftMostBitIndex) {
         split();
     }
 }
