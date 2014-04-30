@@ -29,6 +29,11 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
     directory.putCouple(hash, couple);
 }
 
+void ExtendibleHashing::reset()
+{
+    directory.reset();
+}
+
 string ExtendibleHashing::className() const
 {
     return "ExtendibleHashing ";

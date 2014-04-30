@@ -32,7 +32,7 @@ vector<string> Directory::getValue(size_t hash, string key)
 void Directory::putCouple(size_t hash, Couple couple)
 {
     DepthBucket *bucket = getBucket(hash);
-    if (bucket->isFull() and bucket->getLocalDepth() <= hasher->getLeftMostBitIndex()) {
+    if (bucket->isFull() /*and bucket->getLocalDepth() <= hasher->getLeftMostBitIndex()*/) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
         }
@@ -51,7 +51,12 @@ DepthBucket* Directory::getBucket(size_t hash)
 
 DepthBucket* Directory::getBucketFromName(size_t hash)
 {
-    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
+    string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
+    if (!bucketFetched[name]) {
+        bucketFetched[name] = true;
+        return factory->readBucket(bucketPath + name);
+    }
+    return new DepthBucket();
 }
 
 void Directory::doubleSize()
@@ -139,6 +144,11 @@ void Directory::clearBuckets()
         delete *it;
     }
     buckets.clear();
+}
+
+void Directory::reset()
+{
+    bucketFetched = map<string, bool>();
 }
 
 string Directory::className() const

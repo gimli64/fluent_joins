@@ -117,6 +117,12 @@ int HybridHashing::getLevel()
     return level;
 }
 
+void HybridHashing::reset()
+{
+    for (int i = 0; i < directories.size(); i++)
+        directories.at(i).reset();
+}
+
 string HybridHashing::className() const
 {
     return "HybridHashing ";

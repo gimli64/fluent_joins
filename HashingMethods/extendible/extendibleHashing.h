@@ -18,6 +18,8 @@ public:
     vector<DepthBucket *> getBuckets();
     void clearBuckets();
 
+    void reset();
+
 protected:
     Directory directory;
 

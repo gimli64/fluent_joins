@@ -32,6 +32,7 @@ public:
     vector<DepthBucket *> getBuckets();
     vector<DepthBucket *> getBucketsFromName();
     void clearBuckets();
+    void reset();
 
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
@@ -48,6 +49,7 @@ protected:
 private:
     vector<string> bucketNames;
     string bucketPath;
+    map<string, bool> bucketFetched;
 
     virtual size_t getHash(Couple couple);
 

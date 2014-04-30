@@ -20,6 +20,7 @@ public:
     virtual void setNumberDirEntries(int number);
     double getAverageSize();
     virtual int getLevel();
+    void reset();
 
 protected:
     static const double SPLIT_RATIO;

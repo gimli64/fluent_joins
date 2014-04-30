@@ -7,8 +7,14 @@ MultikeyExtendibleHashing::MultikeyExtendibleHashing(string name, vector<int> ke
 
 Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 {
-    numberBucketFetch++;
-    return directory.getBucketFromName(hash);
+//    numberBucketFetch++;
+//    return directory.getBucketFromName(hash);
+
+    Bucket *bucket = directory.getBucketFromName(hash);
+    if (bucket->getAllValues().size() > 0)
+        numberBucketFetch++;
+
+    return bucket;
 }
 
 vector<Couple> MultikeyExtendibleHashing::getCouples()
@@ -21,7 +27,6 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
     for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
         vector<Couple> values = (*bucket)->getAllValues();
         if (values.size() == 0) {
-            cout << (*bucket)->name << endl;
             numberEmptyBuckets++;
         }
         couples.insert(couples.end(), values.begin(), values.end());
