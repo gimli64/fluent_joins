@@ -14,7 +14,7 @@ HybridDirectory::HybridDirectory(HashTable *hasher)
 void HybridDirectory::putCouple(size_t hash, Couple couple)
 {
     DepthBucket *bucket = getBucket(hash);
-    if (bucket->isFull() and (hasher->getLevel() - bucket->getLocalDepth()) > 0) {
+    if (bucket->isFull() /*and (hasher->getLevel() - bucket->getLocalDepth()) > 0*/) {
         if (bucket->getLocalDepth() == globalDepth) {
             doubleSize();
         }

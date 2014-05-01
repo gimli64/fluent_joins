@@ -13,6 +13,7 @@ public:
     MultikeyHybridHashing(string name = "", vector<int> keysRepartition = vector<int>());
 
     vector<Couple> getCouples();
+    virtual void printState();
 
 private:
     virtual Bucket *fetchBucket(size_t hash);

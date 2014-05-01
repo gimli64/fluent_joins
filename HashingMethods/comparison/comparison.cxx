@@ -25,63 +25,61 @@ int main()
 
         R = result( N.exec("SELECT * from partsupp limit 9000"));
         keysRepartition.clear();
-        keysRepartition.push_back(5);
+        keysRepartition.push_back(6);
         keysRepartition.push_back(6);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         comparer.createTable(R, "partsupp", keysRepartition);
 
-//        R = result( N.exec( "SELECT * FROM supplier" ));
-//        keysRepartition.clear();
-//        keysRepartition.push_back(6);
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(2);
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        comparer.createTable(R, "supplier", keysRepartition);
+        R = result( N.exec( "SELECT * FROM supplier2" ));
+        keysRepartition.clear();
+        keysRepartition.push_back(10);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        comparer.createTable(R, "supplier", keysRepartition);
 
-//        R = result( N.exec( "SELECT * FROM nation" ));
-//        keysRepartition.clear();
-//        keysRepartition.push_back(2);
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        comparer.createTable(R, "nation", keysRepartition);
+        R = result( N.exec( "SELECT * FROM nation" ));
+        keysRepartition.clear();
+        keysRepartition.push_back(2);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        comparer.createTable(R, "nation", keysRepartition);
 
-//        MultikeyExtendibleHashing *supplierTable = comparer.readTable("supplier");
-//        MultikeyExtendibleHashing *nationTable = comparer.readTable("nation");
-//        MultikeyExtendibleHashing *partsuppTable = comparer.readTable("partsupp");
+        MultikeyExtendibleHashing *supplierTable = comparer.readTable("supplier");
+        MultikeyExtendibleHashing *nationTable = comparer.readTable("nation");
+        MultikeyExtendibleHashing *partsuppTable = comparer.readTable("partsupp");
 
-//        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        tStart = clock();
+        comparer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        tStart = clock();
-//        comparer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        tStart = clock();
+        comparer.sortMergeBinaryJoin(supplierTable, nationTable, 3, 0);
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        tStart = clock();
-//        comparer.sortMergeBinaryJoin(supplierTable, nationTable, 3, 0);
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
+        tStart = clock();
+        comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
-
-//        tStart = clock();
-//        comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
-//        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        tStart = clock();
-//        comparer.sortMergeBinaryJoin(partsuppTable, supplierTable, 1, 0);
-//        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        tStart = clock();
+        comparer.sortMergeBinaryJoin(partsuppTable, supplierTable, 1, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
 //        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
 //        tStart = clock();

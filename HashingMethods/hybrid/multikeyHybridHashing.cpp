@@ -66,6 +66,7 @@ vector<Couple> MultikeyHybridHashing::getCouples()
     vector<DepthBucket*> buckets;
     vector<DepthBucket *>::iterator bucket;
     vector<Couple> couples;
+    totalBucketSize = 0;
 
     for (int i = 0; i < directories.size(); i++) {
         buckets = directories.at(i).getBucketsFromName();
@@ -73,6 +74,7 @@ vector<Couple> MultikeyHybridHashing::getCouples()
 
         for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
             vector<Couple> values = (*bucket)->getAllValues();
+            totalBucketSize += values.size();
             if (values.size() == 0)
                 numberEmptyBuckets++;
             couples.insert(couples.end(), values.begin(), values.end());
@@ -82,6 +84,27 @@ vector<Couple> MultikeyHybridHashing::getCouples()
 
     return couples;
 }
+
+void MultikeyHybridHashing::printState()
+{
+    getCouples();
+    cout << "empty buckets : " << numberEmptyBuckets << endl;
+
+    int totalDepth = 0;
+    int maxDepth = 0;
+    for (int i = 0; i < directories.size(); i++) {
+        totalDepth += directories.at(i).getGlobalDepth();
+        if (directories.at(i).getGlobalDepth() > maxDepth)
+            maxDepth = directories.at(i).getGlobalDepth();
+    }
+
+    cout << "linear depth : " << (leftMostBitIndex - level + 1) << endl;
+    cout << "average directory depth : " << (double) totalDepth / directories.size() << endl;
+    cout << "max directory depth : " << maxDepth << endl;
+    cout << "number dir entries : " << numberDirEntries << endl;
+    cout << "load factor : " << (double) totalBucketSize / numberBucketFetch << endl;
+}
+
 
 ostream& operator<<(ostream& strm, const MultikeyHybridHashing& dir)
 {

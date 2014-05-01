@@ -60,16 +60,14 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
 //        cout << table << "\n" << endl;
     }
-    cout << table << endl;
+//    cout << table << endl;
     cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
     table.clearBuckets();
-    table.getCouples();
-    cout << table.numberEmptyBuckets << " empty buckets" << endl;
-//    writeTable(&table);
-
+    table.printState();
+    writeTable(&table);
 }
 
 template<class T, class B>
@@ -230,6 +228,8 @@ set<string> Comparer<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPos
     vector<Bucket *>::iterator bucket2;
     int keyHashSize = min(table1->keysRepartition[leftPosition], table2->keysRepartition[rightPosition]);
     for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
+        table1->reset();
+        table2->reset();
         vector<Couple> couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
         vector<Couple> couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
 
@@ -269,9 +269,12 @@ set<string> Comparer<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3
     int key_1_2_size = min(table1->keysRepartition[position1], table2->keysRepartition[position1_2]);
     int key_2_3_size = min(table2->keysRepartition[position2_3], table3->keysRepartition[position3]);
     for (size_t key_1_2_hash = 0; key_1_2_hash < (int) pow(2.0, (double) key_1_2_size); key_1_2_hash++) {
+        table1->reset();
         vector<Couple> couples1 = table1->fetchCouples(key_1_2_hash, key_1_2_size, position1);
 
         for (size_t key_2_3_hash = 0; key_2_3_hash < (int) pow(2.0, (double) key_2_3_size); key_2_3_hash++) {
+            table2->reset();
+            table3->reset();
             vector<Couple> couples2 = table2->fetchCouples(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
             vector<Couple> couples3 = table3->fetchCouples(key_2_3_hash, key_2_3_size, position3);
 

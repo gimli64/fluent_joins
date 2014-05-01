@@ -15,8 +15,9 @@ HashTable::HashTable(string name, vector<int> keysRepartition)
 
 size_t HashTable::getHash(string key)
 {
-    return simple_hasher(key);
-    //    return MurmurHash2(key.c_str(), key.length(), 0);
+//    return hash(string_hasher(key));
+      return string_hasher(key);
+//    return (atoi(key.c_str()) *2654435761) % 4294967296;
 }
 
 vector<string> HashTable::get(string key)
@@ -60,6 +61,10 @@ int HashTable::getNumberDirEntries()
 int HashTable::getLevel()
 {
     return 0;
+}
+
+void HashTable::printState()
+{
 }
 
 void HashTable::setNumberDirEntries(int number)
@@ -171,23 +176,23 @@ size_t HashTable::interleaveHashes(vector<size_t> &hashes)
 
     for (int i = 0; i < hashes.size() - 1; i++) {
         key += hashes[i] & ((1 << keysRepartition[i]) - 1);
+//        key += (hashes[i] & (((1 << 31) - 1) - ((1 << (32 - keysRepartition[i]) - 1)))) >> (32 - keysRepartition[i]);
         key <<= keysRepartition[i + 1];
     }
     key += hashes[hashes.size() - 1] & ((1 << keysRepartition[hashes.size() - 1]) - 1);
 
-//    vector<int> repartition = keysRepartition;
-//    int hashIndex = 0;
-//    int bitIndex = 0;
-//    while (bitIndex <= leftMostBitIndex) {
-//        if (repartition[hashIndex] > 0) {
-//            key |= ((hashes[hashIndex] & 1) << (leftMostBitIndex - bitIndex));
-//            bitIndex += 1;
-//            hashes[hashIndex] >>= 1;
-//            repartition[hashIndex] -= 1;
+//        vector<int> repartition = keysRepartition;
+//        int hashIndex = 0;
+//        int bitIndex = 0;
+//        while (bitIndex <= leftMostBitIndex) {
+//            if (repartition[hashIndex] > 0) {
+//                key |= ((hashes[hashIndex] & 1) << (leftMostBitIndex - bitIndex));
+//                bitIndex += 1;
+//                hashes[hashIndex] >>= 1;
+//                repartition[hashIndex] -= 1;
+//            }
+//            hashIndex = (hashIndex + 1) % hashes.size();
 //        }
-//        hashIndex = (hashIndex + 1) % hashes.size();
-//    }
-//    cout << key << endl;
 
     return key;
 }

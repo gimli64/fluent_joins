@@ -10,22 +10,34 @@ vector<Couple> MultikeyLinearHashing::getCouples()
     vector<Couple> couples;
     string bucketName;
     ChainedBucket *bucket;
+    totalBucketSize = 0;
+
     for (int i = 0; i < bucketNames.size(); i++) {
         bucketName = bucketNames.at(i);
         bucket = factory->readBucket(bucketPath + bucketNames.at(i));
         numberBucketFetch++;
+        totalBucketSize += bucket->elements.size();
         if (bucket->elements.size() == 0)
             numberEmptyBuckets += 1;
         couples.insert(couples.end(), bucket->elements.begin(), bucket->elements.end());
+
         while (bucket->hasNext()) {
             bucketName = bucket->nextName();
             bucket = factory->readBucket(bucketPath + bucketName);
             numberBucketFetch++;
+            totalBucketSize += bucket->elements.size();
             couples.insert(couples.end(), bucket->elements.begin(), bucket->elements.end());
         }
     }
 
     return couples;
+}
+
+void MultikeyLinearHashing::printState()
+{
+    getCouples();
+    cout << "empty buckets : " << numberEmptyBuckets << endl;
+    cout << "load factor : " << (double) totalBucketSize / numberBucketFetch << endl;
 }
 
 Bucket *MultikeyLinearHashing::fetchBucket(size_t hash)

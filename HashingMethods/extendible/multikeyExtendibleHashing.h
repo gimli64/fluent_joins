@@ -9,7 +9,9 @@ public:
     MultikeyExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
     vector<Couple> getCouples();
 
+    virtual void printState();
 private:
+    int maxBucketSize;
     virtual Bucket *fetchBucket(size_t hash);
 
     friend class boost::serialization::access;
