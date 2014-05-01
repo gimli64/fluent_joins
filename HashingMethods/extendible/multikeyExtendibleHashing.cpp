@@ -24,13 +24,19 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
     vector<DepthBucket *> buckets = directory.getBucketsFromName();
     numberBucketFetch += buckets.size();
     totalBucketSize = 0;
-    maxBucketSize = 0;
+    maxChainLength = 0;
+    numberOverflowBuckets = 0;
 
     for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
         vector<Couple> values = (*bucket)->getAllValues();
         totalBucketSize += values.size();
-        if (values.size() > maxBucketSize)
-            maxBucketSize = values.size();
+        if (values.size() > Bucket::BUCKET_SIZE) {
+            numberOverflowBuckets++;
+
+            if (values.size() / Bucket::BUCKET_SIZE > maxChainLength and values.size() % Bucket::BUCKET_SIZE > 0) {
+                maxChainLength = values.size() / Bucket::BUCKET_SIZE;
+            }
+        }
         if (values.size() == 0) {
             numberEmptyBuckets++;
         }
@@ -46,7 +52,8 @@ void MultikeyExtendibleHashing::printState()
     cout << "empty buckets : " << numberEmptyBuckets << endl;
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
-    cout << "max bucket size : " << maxBucketSize << endl;
+    cout << "max chain length : " << maxChainLength << endl;
+    cout << "number overflow buckets : " << numberOverflowBuckets << endl;
     cout << "load factor : " << (double) totalBucketSize / numberBucketFetch << endl;
 }
 

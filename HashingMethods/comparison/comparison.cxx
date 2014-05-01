@@ -23,10 +23,10 @@ int main()
         result R;
         vector<int> keysRepartition;
 
-        R = result( N.exec("SELECT * from partsupp limit 9000"));
+        R = result( N.exec("SELECT * from partsupp limit 50000"));
         keysRepartition.clear();
         keysRepartition.push_back(6);
-        keysRepartition.push_back(6);
+        keysRepartition.push_back(7);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
@@ -81,24 +81,24 @@ int main()
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-//        tStart = clock();
-//        comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
-//        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+        tStart = clock();
+        comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        tStart = clock();
-//        comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
-//        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+        tStart = clock();
+        comparer.sortMergeThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
+        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
-//        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
-//        BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
+        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
+        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
+        BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();

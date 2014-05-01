@@ -11,7 +11,8 @@ public:
 
     virtual void printState();
 private:
-    int maxBucketSize;
+    int maxChainLength;
+    int numberOverflowBuckets;
     virtual Bucket *fetchBucket(size_t hash);
 
     friend class boost::serialization::access;
