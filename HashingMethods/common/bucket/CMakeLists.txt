@@ -8,4 +8,3 @@ target_link_libraries(Bucket
                       ${Boost_SYSTEM_LIBRARY}
                       ${Boost_SERIALIZATION_LIBRARY} )
 
-target_link_libraries(ChainedBucket LinearHashing)

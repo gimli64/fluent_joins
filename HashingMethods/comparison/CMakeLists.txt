@@ -4,11 +4,10 @@ add_executable(comparison comparison.cxx)
 target_link_libraries(Comparer
                       pqxx
                       ExtendibleHashing
-                      LinearHashing
-                      HybridHashing
-                      MultikeyHybridHashing
+#                      LinearHashing
+#                      HybridHashing
+#                      MultikeyHybridHashing
                       MultikeyExtendibleHashing
-                      MultikeyLinearHashing
                       BucketFactory
                       )
 

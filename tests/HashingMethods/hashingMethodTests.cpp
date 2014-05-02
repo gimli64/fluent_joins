@@ -1,6 +1,6 @@
 #include "extendible/extendibleHashing.h"
-#include "linear/linearHashing.h"
-#include "hybrid/hybridHashing.h"
+//#include "linear/linearHashing.h"
+//#include "hybrid/hybridHashing.h"
 #define BOOST_TEST_MODULE hashingMethodTests
 #include <boost/test/unit_test.hpp>
 

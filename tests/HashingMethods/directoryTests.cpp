@@ -1,5 +1,5 @@
 #include "common/directory/directory.h"
-#include "common/directory/hybridDirectory.h"
+//#include "common/directory/hybridDirectory.h"
 #define BOOST_TEST_MODULE directoryTests
 #include <boost/test/unit_test.hpp>
 #include <stdlib.h>
