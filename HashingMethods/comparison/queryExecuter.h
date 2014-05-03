@@ -70,6 +70,8 @@ set<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int numberEnt
 
     mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
     cout << result.size() << " values successfully joined" << endl;
+    cout << "table " << name1 << " : " << (int) ceil((double) numberEntries1 / B::BUCKET_SIZE) << " bucket fetch" << endl;
+    cout << "table " << name2 << " : " << (int) ceil((double) numberEntries2 / B::BUCKET_SIZE) << " bucket fetch" << endl;
     return result;
 }
 
@@ -129,6 +131,9 @@ set<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(string name1, int numberE
     mergeCouples(interCouples, couples3, position2_3, position3, result);
 
     cout << result.size() << " values successfully joined" << endl;
+    cout << "table " << name1 << " : " << (int) ceil((double) numberEntries1 / B::BUCKET_SIZE) << " bucket fetch" << endl;
+    cout << "table " << name2 << " : " << (int) ceil((double) numberEntries2 / B::BUCKET_SIZE) << " bucket fetch" << endl;
+    cout << "table " << name3 << " : " << (int) ceil((double) numberEntries3 / B::BUCKET_SIZE) << " bucket fetch" << endl;
     return result;
 }
 
@@ -194,6 +199,8 @@ set<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int le
     }
 
     cout << result.size() << " values successfully joined" << endl;
+    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
 }
 
@@ -240,6 +247,9 @@ set<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *t
     }
 
     cout << result.size() << " values successfully joined" << endl;
+    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table3->getName() << " : " << table3->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
 }
 

@@ -49,7 +49,7 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
 void MultikeyExtendibleHashing::printState()
 {
     getCouples();
-    cout << "empty buckets : " << numberEmptyBuckets << endl;
+//    cout << "empty buckets : " << numberEmptyBuckets << endl;
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;
