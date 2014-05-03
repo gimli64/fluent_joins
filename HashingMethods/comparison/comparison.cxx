@@ -1,10 +1,12 @@
 #include "comparer.h"
+#include "queryExecuter.h"
 #include <time.h>
 
 int main()
 {
     try {
         Comparer<MultikeyExtendibleHashing, DepthBucket> comparer;
+        QueryExecuter<MultikeyExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
         cout << "Fluent joins experiment" << endl;
@@ -57,40 +59,40 @@ int main()
 
         cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         tStart = clock();
-        comparer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
+        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
-        comparer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
+        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
 //        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
 //        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
         tStart = clock();
-        comparer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
-        comparer.sortMergeBinaryJoin("partsupp", 50000, "supplier", 10000, 1, 0);
+        executer.sortMergeBinaryJoin("partsupp", 50000, "supplier", 10000, 1, 0);
 //        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
 //        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
         tStart = clock();
-        comparer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+        executer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
         cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
         cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;
         printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         tStart = clock();
-        comparer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
+        executer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
 //        cout << "table partsupp : " << partsuppTable->getNumberBucketFetch() << " bucket fetch" << endl;
 //        cout << "table supplier : " << supplierTable->getNumberBucketFetch() << " bucket fetch" << endl;
 //        cout << "table nation : " << nationTable->getNumberBucketFetch() << " bucket fetch" << endl;

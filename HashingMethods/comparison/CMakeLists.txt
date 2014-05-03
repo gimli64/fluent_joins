@@ -1,3 +1,4 @@
+add_library(QueryExecuter queryExecuter.cpp)
 add_library(Comparer comparer.cpp)
 add_executable(comparison comparison.cxx)
 
