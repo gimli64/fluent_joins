@@ -121,6 +121,7 @@ void BucketFactory<T>::removeAll(string bucketPath)
 {
     reset();
     system(("exec find " + constPrefix + bucketPath + " -name '" + bucketPrefix + "*' | xargs rm").c_str());
+    system(("exec find " + constPrefix + bucketPath + "_aux" + " -name '" + bucketPrefix + "*' | xargs rm").c_str());
 }
 
 template<class T>

@@ -15,9 +15,7 @@ HashTable::HashTable(string name, vector<int> keysRepartition)
 
 size_t HashTable::getHash(string key)
 {
-//    return hash(string_hasher(key));
       return string_hasher(key);
-//    return (atoi(key.c_str()) *2654435761) % 4294967296;
 }
 
 vector<string> HashTable::get(string key)

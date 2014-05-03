@@ -27,11 +27,12 @@ public:
 
     void writeTable(T* table);
     T *readTable(string name);
+    vector<Couple> readStandardTable(string name, int numberEntries);
 
-    set<string> sortMergeBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
+    set<string> sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition);
     void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, set<string> &result);
 
-    set<string> sortMergeThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3);
+    set<string> sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3);
     void threeWayMergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<Couple> &interCouples);
 
     set<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
@@ -58,16 +59,29 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
     clock_t tStart = clock();
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
-//        cout << table << "\n" << endl;
     }
 //    cout << table << endl;
     cout << "\n\nFinished building table " << name << " : " << BucketFactory<B>::getInstance()->getNumberBuckets() << " buckets" << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    cout << "serializing table " << name << endl;
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
     table.clearBuckets();
     table.printState();
     writeTable(&table);
+
+    cout << "\nBuilding standard table" << endl;
+    BucketFactory<B>::getInstance()->reset();
+    int j = 0;
+    B* bucket;
+    vector<B*> buckets;
+    for (int i = 0; i < relation.size(); i++) {
+        if (j == 0) {
+            bucket = BucketFactory<B>::getInstance()->newBucket();
+            buckets.push_back(bucket);
+        }
+        bucket->putCouple(Couple(relation[i][0].c_str(), relation[i]));
+        j = (j + 1) % B::BUCKET_SIZE;
+    }
+    BucketFactory<B>::getInstance()->writeAll(buckets, table.getName() + "_aux/");
 }
 
 template<class T, class B>
@@ -93,15 +107,28 @@ T *Comparer<T, B>::readTable(string name)
 }
 
 template<class T, class B>
-set<string> Comparer<T, B>::sortMergeBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition)
+vector<Couple> Comparer<T, B>::readStandardTable(string name, int numberEntries)
 {
-    table1->setNumberBucketFetch(0);
-    table2->setNumberBucketFetch(0);
+    int numberBuckets = (int) ceil((double) numberEntries / B::BUCKET_SIZE);
+    B *bucket;
+    vector<Couple> couples;
+    for (int i = 0; i < numberBuckets; i++) {
+        bucket = BucketFactory<B>::getInstance()->readBucket(name + "_aux/b" + lexical_cast<string>(i));
+        vector<Couple> values = bucket->getAllValues();
+        couples.insert(couples.end(), values.begin(), values.end());
+    }
+
+    return couples;
+}
+
+template<class T, class B>
+set<string> Comparer<T, B>::sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition)
+{
     cout << "Using sort merge join" << endl;
 
     set<string> result;
-    vector<Couple> couples1 = table1->getCouples();
-    vector<Couple> couples2 = table2->getCouples();
+    vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
+    vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
 
     Comparator comparator(leftPosition);
     sort(couples1.begin(), couples1.end(), comparator);
@@ -146,18 +173,15 @@ void Comparer<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> &coup
 }
 
 template<class T, class B>
-set<string> Comparer<T, B>::sortMergeThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3)
+set<string> Comparer<T, B>::sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3)
 {
-    table1->setNumberBucketFetch(0);
-    table2->setNumberBucketFetch(0);
-    table3->setNumberBucketFetch(0);
     cout << "Using sort merge join" << endl;
 
     set<string> result;
-    vector<Couple> couples1 = table1->getCouples();
-    vector<Couple> couples2 = table2->getCouples();
+    vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
+    vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
     vector<Couple> interCouples = vector<Couple>();
-    vector<Couple> couples3 = table3->getCouples();
+    vector<Couple> couples3 = readStandardTable(name3, numberEntries3);
 
     Comparator comparator(position1);
     sort(couples1.begin(), couples1.end(), comparator);

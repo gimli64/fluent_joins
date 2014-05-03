@@ -25,7 +25,7 @@ public:
     virtual void put(Couple couple);
 
     void putMultikey(Couple couple);
-    vector<Bucket *> fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
+    vector<Bucket*> fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
     vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
 
     virtual int getNumberDirEntries();
