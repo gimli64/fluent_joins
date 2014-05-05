@@ -18,17 +18,17 @@ public:
     QueryExecuter();
     vector<Couple> readStandardTable(string name, int numberEntries);
 
-    set<string> sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition);
-    void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, set<string> &result);
+    vector<string> sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition);
+    void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result);
 
-    set<string> sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3);
+    vector<string> sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3);
     void threeWayMergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<Couple> &interCouples);
 
-    set<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
-    void binaryJoinCouples(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, set<string> &result);
+    vector<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
+    void binaryJoinCouples(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, vector<string> &result);
 
-    set<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
-    void threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, set<string> &result);
+    vector<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
+    void threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, vector<string> &result);
 
 private:
     string constPrefix;
@@ -55,11 +55,11 @@ vector<Couple> QueryExecuter<T, B>::readStandardTable(string name, int numberEnt
 }
 
 template<class T, class B>
-set<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition)
+vector<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition)
 {
     cout << "Using sort merge join" << endl;
 
-    set<string> result;
+    vector<string> result;
     vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
     vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
 
@@ -76,7 +76,7 @@ set<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int numberEnt
 }
 
 template<class T, class B>
-void QueryExecuter<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, set<string> &result)
+void QueryExecuter<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result)
 {
     vector<Couple>::iterator couple1 = couples1.begin();
     vector<Couple>::iterator couple2 = couples2.begin();
@@ -87,17 +87,17 @@ void QueryExecuter<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> 
         } else if ((*couple1).values[leftPosition] > (*couple2).values[rightPosition]) {
             couple2 = next(couple2);
         } else {
-            result.insert(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|"));
+            result.push_back(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|"));
 
             vector<Couple>::iterator couple1_temp = next(couple1);
             while (couple1_temp != couples1.end() and (*couple1_temp).values[leftPosition] == (*couple2).values[rightPosition]) {
-                result.insert(join((*couple1_temp).values, "|") + "$$$" + join((*couple2).values, "|"));
+                result.push_back(join((*couple1_temp).values, "|") + "$$$" + join((*couple2).values, "|"));
                 couple1_temp = next(couple1_temp);
             }
 
             vector<Couple>::iterator couple2_temp = next(couple2);
             while (couple2_temp != couples2.end() and (*couple1).values[leftPosition] == (*couple2_temp).values[rightPosition]) {
-                result.insert(join((*couple1).values, "|") + "$$$" + join((*couple2_temp).values, "|"));
+                result.push_back(join((*couple1).values, "|") + "$$$" + join((*couple2_temp).values, "|"));
                 couple2_temp = next(couple2_temp);
             }
 
@@ -108,11 +108,11 @@ void QueryExecuter<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> 
 }
 
 template<class T, class B>
-set<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3)
+vector<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3)
 {
     cout << "Using sort merge join" << endl;
 
-    set<string> result;
+    vector<string> result;
     vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
     vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
     vector<Couple> interCouples = vector<Couple>();
@@ -179,13 +179,13 @@ void QueryExecuter<T, B>::threeWayMergeCouples(vector<Couple> &couples1, vector<
 }
 
 template<class T, class B>
-set<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition)
+vector<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition)
 {
     table1->setNumberBucketFetch(0);
     table2->setNumberBucketFetch(0);
     cout << "Using multikeyBinaryJoin" << endl;
 
-    set<string> result;
+    vector<string> result;
     vector<Bucket *>::iterator bucket1;
     vector<Bucket *>::iterator bucket2;
     int keyHashSize = min(table1->keysRepartition[leftPosition], table2->keysRepartition[rightPosition]);
@@ -205,28 +205,28 @@ set<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int le
 }
 
 template<class T, class B>
-void QueryExecuter<T, B>::binaryJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, set<string> &result)
+void QueryExecuter<T, B>::binaryJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result)
 {
     vector<Couple>::iterator couple1;
     vector<Couple>::iterator couple2;
     for (couple1 = couples1.begin(); couple1 != couples1.end(); ++couple1) {
         for (couple2 = couples2.begin(); couple2 != couples2.end(); ++couple2) {
             if ((*couple1).values[leftPosition] == (*couple2).values[rightPosition]) {
-                result.insert(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|"));
+                result.push_back(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|"));
             }
         }
     }
 }
 
 template<class T, class B>
-set<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3)
+vector<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3)
 {
     table1->setNumberBucketFetch(0);
     table2->setNumberBucketFetch(0);
     table3->setNumberBucketFetch(0);
     cout << "Using multikeyThreeWayJoin" << endl;
 
-    set<string> result;
+    vector<string> result;
     vector<Bucket *>::iterator bucket1;
     vector<Bucket *>::iterator bucket2;
     vector<Bucket *>::iterator bucket3;
@@ -254,7 +254,7 @@ set<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T *t
 }
 
 template<class T, class B>
-void QueryExecuter<T, B>::threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, set<string> &result)
+void QueryExecuter<T, B>::threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, vector<string> &result)
 {
     vector<Couple>::iterator couple1;
     vector<Couple>::iterator couple2;
@@ -264,7 +264,7 @@ void QueryExecuter<T, B>::threeWayJoinCouples(vector<Couple> &couples1, vector<C
             if ((*couple1).values[position1] == (*couple2).values[position1_2]) {
                 for (couple3 = couples3.begin(); couple3 != couples3.end(); ++couple3) {
                     if ((*couple2).values[position2_3] == (*couple3).values[position3]) {
-                        result.insert(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|") +  "$$$" + join((*couple3).values, "|"));
+                        result.push_back(join((*couple1).values, "|") + "$$$" + join((*couple2).values, "|") +  "$$$" + join((*couple3).values, "|"));
                     }
                 }
             }

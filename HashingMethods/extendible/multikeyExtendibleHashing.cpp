@@ -54,7 +54,7 @@ void MultikeyExtendibleHashing::printState()
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;
     cout << "number overflow buckets : " << numberOverflowBuckets << endl;
-    cout << "load factor : " << (double) totalBucketSize / numberBucketFetch << endl;
+    cout << "load factor : " << (double) totalBucketSize / (numberBucketFetch * Bucket::BUCKET_SIZE) << endl;
 }
 
 ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)
