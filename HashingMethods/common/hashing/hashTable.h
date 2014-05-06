@@ -49,7 +49,6 @@ protected:
     boost::hash<string> string_hasher;
     int leftMostBitIndex;
     int numberBucketFetch;
-    int totalBucketSize;
 
 private:
     void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
