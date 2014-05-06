@@ -6,19 +6,19 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
+//#include <boost/accumulators/accumulators.hpp>
+//#include <boost/accumulators/statistics/stats.hpp>
+//#include <boost/accumulators/statistics/density.hpp>
 #include <math.h>
 
 using namespace std;
-using namespace boost::accumulators;
+//using namespace boost::accumulators;
 
 class HashTable
 {
 public:
     vector<int> keysRepartition;
-    vector<accumulator_set<int, stats<tag::mean> > > accumulators;
+    vector<map<string, int> > histograms;
 
     HashTable(string name = "", vector<int> keysRepartition = vector<int>());
 

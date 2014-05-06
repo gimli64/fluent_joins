@@ -50,6 +50,30 @@ void MultikeyExtendibleHashing::printState()
     cout << "max chain length : " << maxChainLength << endl;
     cout << "number overflow buckets : " << numberOverflowBuckets << endl;
     cout << "load factor : " << (double) couples.size() / (numberBucketFetch * Bucket::BUCKET_SIZE) << endl;
+
+    vector<Couple>::iterator couple;
+    for (couple = couples.begin(); couple != couples.end(); ++couple) {
+        for (int i = 0; i < couple->values.size(); i++) {
+            if (keysRepartition[i] > 0) {
+                if (!histograms[i][couple->values[i]]) {
+                    histograms[i][couple->values[i]] = 1;
+                } else {
+                    histograms[i][couple->values[i]]++;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        if (keysRepartition[i] > 0) {
+            int totalDistance = 0;
+            map<string, int>::iterator it;
+            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
+                totalDistance += it->second - 1;
+            }
+            cout << "column " << i << " distance to uniform distribution : " << (double) totalDistance / couples.size() << endl;
+        }
+    }
 }
 
 ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)

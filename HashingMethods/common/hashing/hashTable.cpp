@@ -8,6 +8,7 @@ HashTable::HashTable(string name, vector<int> keysRepartition)
     if (keysRepartition.size() > 0) {
         globalDepthLimit = -1;  // coherence with 0 indexation
         for (int i = 0; i < keysRepartition.size(); i++) {
+            histograms.push_back(map<string, int>());
             globalDepthLimit += keysRepartition[i];
         }
     }
@@ -137,8 +138,9 @@ void HashTable::putMultikey(Couple couple)
 size_t HashTable::getMultikeyHash(Couple couple)
 {
     vector<size_t> hashes;
-    for (int i = 0; i < couple.values.size(); i++)
+    for (int i = 0; i < couple.values.size(); i++) {
         hashes.push_back(getHash(couple.values[i]));
+    }
 
     return interleaveHashes(hashes);
 }
