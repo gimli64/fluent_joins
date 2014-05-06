@@ -11,6 +11,7 @@ Directory::Directory(HashTable *hasher)
     factory = BucketFactory<DepthBucket>::getInstance();
     bucketPath = hasher->getBucketPath();
     DepthBucket *bucket = factory->newBucket();
+    bucket->setBucketPath(bucketPath);
     buckets.push_back(bucket);
     bucketNames.push_back(bucket->name);
 }
@@ -75,7 +76,13 @@ void Directory::split(DepthBucket* bucket)
 {
     DepthBucket *newBucket1 = factory->newBucket();
     DepthBucket *newBucket2 = factory->newBucket();
-    vector<Couple> values = bucket->getAllValues();
+    vector<Couple> values = bucket->elements;
+
+    DepthBucket *nextBucket = bucket;
+    while (nextBucket->hasNext()) {
+        nextBucket = nextBucket->next();
+        values.insert(values.end(), nextBucket->elements.begin(), nextBucket->elements.end());
+    }
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = getHash(*it) & ((1 << globalDepth) - 1);
@@ -103,7 +110,9 @@ void Directory::split(DepthBucket* bucket)
     }
 
     newBucket1->setLocalDepth(bucket->getLocalDepth() + 1);
+    newBucket1->setBucketPath(bucketPath);
     newBucket2->setLocalDepth(newBucket1->getLocalDepth());
+    newBucket2->setBucketPath(bucketPath);
     factory->deleteBucket(bucket);
 }
 

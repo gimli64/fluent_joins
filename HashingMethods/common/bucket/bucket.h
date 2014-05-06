@@ -11,7 +11,7 @@ using namespace std;
 class Bucket
 {
 public:
-    static const int BUCKET_SIZE = 10;
+    static const int BUCKET_SIZE = 20;
     string name;
 
     Bucket(string name = "");
@@ -19,7 +19,8 @@ public:
     void putCouple(Couple couple);
     bool isFull();
     int size();
-    int getChainCount();
+
+    virtual int getChainCount();
     virtual vector<Couple> getAllValues();
 
     virtual string className() const;
