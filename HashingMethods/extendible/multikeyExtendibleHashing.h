@@ -10,9 +10,11 @@ public:
     vector<Couple> getCouples();
 
     virtual void printState();
+
 private:
     int maxChainLength;
     int numberOverflowBuckets;
+
     virtual Bucket *fetchBucket(size_t hash);
 
     friend class boost::serialization::access;

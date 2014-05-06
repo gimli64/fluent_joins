@@ -42,9 +42,6 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
         if (chainCount > maxChainLength) {
             maxChainLength = chainCount;
         }
-        if (values.size() == 0) {
-            numberEmptyBuckets++;
-        }
         couples.insert(couples.end(), values.begin(), values.end());
     }
 
@@ -54,7 +51,6 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
 void MultikeyExtendibleHashing::printState()
 {
     vector<Couple> couples = getCouples();
-    //    cout << "empty buckets : " << numberEmptyBuckets << endl;
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;

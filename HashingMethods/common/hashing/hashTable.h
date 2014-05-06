@@ -19,18 +19,14 @@ public:
     HashTable(string name = "", vector<int> keysRepartition = vector<int>());
 
     size_t getHash(string key);
-    virtual size_t getMultikeyHash(Couple couple);
+    size_t getMultikeyHash(Couple couple);
 
     vector<string> get(string key);
     virtual void put(Couple couple);
 
     void putMultikey(Couple couple);
-    vector<Bucket*> fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
     vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = 0);
 
-    virtual int getNumberDirEntries();
-    virtual void setNumberDirEntries(int number);
-    virtual int getLevel();
     virtual void printState();
 
     int getNumberBucketFetch();
@@ -38,16 +34,13 @@ public:
 
     string getBucketPath();
     string getName();
-    int getLeftMostBitIndex();
-
-    int numberEmptyBuckets;
+    int getGlobalDepthLimit();
 
 protected:
     string bucketPath;
     string name;
-    int numberItems;
     boost::hash<string> string_hasher;
-    int leftMostBitIndex;
+    int globalDepthLimit;
     int numberBucketFetch;
 
 private:
@@ -65,7 +58,7 @@ private:
         ar & name;
         ar & bucketPath;
         ar & keysRepartition;
-        ar & leftMostBitIndex;
+        ar & globalDepthLimit;
     }
 };
 

@@ -1,14 +1,14 @@
 #include "hashTable.h"
 
 HashTable::HashTable(string name, vector<int> keysRepartition)
-    :numberItems(0), name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberEmptyBuckets(0)
+    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0)
 {
     bucketPath = name + "/";
 
     if (keysRepartition.size() > 0) {
-        leftMostBitIndex = -1;  // coherence with 0 indexation
+        globalDepthLimit = -1;  // coherence with 0 indexation
         for (int i = 0; i < keysRepartition.size(); i++) {
-            leftMostBitIndex += keysRepartition[i];
+            globalDepthLimit += keysRepartition[i];
         }
     }
 }
@@ -46,38 +46,13 @@ string HashTable::getName()
     return name;
 }
 
-int HashTable::getLeftMostBitIndex()
+int HashTable::getGlobalDepthLimit()
 {
-    return leftMostBitIndex;
-}
-
-int HashTable::getNumberDirEntries()
-{
-    return 0;
-}
-
-int HashTable::getLevel()
-{
-    return 0;
+    return globalDepthLimit;
 }
 
 void HashTable::printState()
 {
-}
-
-void HashTable::setNumberDirEntries(int number)
-{
-}
-
-vector<Bucket *> HashTable::fetchBuckets(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
-{
-    vector<Bucket *> buckets;
-    vector<size_t> hashes;
-    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
-    for (int i = 0; i < hashes.size(); i++) {
-        buckets.push_back(fetchBucket(hashes[i]));
-    }
-    return buckets;
 }
 
 vector<Couple> HashTable::fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
