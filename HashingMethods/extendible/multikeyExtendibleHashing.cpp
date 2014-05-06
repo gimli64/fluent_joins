@@ -14,7 +14,7 @@ Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
     return bucket;
 }
 
-vector<Couple> MultikeyExtendibleHashing::getCouples()
+void MultikeyExtendibleHashing::printState()
 {
     vector<DepthBucket *>::iterator bucket_it;
     vector<DepthBucket *> buckets = directory.getBucketsFromName();
@@ -45,12 +45,6 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
         couples.insert(couples.end(), values.begin(), values.end());
     }
 
-    return couples;
-}
-
-void MultikeyExtendibleHashing::printState()
-{
-    vector<Couple> couples = getCouples();
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;

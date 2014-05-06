@@ -1,7 +1,7 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
-#include "common/structure/couple.h"
+#include "couple.h"
 
 #include <vector>
 #include <boost/serialization/vector.hpp>

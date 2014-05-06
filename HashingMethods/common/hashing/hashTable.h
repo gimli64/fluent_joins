@@ -1,20 +1,24 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "common/structure/couple.h"
 #include "common/bucket/bucket.h"
 #include <vector>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
 #include <math.h>
 
 using namespace std;
+using namespace boost::accumulators;
 
 class HashTable
 {
 public:
     vector<int> keysRepartition;
+    vector<accumulator_set<int, stats<tag::mean> > > accumulators;
 
     HashTable(string name = "", vector<int> keysRepartition = vector<int>());
 

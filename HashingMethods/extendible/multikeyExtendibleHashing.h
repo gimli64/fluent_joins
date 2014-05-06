@@ -7,7 +7,6 @@ class MultikeyExtendibleHashing : public ExtendibleHashing
 {
 public:
     MultikeyExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
-    vector<Couple> getCouples();
 
     virtual void printState();
 
