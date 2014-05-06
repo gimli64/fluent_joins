@@ -7,9 +7,6 @@ MultikeyExtendibleHashing::MultikeyExtendibleHashing(string name, vector<int> ke
 
 Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 {
-//    numberBucketFetch++;
-//    return directory.getBucketFromName(hash);
-
     Bucket *bucket = directory.getBucketFromName(hash);
     if (bucket->getAllValues().size() > 0)
         numberBucketFetch++;
@@ -19,23 +16,34 @@ Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 
 vector<Couple> MultikeyExtendibleHashing::getCouples()
 {
-    vector<DepthBucket *>::iterator bucket;
-    vector<Couple> couples;
+    vector<DepthBucket *>::iterator bucket_it;
     vector<DepthBucket *> buckets = directory.getBucketsFromName();
+    DepthBucket *bucket;
     numberBucketFetch += buckets.size();
     totalBucketSize = 0;
     maxChainLength = 0;
     numberOverflowBuckets = 0;
+    vector<Couple> couples;
+    string bucketName;
 
-    for (bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
-        vector<Couple> values = (*bucket)->getAllValues();
+    for (bucket_it = buckets.begin(); bucket_it != buckets.end(); ++bucket_it) {
+        bucket = (*bucket_it);
+        vector<Couple> values = bucket->elements;
         totalBucketSize += values.size();
-        if (values.size() > Bucket::BUCKET_SIZE) {
-            numberOverflowBuckets++;
 
-            if (values.size() / Bucket::BUCKET_SIZE > maxChainLength and values.size() % Bucket::BUCKET_SIZE > 0) {
-                maxChainLength = values.size() / Bucket::BUCKET_SIZE;
-            }
+        int chainCount = 0;
+        while (bucket->hasNext()) {
+            bucketName = bucket->nextName();
+            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
+            numberBucketFetch++;
+            numberOverflowBuckets++;
+            chainCount++;
+            totalBucketSize += bucket->elements.size();
+            values.insert(values.end(), bucket->elements.begin(), bucket->elements.end());
+        }
+
+        if (chainCount > maxChainLength) {
+            maxChainLength = chainCount;
         }
         if (values.size() == 0) {
             numberEmptyBuckets++;
@@ -49,7 +57,7 @@ vector<Couple> MultikeyExtendibleHashing::getCouples()
 void MultikeyExtendibleHashing::printState()
 {
     getCouples();
-//    cout << "empty buckets : " << numberEmptyBuckets << endl;
+    //    cout << "empty buckets : " << numberEmptyBuckets << endl;
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;

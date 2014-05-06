@@ -13,7 +13,7 @@ public:
     ~DepthBucket();
 
     vector<string> getValue(string key);
-    void putCouple(Couple couple);
+    virtual void putCouple(Couple couple);
 
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
@@ -40,6 +40,7 @@ private:
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & boost::serialization::base_object<Bucket>(*this);
+        ar & bucketPath;
         ar & localDepth;
         ar & nextBucketName;
     }

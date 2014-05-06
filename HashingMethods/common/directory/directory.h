@@ -51,8 +51,6 @@ private:
     string bucketPath;
     map<string, bool> bucketFetched;
 
-    virtual size_t getHash(Couple couple);
-
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

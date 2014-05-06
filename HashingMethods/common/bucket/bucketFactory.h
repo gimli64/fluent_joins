@@ -128,7 +128,13 @@ template<class T>
 void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
 {
     for(typename vector<T*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        writeBucket(*it, bucketPath);
+        T* bucket = *it;
+        writeBucket(bucket, bucketPath);
+
+        while(bucket->hasNext()) {
+            bucket = bucket->next();
+            writeBucket(bucket, bucketPath);
+        }
     }
 }
 

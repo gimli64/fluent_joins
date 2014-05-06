@@ -85,7 +85,7 @@ void Directory::split(DepthBucket* bucket)
     }
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
-        size_t h = getHash(*it) & ((1 << globalDepth) - 1);
+        size_t h = hasher->getMultikeyHash(*it) & ((1 << globalDepth) - 1);
         if ((h | (1 << bucket->getLocalDepth())) == h)
             newBucket2->putCouple(*it);
         else
@@ -139,11 +139,6 @@ vector<DepthBucket *> Directory::getBucketsFromName()
     }
 
     return buckets;
-}
-
-size_t Directory::getHash(Couple couple)
-{
-    return hasher->getMultikeyHash(couple);
 }
 
 void Directory::clearBuckets()
