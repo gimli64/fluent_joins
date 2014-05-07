@@ -9,9 +9,6 @@ int main()
         QueryExecuter<MultikeyExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
-        cout << "Fluent joins experiment" << endl;
-        cout << "Bucket size : " << Bucket::BUCKET_SIZE << endl;
-
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
@@ -34,9 +31,9 @@ int main()
 //        keysRepartition.push_back(0);
 //        TableFactory.createTable(R, "partsupp", keysRepartition);
 
-        R = result( N.exec( "SELECT * FROM supplier2 limit 250" ));
+        R = result( N.exec( "SELECT * FROM supplier2" ));
         keysRepartition.clear();
-        keysRepartition.push_back(4);
+        keysRepartition.push_back(1);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(1);

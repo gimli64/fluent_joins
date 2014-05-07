@@ -8,11 +8,17 @@ class MultikeyExtendibleHashing : public ExtendibleHashing
 public:
     MultikeyExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
 
-    virtual void printState();
+    virtual void checkStructure();
+    double updateStructure();
+    void reInsertCouples();
 
 private:
     int maxChainLength;
     int numberOverflowBuckets;
+    int numberLongChain;
+    int numberChain;
+    double loadFactor;
+    vector<Couple> insertedCouples;
 
     virtual Bucket *fetchBucket(size_t hash);
 
