@@ -46,7 +46,6 @@ void MultikeyExtendibleHashing::printState()
     }
 
     cout << "global depth : " << directory.getGlobalDepth() << endl;
-    cout << "number dir entries : " << pow(2.0, (double) (directory.getGlobalDepth())) << endl;
     cout << "max chain length : " << maxChainLength << endl;
     cout << "number overflow buckets : " << numberOverflowBuckets << endl;
     cout << "load factor : " << (double) couples.size() / (numberBucketFetch * Bucket::BUCKET_SIZE) << endl;
@@ -72,6 +71,7 @@ void MultikeyExtendibleHashing::printState()
                 totalDistance += it->second - 1;
             }
             cout << "column " << i << " distance to uniform distribution : " << (double) totalDistance / couples.size() << endl;
+            cout << "column " << i << " number of different values : " << histograms[i].size() << endl;
         }
     }
 }

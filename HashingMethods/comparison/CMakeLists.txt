@@ -1,8 +1,8 @@
 add_library(QueryExecuter queryExecuter.cpp)
-add_library(Comparer comparer.cpp)
+add_library(TableFactory tableFactory.cpp)
 add_executable(comparison comparison.cxx)
 
-target_link_libraries(Comparer
+target_link_libraries(TableFactory
                       pqxx
                       ExtendibleHashing
 #                      LinearHashing
@@ -12,4 +12,4 @@ target_link_libraries(Comparer
                       BucketFactory
                       )
 
-target_link_libraries(comparison Comparer)
+target_link_libraries(comparison TableFactory)

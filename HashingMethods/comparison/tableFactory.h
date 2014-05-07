@@ -1,5 +1,5 @@
-#ifndef COMPARER_H
-#define COMPARER_H
+#ifndef TABLEFACTORY_H
+#define TABLEFACTORY_H
 //#include "extendible/extendibleHashing.h"
 //#include "hybrid/multikeyHybridHashing.h"
 #include "extendible/multikeyExtendibleHashing.h"
@@ -16,10 +16,10 @@
 using namespace std;
 using namespace pqxx;
 
-template<class T, class B> class Comparer
+template<class T, class B> class TableFactory
 {
 public:
-    Comparer();
+    TableFactory();
 
     void createTable(result relation, string name, vector<int> keysRepartition);
 
@@ -31,13 +31,13 @@ private:
 };
 
 template<class T, class B>
-Comparer<T, B>::Comparer()
+TableFactory<T, B>::TableFactory()
     :constPrefix("/tmp/tables/")
 {
 }
 
 template<class T, class B>
-void Comparer<T, B>::createTable(result relation, string name, vector<int> keysRepartition)
+void TableFactory<T, B>::createTable(result relation, string name, vector<int> keysRepartition)
 {
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition);
@@ -70,7 +70,7 @@ void Comparer<T, B>::createTable(result relation, string name, vector<int> keysR
 }
 
 template<class T, class B>
-void Comparer<T, B>::writeTable(T *table)
+void TableFactory<T, B>::writeTable(T *table)
 {
     ofstream ofs((constPrefix + table->getName() + ".table").c_str());
     {
@@ -80,7 +80,7 @@ void Comparer<T, B>::writeTable(T *table)
 }
 
 template<class T, class B>
-T *Comparer<T, B>::readTable(string name)
+T *TableFactory<T, B>::readTable(string name)
 {
     T* table = new T();
     {
@@ -91,4 +91,4 @@ T *Comparer<T, B>::readTable(string name)
     return table;
 }
 
-#endif // COMPARER_H
+#endif // TABLEFACTORY_H

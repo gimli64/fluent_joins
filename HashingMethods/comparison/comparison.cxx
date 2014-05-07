@@ -1,11 +1,11 @@
-#include "comparer.h"
+#include "tableFactory.h"
 #include "queryExecuter.h"
 #include <time.h>
 
 int main()
 {
     try {
-        Comparer<MultikeyExtendibleHashing, DepthBucket> comparer;
+        TableFactory<MultikeyExtendibleHashing, DepthBucket> factory;
         QueryExecuter<MultikeyExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
@@ -25,64 +25,64 @@ int main()
         result R;
         vector<int> keysRepartition;
 
-        R = result( N.exec("SELECT * from partsupp limit 50000"));
+//        R = result( N.exec("SELECT * from partsupp limit 50000"));
+//        keysRepartition.clear();
+//        keysRepartition.push_back(6);
+//        keysRepartition.push_back(8);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        TableFactory.createTable(R, "partsupp", keysRepartition);
+
+        R = result( N.exec( "SELECT * FROM supplier2 limit 250" ));
         keysRepartition.clear();
-        keysRepartition.push_back(6);
-        keysRepartition.push_back(8);
+        keysRepartition.push_back(4);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(1);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
-        comparer.createTable(R, "partsupp", keysRepartition);
+        factory.createTable(R, "supplier", keysRepartition);
 
-        R = result( N.exec( "SELECT * FROM supplier2" ));
-        keysRepartition.clear();
-        keysRepartition.push_back(10);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        comparer.createTable(R, "supplier", keysRepartition);
+//        R = result( N.exec( "SELECT * FROM nation" ));
+//        keysRepartition.clear();
+//        keysRepartition.push_back(1);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        TableFactory.createTable(R, "nation", keysRepartition);
 
-        R = result( N.exec( "SELECT * FROM nation" ));
-        keysRepartition.clear();
-        keysRepartition.push_back(2);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        comparer.createTable(R, "nation", keysRepartition);
+//        MultikeyExtendibleHashing *supplierTable = TableFactory.readTable("supplier");
+//        MultikeyExtendibleHashing *nationTable = TableFactory.readTable("nation");
+//        MultikeyExtendibleHashing *partsuppTable = TableFactory.readTable("partsupp");
 
-        MultikeyExtendibleHashing *supplierTable = comparer.readTable("supplier");
-        MultikeyExtendibleHashing *nationTable = comparer.readTable("nation");
-        MultikeyExtendibleHashing *partsuppTable = comparer.readTable("partsupp");
+//        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        tStart = clock();
+//        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        tStart = clock();
+//        executer.sortMergeBinaryJoin("partsupp", 50000, "supplier", 10000, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeBinaryJoin("partsupp", 50000, "supplier", 10000, 1, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+//        tStart = clock();
+//        executer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        tStart = clock();
-        executer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-        tStart = clock();
-        executer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        tStart = clock();
+//        executer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
         BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
