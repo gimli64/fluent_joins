@@ -1,7 +1,7 @@
 #include "hashTable.h"
 
 HashTable::HashTable(string name, vector<int> keysRepartition)
-    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0)
+    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberItems(0)
 {
     bucketPath = name + "/";
 
@@ -50,6 +50,15 @@ string HashTable::getName()
 int HashTable::getGlobalDepthLimit()
 {
     return globalDepthLimit;
+}
+
+void HashTable::addBHF()
+{
+}
+
+bool HashTable::canAddBHF()
+{
+    return false;
 }
 
 void HashTable::printState()
@@ -132,17 +141,20 @@ Bucket *HashTable::fetchBucket(size_t hash)
 
 void HashTable::putMultikey(Couple couple)
 {
+    numberItems++;
     putCouple(getMultikeyHash(couple), couple);
 }
 
-size_t HashTable::getMultikeyHash(Couple couple)
+size_t HashTable::getMultikeyHash(Couple& couple)
 {
     vector<size_t> hashes;
     for (int i = 0; i < couple.values.size(); i++) {
         hashes.push_back(getHash(couple.values[i]));
     }
 
-    return interleaveHashes(hashes);
+    size_t hash_value = interleaveHashes(hashes);
+    couple.key = lexical_cast<string>(hash_value);
+    return hash_value;
 }
 
 size_t HashTable::interleaveHashes(vector<size_t> &hashes)
@@ -161,7 +173,7 @@ size_t HashTable::interleaveHashes(vector<size_t> &hashes)
     int bitIndex = 0;
     while (bitIndex <= globalDepthLimit) {
         if (repartition[hashIndex] > 0) {
-            key |= ((hashes[hashIndex] & 1) << (globalDepthLimit - bitIndex));
+            key |= ((hashes[hashIndex] & 1) << bitIndex);
             bitIndex += 1;
             hashes[hashIndex] >>= 1;
             repartition[hashIndex] -= 1;

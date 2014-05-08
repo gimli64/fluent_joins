@@ -9,9 +9,11 @@
 //#include <boost/accumulators/accumulators.hpp>
 //#include <boost/accumulators/statistics/stats.hpp>
 //#include <boost/accumulators/statistics/density.hpp>
+#include <boost/lexical_cast.hpp>
 #include <math.h>
 
 using namespace std;
+using namespace boost;
 //using namespace boost::accumulators;
 
 class HashTable
@@ -23,7 +25,7 @@ public:
     HashTable(string name = "", vector<int> keysRepartition = vector<int>());
 
     size_t getHash(string key);
-    size_t getMultikeyHash(Couple couple);
+    size_t getMultikeyHash(Couple &couple);
 
     vector<string> get(string key);
     virtual void put(Couple couple);
@@ -40,12 +42,16 @@ public:
     string getName();
     int getGlobalDepthLimit();
 
+    virtual void addBHF();
+    virtual bool canAddBHF();
+
 protected:
     string bucketPath;
     string name;
     boost::hash<string> string_hasher;
     int globalDepthLimit;
     int numberBucketFetch;
+    int numberItems;
 
 private:
     void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
