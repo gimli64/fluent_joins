@@ -10,7 +10,6 @@ class DepthBucket : public Bucket
 {
 public:
     DepthBucket(string name = "");
-    ~DepthBucket();
 
     vector<string> getValue(string key);
     virtual void putCouple(Couple couple);
@@ -33,7 +32,6 @@ private:
     int localDepth;
     string bucketPath;
     string nextBucketName;
-    DepthBucket* nextBucket;
 
     friend class boost::serialization::access;
     template<class Archive>

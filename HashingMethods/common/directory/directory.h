@@ -27,9 +27,7 @@ public:
     int getGlobalDepth();
     int getSize();
 
-    DepthBucket *getBucket(size_t hash);
     DepthBucket *getBucketFromName(size_t hash);
-    vector<DepthBucket *> getBuckets();
     vector<DepthBucket *> getBucketsFromName();
     void clearBuckets();
     void reset();
@@ -40,16 +38,14 @@ public:
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
-protected:
+private:
     int globalDepth;
+    string bucketPath;
 
     BucketFactory<DepthBucket> *factory;
-    vector<DepthBucket*> buckets;
     HashTable *hasher;
-
-private:
     vector<string> bucketNames;
-    string bucketPath;
+
     map<string, bool> bucketFetched;
 
     friend class boost::serialization::access;

@@ -9,7 +9,7 @@ MultikeyExtendibleHashing::MultikeyExtendibleHashing(string name, vector<int> ke
 Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 {
     Bucket *bucket = directory.getBucketFromName(hash);
-    if (bucket->getAllValues().size() > 0)
+    if (bucket->elements.size() > 0)
         numberBucketFetch++;
 
     return bucket;
@@ -18,10 +18,9 @@ Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 void MultikeyExtendibleHashing::checkStructure()
 {
     vector<DepthBucket *>::iterator bucket_it;
-    //    vector<DepthBucket *> buckets = directory.getBucketsFromName();
-    vector<DepthBucket *> buckets = directory.getBuckets();
+    vector<DepthBucket *> buckets = directory.getBucketsFromName();
     DepthBucket *bucket;
-    //    string bucketName;
+    string bucketName;
     insertedCouples.clear();
     numberBucketFetch = buckets.size();
     maxChainLength = 0;
@@ -35,9 +34,8 @@ void MultikeyExtendibleHashing::checkStructure()
 
         int chainCount = 0;
         while (bucket->hasNext()) {
-            //            bucketName = bucket->nextName();
-            //            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
-            bucket = bucket->next();
+            bucketName = bucket->nextName();
+            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
             numberBucketFetch++;
             numberOverflowBuckets++;
             chainCount++;
@@ -68,10 +66,7 @@ void MultikeyExtendibleHashing::checkStructure()
 
 bool MultikeyExtendibleHashing::canAddBHF()
 {
-//    return numberItems > 0.7 * insertionLimit;
     checkStructure();
-//    return maxChainLength > 1 /*and ((double) numberLongChain / numberChain >= 0.33)*/;
-//    return false;
     return (double) numberOverflowBuckets / numberBucketFetch >= 0.1;
 }
 
@@ -105,24 +100,6 @@ void MultikeyExtendibleHashing::addBHF() {
     globalDepthLimit += 1;
     insertionLimit *= 2;
     cout << "Adding BHF, global depth limit : " << globalDepthLimit << endl;
-}
-
-void MultikeyExtendibleHashing::splitAllBuckets()
-{
-    vector<DepthBucket *>::iterator bucket_it;
-    //    vector<DepthBucket *> buckets = directory.getBucketsFromName();
-    vector<DepthBucket *> buckets = directory.getBuckets();
-    DepthBucket *bucket;
-    directory.doubleSize();
-    cout << *this << endl;
-
-    for (bucket_it = buckets.begin(); bucket_it != buckets.end(); ++bucket_it) {
-        bucket = (*bucket_it);
-        if (bucket->hasNext()) {
-            directory.split(bucket);
-            cout << *this << endl;
-        }
-    }
 }
 
 ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)

@@ -44,14 +44,11 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     clock_t tStart = clock();
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
-//        cout << table << "\n" << endl;
     }
 //    cout << table << endl;
     table.checkStructure();
     cout << "\n\nFinished building multikey table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());
-    table.clearBuckets();
     table.printState();
     writeTable(&table);
 

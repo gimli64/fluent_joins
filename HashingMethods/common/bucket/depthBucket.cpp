@@ -1,13 +1,8 @@
 #include "depthbucket.h"
 
 DepthBucket::DepthBucket(string name)
-    :localDepth(0), nextBucket(0), Bucket(name)
+    :localDepth(0), Bucket(name)
 {
-}
-
-DepthBucket::~DepthBucket()
-{
-    delete nextBucket;
 }
 
 vector<string> DepthBucket::getValue(string key)
@@ -21,7 +16,7 @@ vector<string> DepthBucket::getValue(string key)
         } else {
             DepthBucket *bucket;
             try {
-                bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
+                bucket = next();
                 result = bucket->getValue(key);
                 delete bucket;
             } catch (string &e) {
@@ -48,20 +43,28 @@ vector<Couple> DepthBucket::getAllValues()
 
 void DepthBucket::putCouple(Couple couple) {
     if (this->isFull()) {
-        if (!nextBucket) {
+        DepthBucket *nextBucket;
+        if (!hasNext()) {
             nextBucket = BucketFactory<DepthBucket>::getInstance()->newBucket();
             nextBucketName = nextBucket->name;
             nextBucket->setBucketPath(bucketPath);
+        } else {
+            nextBucket = next();
         }
         nextBucket->putCouple(couple);
+        BucketFactory<DepthBucket>::getInstance()->writeBucket(nextBucket, bucketPath);
+        delete nextBucket;
     } else {
         Bucket::putCouple(couple);
     }
 }
 
 int DepthBucket::getChainCount() {
-    if (nextBucket) {
-        return 1 + nextBucket->getChainCount();
+    if (hasNext()) {
+        DepthBucket *nextBucket = next();
+        int chainCount = 1 + nextBucket->getChainCount();
+        delete nextBucket;
+        return chainCount;
     } else {
         return 1;
     }
@@ -79,7 +82,7 @@ bool DepthBucket::hasNext()
 
 DepthBucket *DepthBucket::next()
 {
-    return nextBucket;
+    return  BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);;
 }
 
 string DepthBucket::nextName()
@@ -104,9 +107,9 @@ ostream& DepthBucket::dump(ostream &strm) const
 {
     ostream& output = Bucket::dump(strm);
     output << " , depth : " << localDepth;
-    if (nextBucket) {
-        output << " --> ";
-        return nextBucket->dump(output);
-    }
+//    if (nextBucket) {
+//        output << " --> ";
+//        return nextBucket->dump(output);
+//    }
     return output;
 }
