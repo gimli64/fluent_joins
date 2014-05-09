@@ -31,7 +31,7 @@ int main()
 //        keysRepartition.push_back(0);
 //        TableFactory.createTable(R, "partsupp", keysRepartition);
 
-        R = result( N.exec( "SELECT * FROM supplier2" ));
+        R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
         keysRepartition.clear();
         keysRepartition.push_back(1);
         keysRepartition.push_back(0);

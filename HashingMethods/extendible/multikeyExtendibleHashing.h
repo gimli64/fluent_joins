@@ -9,8 +9,9 @@ public:
     MultikeyExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
 
     virtual void checkStructure();
-    double updateStructure();
-    void reInsertCouples();
+    virtual void addBHF();
+    virtual bool canAddBHF();
+    void splitAllBuckets();
 
 private:
     int maxChainLength;
@@ -19,8 +20,11 @@ private:
     int numberChain;
     double loadFactor;
     vector<Couple> insertedCouples;
+    int insertionLimit;
+//    vector<DepthBucket *> bucketsWithChains;
 
     virtual Bucket *fetchBucket(size_t hash);
+    vector<DepthBucket *> getBucketsToSplit();
 
     friend class boost::serialization::access;
     template<class Archive>

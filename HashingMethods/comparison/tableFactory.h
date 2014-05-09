@@ -28,12 +28,11 @@ public:
 
 private:
     string constPrefix;
-    int insertionLimit;
 };
 
 template<class T, class B>
 TableFactory<T, B>::TableFactory()
-    :constPrefix("/tmp/tables/"), insertionLimit(40)
+    :constPrefix("/tmp/tables/")
 {
 }
 
@@ -45,20 +44,10 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     clock_t tStart = clock();
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
-
-        if (i >= insertionLimit - 1 or i >= relation.size() - 1) {
-            cout << "\nInserted " << (i + 1) << " values, " << "checking table structure" << endl;
-            table.checkStructure();
-            double numberUpdates = table.updateStructure();
-            if (numberUpdates > 0) {
-                table.reInsertCouples();
-                insertionLimit = int(insertionLimit * (2 * numberUpdates));
-            } else {
-                insertionLimit += 10;
-            }
-        }
+//        cout << table << "\n" << endl;
     }
 //    cout << table << endl;
+    table.checkStructure();
     cout << "\n\nFinished building multikey table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     BucketFactory<B>::getInstance()->writeAll(table.getBuckets(), table.getBucketPath());

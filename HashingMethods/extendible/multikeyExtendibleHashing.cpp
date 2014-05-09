@@ -3,6 +3,7 @@
 MultikeyExtendibleHashing::MultikeyExtendibleHashing(string name, vector<int> keysRepartition)
     :ExtendibleHashing(name, keysRepartition)
 {
+    insertionLimit = 0.69 * Bucket::BUCKET_SIZE * 4;
 }
 
 Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
@@ -17,10 +18,11 @@ Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
 void MultikeyExtendibleHashing::checkStructure()
 {
     vector<DepthBucket *>::iterator bucket_it;
-//    vector<DepthBucket *> buckets = directory.getBucketsFromName();
+    //    vector<DepthBucket *> buckets = directory.getBucketsFromName();
     vector<DepthBucket *> buckets = directory.getBuckets();
     DepthBucket *bucket;
-//    string bucketName;
+    //    string bucketName;
+    insertedCouples.clear();
     numberBucketFetch = buckets.size();
     maxChainLength = 0;
     numberOverflowBuckets = 0;
@@ -33,8 +35,8 @@ void MultikeyExtendibleHashing::checkStructure()
 
         int chainCount = 0;
         while (bucket->hasNext()) {
-//            bucketName = bucket->nextName();
-//            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
+            //            bucketName = bucket->nextName();
+            //            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
             bucket = bucket->next();
             numberBucketFetch++;
             numberOverflowBuckets++;
@@ -64,68 +66,63 @@ void MultikeyExtendibleHashing::checkStructure()
     cout << "load factor : " << loadFactor << "\n" << endl;
 }
 
-double MultikeyExtendibleHashing::updateStructure()
+bool MultikeyExtendibleHashing::canAddBHF()
 {
-    double numberUpdates = 0.0;
-
-    if (maxChainLength > 1 and ((double) numberLongChain / numberChain >= 0.5)) {
-        Bucket::BUCKET_SIZE *= 2;
-        numberUpdates += 1;
-        cout << "Doubling bucket size : " << Bucket::BUCKET_SIZE << endl;
-    } /*else if (maxChainLength > 1) {
-        Bucket::BUCKET_SIZE = int(Bucket::BUCKET_SIZE * 1.5);
-        numberUpdates += 1.5;
-        cout << "Raising bucket size by 50% : " << Bucket::BUCKET_SIZE << endl;
-    }*/
-
-    if (abs(loadFactor - 0.69) >= 0.08 or ((double) numberOverflowBuckets / numberBucketFetch >= 0.33)) {
-        //    vector<Couple>::iterator couple;
-        //    for (couple = insertedCouples.begin(); couple != insertedCouples.end(); ++couple) {
-        //        for (int i = 0; i < couple->values.size(); i++) {
-        //            if (keysRepartition[i] > 0) {
-        //                if (!histograms[i][couple->values[i]]) {
-        //                    histograms[i][couple->values[i]] = 1;
-        //                } else {
-        //                    histograms[i][couple->values[i]]++;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    for (int i = 0; i < keysRepartition.size(); i++) {
-        //        if (keysRepartition[i] > 0) {
-        //            int totalDistance = 0;
-        //            map<string, int>::iterator it;
-        //            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
-        //                totalDistance += it->second - 1;
-        //            }
-        //            cout << "column " << i << " distance to uniform distribution : " << (double) totalDistance / insertedCouples.size() << endl;
-        //            cout << "column " << i << " number of different values : " << histograms[i].size() << endl;
-        //        }
-        //    }
-
-        keysRepartition[0] += 1;
-        globalDepthLimit += 1;
-        numberUpdates += 1;
-        cout << "Adding BHF, global depth : " << globalDepthLimit + 1 << endl;
-    }
-
-    if (numberUpdates == 0)
-        insertedCouples.clear();
-    return numberUpdates;
+//    return numberItems > 0.7 * insertionLimit;
+    checkStructure();
+//    return maxChainLength > 1 /*and ((double) numberLongChain / numberChain >= 0.33)*/;
+//    return false;
+    return (double) numberOverflowBuckets / numberBucketFetch >= 0.1;
 }
 
-void MultikeyExtendibleHashing::reInsertCouples()
+void MultikeyExtendibleHashing::addBHF() {
+    //    vector<Couple>::iterator couple;
+    //    for (couple = insertedCouples.begin(); couple != insertedCouples.end(); ++couple) {
+    //        for (int i = 0; i < couple->values.size(); i++) {
+    //            if (keysRepartition[i] > 0) {
+    //                if (!histograms[i][couple->values[i]]) {
+    //                    histograms[i][couple->values[i]] = 1;
+    //                } else {
+    //                    histograms[i][couple->values[i]]++;
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    for (int i = 0; i < keysRepartition.size(); i++) {
+    //        if (keysRepartition[i] > 0) {
+    //            int totalDistance = 0;
+    //            map<string, int>::iterator it;
+    //            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
+    //                totalDistance += it->second - 1;
+    //            }
+    //            cout << "column " << i << " distance to uniform distribution : " << (double) totalDistance / insertedCouples.size() << endl;
+    //            cout << "column " << i << " number of different values : " << histograms[i].size() << endl;
+    //        }
+    //    }
+
+    keysRepartition[0] += 1;
+    globalDepthLimit += 1;
+    insertionLimit *= 2;
+    cout << "Adding BHF, global depth limit : " << globalDepthLimit << endl;
+}
+
+void MultikeyExtendibleHashing::splitAllBuckets()
 {
-    cout << "\nReinserting " << insertedCouples.size() << " values " << endl;
-    BucketFactory<DepthBucket>::getInstance()->reset();
-    directory = Directory(this);
-    for (int i = 0; i < insertedCouples.size(); i++) {
-        putMultikey(insertedCouples[i]);
+    vector<DepthBucket *>::iterator bucket_it;
+    //    vector<DepthBucket *> buckets = directory.getBucketsFromName();
+    vector<DepthBucket *> buckets = directory.getBuckets();
+    DepthBucket *bucket;
+    directory.doubleSize();
+    cout << *this << endl;
+
+    for (bucket_it = buckets.begin(); bucket_it != buckets.end(); ++bucket_it) {
+        bucket = (*bucket_it);
+        if (bucket->hasNext()) {
+            directory.split(bucket);
+            cout << *this << endl;
+        }
     }
-    insertedCouples.clear();
-    checkStructure();
-    insertedCouples.clear();
 }
 
 ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)

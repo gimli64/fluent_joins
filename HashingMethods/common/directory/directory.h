@@ -34,6 +34,9 @@ public:
     void clearBuckets();
     void reset();
 
+    virtual void doubleSize();
+    virtual void split(DepthBucket *bucket);
+
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 
@@ -43,8 +46,6 @@ protected:
     BucketFactory<DepthBucket> *factory;
     vector<DepthBucket*> buckets;
     HashTable *hasher;
-    virtual void doubleSize();
-    virtual void split(DepthBucket *bucket);
 
 private:
     vector<string> bucketNames;

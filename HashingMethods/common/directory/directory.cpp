@@ -32,14 +32,31 @@ vector<string> Directory::getValue(size_t hash, string key)
 
 void Directory::putCouple(size_t hash, Couple couple)
 {
+//    DepthBucket *bucket = getBucket(hash);
+//    if (bucket->isFull() and bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
+//        if (bucket->getLocalDepth() == globalDepth) {
+//            doubleSize();
+//        }
+//        if (bucket->getLocalDepth() < globalDepth) {
+//            split(bucket);
+//            bucket = getBucket(hash);
+//        }
+//    }
+//    bucket->putCouple(couple);
+
     DepthBucket *bucket = getBucket(hash);
-    if (bucket->isFull() and bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
-        if (bucket->getLocalDepth() == globalDepth) {
-            doubleSize();
+    if (bucket->isFull()) {
+        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and hasher->canAddBHF()) {
+            hasher->addBHF();
         }
-        if (bucket->getLocalDepth() < globalDepth) {
-            split(bucket);
-            bucket = getBucket(hash);
+        if (bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
+            if (bucket->getLocalDepth() == globalDepth) {
+                doubleSize();
+            }
+            if (bucket->getLocalDepth() < globalDepth) {
+                split(bucket);
+                bucket = getBucket(hash);
+            }
         }
     }
     bucket->putCouple(couple);
@@ -166,7 +183,9 @@ ostream& Directory::dump(ostream& strm) const
     stringstream ss;
     ss << address;
     ostream& output = strm;
-    output << className() + ss.str() + " : \n";
+    output << className() + ss.str() + ", globalDepth ";
+    output << globalDepth;
+    output << " : \n";
 
     DepthBucket* bucket;
     for(int i = 0; i < buckets.size(); i++) {

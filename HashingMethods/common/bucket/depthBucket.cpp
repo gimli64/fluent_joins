@@ -103,9 +103,10 @@ string DepthBucket::className() const
 ostream& DepthBucket::dump(ostream &strm) const
 {
     ostream& output = Bucket::dump(strm);
+    output << " , depth : " << localDepth;
     if (nextBucket) {
         output << " --> ";
         return nextBucket->dump(output);
     }
-    return output << " , depth : " << localDepth;
+    return output;
 }
