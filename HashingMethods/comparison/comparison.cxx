@@ -33,7 +33,7 @@ int main()
 
         R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
         keysRepartition.clear();
-        keysRepartition.push_back(11);
+        keysRepartition.push_back(1);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(1);

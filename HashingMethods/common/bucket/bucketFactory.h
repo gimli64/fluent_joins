@@ -36,6 +36,10 @@ public:
     int getBucketCount();
     int getNumberBuckets();
 
+    void incChainNumber(int chainCount);
+    double getOverflowRatio();
+    void printState();
+
 private:
     BucketFactory();
     static BucketFactory<T>* instance;
@@ -43,6 +47,11 @@ private:
     int numberBuckets;         // Actual number of buckets (for building phase)
     const string constPrefix;  // Beginning of path to the buckets
     const string bucketPrefix;
+
+    int maxChainLength;
+    int numberOverflowBuckets;
+    int numberLongChain;
+    int numberChain;
 };
 
 
@@ -59,7 +68,8 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketPrefix("b")
+    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketPrefix("b"),
+      maxChainLength(0), numberOverflowBuckets(0), numberChain(0), numberLongChain(0)
 {
 }
 
@@ -97,7 +107,20 @@ T* BucketFactory<T>::newBucket()
 template<class T>
 void BucketFactory<T>::deleteBucket(T *bucket)
 {
-    numberBuckets -= bucket->getChainCount();
+    int chainCount = bucket->getChainCount();
+    numberBuckets -= chainCount;
+    chainCount -= 1;
+    if (chainCount >= 1) {
+        numberOverflowBuckets -= chainCount;
+        numberChain -= 1;
+    }
+    if (chainCount == maxChainLength) {
+        maxChainLength -= 1;
+    }
+    if (chainCount > 1) {
+        numberLongChain -= 1;
+    }
+
     delete bucket;
 }
 
@@ -150,5 +173,34 @@ int BucketFactory<T>::getNumberBuckets()
     return numberBuckets;
 }
 
+template<class T>
+void BucketFactory<T>::incChainNumber(int chainCount)
+{
+    numberOverflowBuckets += 1;
+    if (chainCount == 1)
+        numberChain += 1;
+
+    if (chainCount > maxChainLength)
+        maxChainLength += 1;
+
+    if (chainCount > 1)
+        numberLongChain += 1;
+}
+
+template<class T>
+void BucketFactory<T>::printState()
+{
+    cout << "bucketFactory numbers" << endl;
+    cout << "max chain length : " << maxChainLength << endl;
+    cout << "number overflow buckets : " << numberOverflowBuckets << endl;
+    cout << "number long chain : " << numberLongChain << endl;
+    cout << "number chain : " << numberChain << endl;
+}
+
+template<class T>
+double BucketFactory<T>::getOverflowRatio()
+{
+    return (double) numberOverflowBuckets / numberBuckets;
+}
 
 #endif // BUCKETFACTORY_H

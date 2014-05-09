@@ -33,12 +33,12 @@ vector<string> Directory::getValue(size_t hash, string key)
 
 void Directory::putCouple(size_t hash, Couple couple)
 {
-
     DepthBucket *bucket = getBucketFromName(hash);
+
     if (bucket->isFull()) {
-//        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and hasher->canAddBHF()) {
-//            hasher->addBHF();
-//        }
+        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and hasher->canAddBHF()) {
+            hasher->addBHF();
+        }
         if (bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
             if (bucket->getLocalDepth() == globalDepth) {
                 doubleSize();
@@ -47,6 +47,21 @@ void Directory::putCouple(size_t hash, Couple couple)
                 split(bucket);
                 bucket = getBucketFromName(hash);
             }
+        }
+    }
+
+    int chainCount = 0;
+    while (bucket->isFull()) {
+        chainCount += 1;
+        if (bucket->hasNext()) {
+            bucket = bucket->next();
+        } else {
+            DepthBucket *nextBucket = factory->newBucket();
+            bucket->nextBucketName = nextBucket->name;
+            nextBucket->setBucketPath(bucketPath);
+            factory->incChainNumber(chainCount);
+            factory->writeBucket(bucket, bucketPath);
+            bucket = nextBucket;
         }
     }
     bucket->putCouple(couple);
@@ -61,7 +76,7 @@ DepthBucket* Directory::getBucketFromName(size_t hash)
 //        bucketFetched[name] = true;
 //        return factory->readBucket(bucketPath + name);
 //    }
-    return factory->readBucket(bucketPath + name);;
+    return factory->readBucket(bucketPath + name);
 }
 
 void Directory::doubleSize()

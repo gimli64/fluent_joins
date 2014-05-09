@@ -9,10 +9,11 @@
 class DepthBucket : public Bucket
 {
 public:
+    string nextBucketName;
+
     DepthBucket(string name = "");
 
-    vector<string> getValue(string key);
-    virtual void putCouple(Couple couple);
+    virtual vector<string> getValue(string key);
 
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
@@ -23,7 +24,6 @@ public:
 
     bool hasNext();
     DepthBucket *next();
-    string nextName();
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
@@ -31,7 +31,6 @@ public:
 private:
     int localDepth;
     string bucketPath;
-    string nextBucketName;
 
     friend class boost::serialization::access;
     template<class Archive>

@@ -3,7 +3,6 @@
 MultikeyExtendibleHashing::MultikeyExtendibleHashing(string name, vector<int> keysRepartition)
     :ExtendibleHashing(name, keysRepartition)
 {
-    insertionLimit = 0.69 * Bucket::BUCKET_SIZE * 4;
 }
 
 Bucket *MultikeyExtendibleHashing::fetchBucket(size_t hash)
@@ -20,7 +19,6 @@ void MultikeyExtendibleHashing::checkStructure()
     vector<DepthBucket *>::iterator bucket_it;
     vector<DepthBucket *> buckets = directory.getBucketsFromName();
     DepthBucket *bucket;
-    string bucketName;
     insertedCouples.clear();
     numberBucketFetch = buckets.size();
     maxChainLength = 0;
@@ -34,8 +32,7 @@ void MultikeyExtendibleHashing::checkStructure()
 
         int chainCount = 0;
         while (bucket->hasNext()) {
-            bucketName = bucket->nextName();
-            bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + bucketName);
+            bucket = bucket->next();
             numberBucketFetch++;
             numberOverflowBuckets++;
             chainCount++;
@@ -57,6 +54,7 @@ void MultikeyExtendibleHashing::checkStructure()
 
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "number buckets : " << numberBucketFetch << endl;
+    cout << "number inserted values : " << insertedCouples.size() << endl;
     cout << "number overflow buckets : " << numberOverflowBuckets << endl;
     cout << "max chain length : " << maxChainLength << endl;
     cout << "number long chains : " << numberLongChain << endl;
@@ -66,8 +64,7 @@ void MultikeyExtendibleHashing::checkStructure()
 
 bool MultikeyExtendibleHashing::canAddBHF()
 {
-    checkStructure();
-    return (double) numberOverflowBuckets / numberBucketFetch >= 0.1;
+    return BucketFactory<DepthBucket>::getInstance()->getOverflowRatio() >= 0.1;
 }
 
 void MultikeyExtendibleHashing::addBHF() {
@@ -98,7 +95,6 @@ void MultikeyExtendibleHashing::addBHF() {
 
     keysRepartition[0] += 1;
     globalDepthLimit += 1;
-    insertionLimit *= 2;
     cout << "Adding BHF, global depth limit : " << globalDepthLimit << endl;
 }
 

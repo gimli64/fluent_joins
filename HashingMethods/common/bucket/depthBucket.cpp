@@ -41,24 +41,6 @@ vector<Couple> DepthBucket::getAllValues()
     return values;
 }
 
-void DepthBucket::putCouple(Couple couple) {
-    if (this->isFull()) {
-        DepthBucket *nextBucket;
-        if (!hasNext()) {
-            nextBucket = BucketFactory<DepthBucket>::getInstance()->newBucket();
-            nextBucketName = nextBucket->name;
-            nextBucket->setBucketPath(bucketPath);
-        } else {
-            nextBucket = next();
-        }
-        nextBucket->putCouple(couple);
-        BucketFactory<DepthBucket>::getInstance()->writeBucket(nextBucket, bucketPath);
-        delete nextBucket;
-    } else {
-        Bucket::putCouple(couple);
-    }
-}
-
 int DepthBucket::getChainCount() {
     if (hasNext()) {
         DepthBucket *nextBucket = next();
@@ -83,11 +65,6 @@ bool DepthBucket::hasNext()
 DepthBucket *DepthBucket::next()
 {
     return  BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);;
-}
-
-string DepthBucket::nextName()
-{
-    return nextBucketName;
 }
 
 int DepthBucket::getLocalDepth() {

@@ -42,6 +42,8 @@ public:
     string getName();
     int getGlobalDepthLimit();
 
+    void incNumberChain(int chainCount);
+
     virtual void addBHF();
     virtual bool canAddBHF();
 
