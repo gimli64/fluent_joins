@@ -113,9 +113,10 @@ void BucketFactory<T>::deleteBucket(T *bucket)
     if (chainCount >= 1) {
         numberOverflowBuckets -= chainCount;
         numberChain -= 1;
-    }
-    if (chainCount == maxChainLength) {
-        maxChainLength -= 1;
+
+        if (chainCount == maxChainLength) {
+            maxChainLength -= 1;
+        }
     }
     if (chainCount > 1) {
         numberLongChain -= 1;
@@ -190,11 +191,11 @@ void BucketFactory<T>::incChainNumber(int chainCount)
 template<class T>
 void BucketFactory<T>::printState()
 {
-    cout << "bucketFactory numbers" << endl;
-    cout << "max chain length : " << maxChainLength << endl;
+    cout << "number buckets : " << numberBuckets << endl;
     cout << "number overflow buckets : " << numberOverflowBuckets << endl;
-    cout << "number long chain : " << numberLongChain << endl;
-    cout << "number chain : " << numberChain << endl;
+    cout << "number chains : " << numberChain << endl;
+    cout << "max chain length : " << maxChainLength << endl;
+    cout << "number long chains : " << numberLongChain << endl;
 }
 
 template<class T>

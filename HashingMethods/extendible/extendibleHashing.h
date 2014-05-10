@@ -16,7 +16,7 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
     void reset();
-    virtual void checkStructure();
+    virtual void printState();
     virtual void addBHF();
 
 private:

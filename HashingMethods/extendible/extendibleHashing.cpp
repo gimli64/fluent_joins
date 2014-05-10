@@ -49,46 +49,11 @@ ostream& ExtendibleHashing::dump(ostream& strm) const
     return output;
 }
 
-void ExtendibleHashing::checkStructure()
+void ExtendibleHashing::printState()
 {
-    vector<DepthBucket *>::iterator bucket_it;
-    vector<DepthBucket *> buckets = directory.getBucketsFromName();
-    DepthBucket *bucket;
-    maxChainLength = 0;
-    numberOverflowBuckets = 0;
-    numberLongChain = 0;
-    numberChain = 0;
-
-    for (bucket_it = buckets.begin(); bucket_it != buckets.end(); ++bucket_it) {
-        bucket = (*bucket_it);
-
-        int chainCount = 0;
-        while (bucket->hasNext()) {
-            bucket = bucket->next();
-            numberOverflowBuckets++;
-            chainCount++;
-        }
-
-        if (chainCount > maxChainLength) {
-            maxChainLength = chainCount;
-        }
-        if (chainCount > 0) {
-            numberChain += 1;
-        }
-        if (chainCount > 1) {
-            numberLongChain += 1;
-        }
-    }
-    double loadFactor = numberItems / (BucketFactory<DepthBucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE);
-
     cout << "global depth : " << directory.getGlobalDepth() << endl;
-    cout << "number buckets : " << numberBucketFetch << endl;
-    cout << "number inserted values : " << numberItems << endl;
-    cout << "number overflow buckets : " << numberOverflowBuckets << endl;
-    cout << "max chain length : " << maxChainLength << endl;
-    cout << "number long chains : " << numberLongChain << endl;
-    cout << "number chains : " << numberChain << endl;
-    cout << "load factor : " << loadFactor << "\n" << endl;
+    BucketFactory<DepthBucket>::getInstance()->printState();
+    cout << "load factor : " << (double) numberItems / (BucketFactory<DepthBucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE) << "\n" << endl;
 }
 
 void ExtendibleHashing::addBHF() {

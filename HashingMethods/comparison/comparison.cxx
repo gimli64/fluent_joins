@@ -22,7 +22,7 @@ int main()
         result R;
         vector<int> keysRepartition;
 
-        R = result( N.exec("SELECT * from partsupp limit 50000"));
+        R = result( N.exec("SELECT * from partsupp limit 60000"));
         keysRepartition.clear();
         keysRepartition.push_back(1);
         keysRepartition.push_back(1);
