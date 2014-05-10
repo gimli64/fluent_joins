@@ -36,7 +36,7 @@ void Directory::putCouple(size_t hash, Couple couple)
     DepthBucket *bucket = getBucketFromName(hash);
 
     if (bucket->isFull()) {
-        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and hasher->canAddBHF()) {
+        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and factory->getOverflowRatio() >= 0.1) {
             hasher->addBHF();
         }
         if (bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {

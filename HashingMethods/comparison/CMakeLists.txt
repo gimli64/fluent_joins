@@ -8,7 +8,7 @@ target_link_libraries(TableFactory
 #                      LinearHashing
 #                      HybridHashing
 #                      MultikeyHybridHashing
-                      MultikeyExtendibleHashing
+#                      MultikeyExtendibleHashing
                       BucketFactory
                       )
 

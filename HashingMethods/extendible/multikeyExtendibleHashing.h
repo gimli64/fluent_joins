@@ -17,8 +17,6 @@ private:
     int numberOverflowBuckets;
     int numberLongChain;
     int numberChain;
-    double loadFactor;
-    vector<Couple> insertedCouples;
 
     virtual Bucket *fetchBucket(size_t hash);
 

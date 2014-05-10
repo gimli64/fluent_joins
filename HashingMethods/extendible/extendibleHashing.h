@@ -16,13 +16,20 @@ public:
     virtual ostream& dump(ostream& strm) const;
 
     void reset();
-
-protected:
-    Directory directory;
+    virtual void checkStructure();
+    virtual void addBHF();
 
 private:
+    int maxChainLength;
+    int numberOverflowBuckets;
+    int numberLongChain;
+    int numberChain;
+
+    Directory directory;
+
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
+    virtual Bucket *fetchBucket(size_t hash);
 
     friend class boost::serialization::access;
     template<class Archive>

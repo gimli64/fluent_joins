@@ -1,8 +1,8 @@
 #ifndef TABLEFACTORY_H
 #define TABLEFACTORY_H
-//#include "extendible/extendibleHashing.h"
+#include "extendible/extendibleHashing.h"
 //#include "hybrid/multikeyHybridHashing.h"
-#include "extendible/multikeyExtendibleHashing.h"
+//#include "extendible/multikeyExtendibleHashing.h"
 //#include "linear/multikeyLinearHashing.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"

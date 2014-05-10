@@ -5,8 +5,8 @@
 int main()
 {
     try {
-        TableFactory<MultikeyExtendibleHashing, DepthBucket> factory;
-        QueryExecuter<MultikeyExtendibleHashing, DepthBucket> executer;
+        TableFactory<ExtendibleHashing, DepthBucket> factory;
+        QueryExecuter<ExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
         connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
