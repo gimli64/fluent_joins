@@ -11,7 +11,6 @@ public:
     virtual void checkStructure();
     virtual void addBHF();
     virtual bool canAddBHF();
-    void splitAllBuckets();
 
 private:
     int maxChainLength;

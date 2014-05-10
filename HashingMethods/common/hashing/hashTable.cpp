@@ -142,6 +142,15 @@ Bucket *HashTable::fetchBucket(size_t hash)
 void HashTable::putMultikey(Couple couple)
 {
     numberItems++;
+    for (int i = 0; i < couple.values.size(); i++) {
+        if (keysRepartition[i] > 0) {
+            if (!histograms[i][couple.values[i]]) {
+                histograms[i][couple.values[i]] = 1;
+            } else {
+                histograms[i][couple.values[i]]++;
+            }
+        }
+    }
     putCouple(getMultikeyHash(couple), couple);
 }
 

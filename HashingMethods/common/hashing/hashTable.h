@@ -6,15 +6,11 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
-//#include <boost/accumulators/accumulators.hpp>
-//#include <boost/accumulators/statistics/stats.hpp>
-//#include <boost/accumulators/statistics/density.hpp>
 #include <boost/lexical_cast.hpp>
 #include <math.h>
 
 using namespace std;
 using namespace boost;
-//using namespace boost::accumulators;
 
 class HashTable
 {

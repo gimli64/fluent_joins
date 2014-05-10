@@ -68,34 +68,46 @@ bool MultikeyExtendibleHashing::canAddBHF()
 }
 
 void MultikeyExtendibleHashing::addBHF() {
-    //    vector<Couple>::iterator couple;
-    //    for (couple = insertedCouples.begin(); couple != insertedCouples.end(); ++couple) {
-    //        for (int i = 0; i < couple->values.size(); i++) {
-    //            if (keysRepartition[i] > 0) {
-    //                if (!histograms[i][couple->values[i]]) {
-    //                    histograms[i][couple->values[i]] = 1;
-    //                } else {
-    //                    histograms[i][couple->values[i]]++;
-    //                }
-    //            }
-    //        }
-    //    }
+    double maxNeededBHFRatio = 0.0;
+    double minDistanceToUniform = 1.0;
+    int maxNeededBHFRatioIndex = 0;
+    int minDistanceToUniformIndex = 0;
 
-    //    for (int i = 0; i < keysRepartition.size(); i++) {
-    //        if (keysRepartition[i] > 0) {
-    //            int totalDistance = 0;
-    //            map<string, int>::iterator it;
-    //            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
-    //                totalDistance += it->second - 1;
-    //            }
-    //            cout << "column " << i << " distance to uniform distribution : " << (double) totalDistance / insertedCouples.size() << endl;
-    //            cout << "column " << i << " number of different values : " << histograms[i].size() << endl;
-    //        }
-    //    }
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        if (keysRepartition[i] > 0) {
+            double totalDistance = 0.0;
+            map<string, int>::iterator it;
+            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
+                totalDistance += abs(((double) it->second / numberItems) - (1.0 / histograms[i].size()));
+            }
+            if (totalDistance < minDistanceToUniform) {
+                minDistanceToUniform = totalDistance;
+                minDistanceToUniformIndex = i;
+            }
 
-    keysRepartition[0] += 1;
+            int neededNumberBuckets = (int) round((double) histograms[i].size() / Bucket::BUCKET_SIZE);
+            int neededBHF = 1;
+            while (neededNumberBuckets > 1) {
+                neededNumberBuckets >>= 1;
+                neededBHF += 1;
+            }
+            double neededBHFRatio = ((double) neededBHF - keysRepartition[i]) * (1 - totalDistance);
+            if (neededBHFRatio > maxNeededBHFRatio) {
+                maxNeededBHFRatio = neededBHFRatio;
+                maxNeededBHFRatioIndex = i;
+            }
+        }
+    }
+
     globalDepthLimit += 1;
-    cout << "Adding BHF, global depth limit : " << globalDepthLimit << endl;
+    if (maxNeededBHFRatio == 0.0) {
+        keysRepartition[minDistanceToUniformIndex] += 1;
+        cout << "Adding BHF on column " << minDistanceToUniformIndex << ", global depth limit : " << globalDepthLimit << endl;
+    }
+    else {
+        keysRepartition[maxNeededBHFRatioIndex] += 1;
+        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << ", global depth limit : " << globalDepthLimit << endl;
+    }
 }
 
 ostream& operator<<(ostream& strm, const MultikeyExtendibleHashing& hash)

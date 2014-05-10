@@ -22,25 +22,25 @@ int main()
         result R;
         vector<int> keysRepartition;
 
-//        R = result( N.exec("SELECT * from partsupp limit 50000"));
-//        keysRepartition.clear();
-//        keysRepartition.push_back(6);
-//        keysRepartition.push_back(8);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        TableFactory.createTable(R, "partsupp", keysRepartition);
-
-        R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
+        R = result( N.exec("SELECT * from partsupp limit 50000"));
         keysRepartition.clear();
         keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
         keysRepartition.push_back(1);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
         keysRepartition.push_back(0);
-        factory.createTable(R, "supplier", keysRepartition);
+        factory.createTable(R, "partsupp", keysRepartition);
+
+//        R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
+//        keysRepartition.clear();
+//        keysRepartition.push_back(1);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(1);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        keysRepartition.push_back(0);
+//        factory.createTable(R, "supplier", keysRepartition);
 
 //        R = result( N.exec( "SELECT * FROM nation" ));
 //        keysRepartition.clear();
