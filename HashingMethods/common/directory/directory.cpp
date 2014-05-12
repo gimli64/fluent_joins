@@ -19,7 +19,7 @@ Directory::Directory(HashTable *hasher)
 
 vector<string> Directory::getValue(size_t hash, string key)
 {
-    DepthBucket *bucket = getBucketFromName(hash);
+    DepthBucket *bucket = getBucket(hash);
     try {
         vector<string> result = bucket->getValue(key);
         delete bucket;
@@ -33,7 +33,7 @@ vector<string> Directory::getValue(size_t hash, string key)
 
 void Directory::putCouple(size_t hash, Couple couple)
 {
-    DepthBucket *bucket = getBucketFromName(hash);
+    DepthBucket *bucket = getBucket(hash);
 
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and factory->getOverflowRatio() >= 0.1) {
@@ -45,7 +45,7 @@ void Directory::putCouple(size_t hash, Couple couple)
             }
             if (bucket->getLocalDepth() < globalDepth) {
                 split(bucket);
-                bucket = getBucketFromName(hash);
+                bucket = getBucket(hash);
             }
         }
     }
@@ -69,14 +69,19 @@ void Directory::putCouple(size_t hash, Couple couple)
     delete bucket;
 }
 
-DepthBucket* Directory::getBucketFromName(size_t hash)
+DepthBucket* Directory::getBucket(size_t hash)
+{
+    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
+}
+
+DepthBucket *Directory::fetchBucket(size_t hash)
 {
     string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
-//    if (!bucketFetched[name]) {
-//        bucketFetched[name] = true;
-//        return factory->readBucket(bucketPath + name);
-//    }
-    return factory->readBucket(bucketPath + name);
+    if (!bucketFetched[name]) {
+        bucketFetched[name] = true;
+        return factory->readBucket(bucketPath + name);
+    }
+    return new DepthBucket();
 }
 
 void Directory::doubleSize()
@@ -141,7 +146,7 @@ int Directory::getGlobalDepth()
     return globalDepth;
 }
 
-vector<DepthBucket *> Directory::getBucketsFromName()
+vector<DepthBucket *> Directory::getBuckets()
 {
     set<string> uniqueNames = set<string>(bucketNames.begin(), bucketNames.end());
     vector<DepthBucket *> buckets;

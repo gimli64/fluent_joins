@@ -42,23 +42,8 @@ void HashTable::putCouple(size_t hash, Couple couple)
 {
 }
 
-string HashTable::getName()
-{
-    return name;
-}
-
-int HashTable::getGlobalDepthLimit()
-{
-    return globalDepthLimit;
-}
-
 void HashTable::addBHF()
 {
-}
-
-bool HashTable::canAddBHF()
-{
-    return false;
 }
 
 void HashTable::printState()
@@ -191,12 +176,22 @@ int HashTable::getNumberBucketFetch()
     return numberBucketFetch;
 }
 
-void HashTable::setNumberBucketFetch(int bucketFetch)
+void HashTable::setNumberBucketFetch(int number)
 {
-    numberBucketFetch = bucketFetch;
+    numberBucketFetch = number;
 }
 
 string HashTable::getBucketPath()
 {
     return bucketPath;
+}
+
+int HashTable::getGlobalDepthLimit()
+{
+    return globalDepthLimit;
+}
+
+string HashTable::getName()
+{
+    return name;
 }

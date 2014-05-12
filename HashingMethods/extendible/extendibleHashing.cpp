@@ -21,7 +21,7 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 
 Bucket *ExtendibleHashing::fetchBucket(size_t hash)
 {
-    Bucket *bucket = directory.getBucketFromName(hash);
+    Bucket *bucket = directory.fetchBucket(hash);
     if (bucket->elements.size() > 0)
         numberBucketFetch++;
 
@@ -91,11 +91,11 @@ void ExtendibleHashing::addBHF() {
     globalDepthLimit += 1;
     if (maxNeededBHFRatio == 0.0) {
         keysRepartition[minDistanceToUniformIndex] += 1;
-        cout << "Adding BHF on column " << minDistanceToUniformIndex << ", global depth limit : " << globalDepthLimit << endl;
+        cout << "Adding BHF on column " << minDistanceToUniformIndex << endl;
     }
     else {
         keysRepartition[maxNeededBHFRatioIndex] += 1;
-        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << ", global depth limit : " << globalDepthLimit << endl;
+        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
     }
 }
 

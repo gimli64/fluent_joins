@@ -21,32 +21,32 @@ public:
     Directory();
     Directory(HashTable *hasher);
 
-    void init();
     vector<string> getValue(size_t hash, string key);
-    virtual void putCouple(size_t hash, Couple couple);
+    void putCouple(size_t hash, Couple couple);
+
     int getGlobalDepth();
     int getSize();
 
-    DepthBucket *getBucketFromName(size_t hash);
-    vector<DepthBucket *> getBucketsFromName();
-    void clearBuckets();
+    DepthBucket *getBucket(size_t hash);
+    DepthBucket *fetchBucket(size_t hash);
+    vector<DepthBucket *> getBuckets();
     void reset();
 
-    virtual void doubleSize();
-    virtual void split(DepthBucket *bucket);
-
-    virtual string className() const;
-    virtual ostream& dump(ostream& strm) const;
+    string className() const;
+    ostream& dump(ostream& strm) const;
 
 private:
     int globalDepth;
     string bucketPath;
+    vector<string> bucketNames;
 
     BucketFactory<DepthBucket> *factory;
     HashTable *hasher;
-    vector<string> bucketNames;
 
     map<string, bool> bucketFetched;
+
+    void doubleSize();
+    void split(DepthBucket *bucket);
 
     friend class boost::serialization::access;
     template<class Archive>
