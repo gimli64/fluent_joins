@@ -1,9 +1,6 @@
 #ifndef TABLEFACTORY_H
 #define TABLEFACTORY_H
 #include "extendible/extendibleHashing.h"
-//#include "hybrid/multikeyHybridHashing.h"
-//#include "extendible/multikeyExtendibleHashing.h"
-//#include "linear/multikeyLinearHashing.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"
 
@@ -39,13 +36,14 @@ TableFactory<T, B>::TableFactory()
 template<class T, class B>
 void TableFactory<T, B>::createTable(result relation, string name, vector<int> keysRepartition)
 {
+    cout << "Building table " << name << endl;
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition);
     clock_t tStart = clock();
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
     }
-    cout << "\n\nFinished building multikey table " << name << endl;
+    cout << "\n\nFinished building table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     table.printState();
     writeTable(&table);

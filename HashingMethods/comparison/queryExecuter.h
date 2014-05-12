@@ -2,9 +2,6 @@
 #define QUERYEXECUTER_H
 
 #include "extendible/extendibleHashing.h"
-//#include "hybrid/multikeyHybridHashing.h"
-//#include "extendible/multikeyExtendibleHashing.h"
-//#include "linear/multikeyLinearHashing.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"
 #include <boost/algorithm/string/join.hpp>
@@ -29,9 +26,6 @@ public:
 
     vector<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
     void threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, vector<string> &result);
-
-private:
-    string constPrefix;
 };
 
 template<class T, class B>

@@ -9,8 +9,6 @@
 class DepthBucket : public Bucket
 {
 public:
-    string nextBucketName;
-
     DepthBucket(string name = "");
 
     virtual vector<string> getValue(string key);
@@ -23,6 +21,7 @@ public:
     void setBucketPath(string path);
 
     bool hasNext();
+    void setNextBucketName(string name);
     DepthBucket *next();
 
     virtual string className() const;
@@ -31,6 +30,8 @@ public:
 private:
     int localDepth;
     string bucketPath;
+    string nextBucketName;
+
 
     friend class boost::serialization::access;
     template<class Archive>

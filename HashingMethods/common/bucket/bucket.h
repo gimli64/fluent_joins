@@ -13,6 +13,7 @@ class Bucket
 public:
     static int BUCKET_SIZE;
     string name;
+    vector<Couple> elements;
 
     Bucket(string name = "");
     virtual vector<string> getValue(string key);
@@ -26,8 +27,6 @@ public:
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;
-
-    vector<Couple> elements;
 
 private:
     friend class boost::serialization::access;

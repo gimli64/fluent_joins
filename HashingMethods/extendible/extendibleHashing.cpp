@@ -22,7 +22,7 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 Bucket *ExtendibleHashing::fetchBucket(size_t hash)
 {
     Bucket *bucket = directory.fetchBucket(hash);
-    if (bucket->elements.size() > 0)
+    if (bucket->size() > 0)
         numberBucketFetch++;
 
     return bucket;

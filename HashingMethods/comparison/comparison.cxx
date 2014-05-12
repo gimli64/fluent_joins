@@ -17,19 +17,18 @@ int main()
             return 1;
         }
 
-        cout << "\nCreating the tables" << endl;
         nontransaction N(C);
         result R;
         vector<int> keysRepartition;
 
-//        R = result( N.exec("SELECT * from partsupp limit 50000"));
-//        keysRepartition.clear();
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(1);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        keysRepartition.push_back(0);
-//        factory.createTable(R, "partsupp", keysRepartition);
+        R = result( N.exec("SELECT * from partsupp limit 50000"));
+        keysRepartition.clear();
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(1);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        keysRepartition.push_back(0);
+        factory.createTable(R, "partsupp", keysRepartition);
 
         R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
         keysRepartition.clear();
@@ -50,18 +49,18 @@ int main()
         keysRepartition.push_back(0);
         factory.createTable(R, "nation", keysRepartition);
 
-        ExtendibleHashing *supplierTable = factory.readTable("supplier");
-        ExtendibleHashing *nationTable = factory.readTable("nation");
-//        MultikeyExtendibleHashing *partsuppTable = TableFactory.readTable("partsupp");
+//        ExtendibleHashing *supplierTable = factory.readTable("supplier");
+//        ExtendibleHashing *nationTable = factory.readTable("nation");
+//        ExtendibleHashing *partsuppTable = factory.readTable("partsupp");
 
-        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        tStart = clock();
+//        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
 //        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
 //        tStart = clock();
@@ -81,8 +80,8 @@ int main()
 //        executer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
 //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-//        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
-//        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
+        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
+        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
         BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
 
         cout << "\nOperation done successfully" << endl;

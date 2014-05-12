@@ -38,17 +38,11 @@ vector<string> HashTable::getValue(size_t hash, string key)
     throw string("Value wasn't found");
 }
 
-void HashTable::putCouple(size_t hash, Couple couple)
-{
-}
+void HashTable::putCouple(size_t hash, Couple couple) {}
 
-void HashTable::addBHF()
-{
-}
+void HashTable::addBHF() {}
 
-void HashTable::printState()
-{
-}
+void HashTable::printState() {}
 
 vector<Couple> HashTable::fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
 {
@@ -65,57 +59,68 @@ vector<Couple> HashTable::fetchCouples(size_t keyHash, int keyHashSize, int posi
     return couples;
 }
 
+size_t HashTable::interleaveHashes(vector<size_t> &hashes, vector<int> keysRepartition)
+{
+    size_t key = 0;
+
+    int hashIndex = 0;
+    int bitIndex = 0;
+    while (bitIndex <= globalDepthLimit) {
+        if (keysRepartition[hashIndex] > 0) {
+            key |= ((hashes[hashIndex] & 1) << bitIndex);
+            bitIndex += 1;
+            hashes[hashIndex] >>= 1;
+            keysRepartition[hashIndex] -= 1;
+        }
+        hashIndex = (hashIndex + 1) % hashes.size();
+    }
+
+    return key;
+}
+
 void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes)
 {
-    int numberBitsToSet = keyHashSize;
-    int numberBitsToSet2 = keyHashSize2;
-
     int numberBitsUnset = 0;
-    int numberBitsLeft = 0;
-    for (int i = 0; i < position; i++) {
-        numberBitsUnset += keysRepartition[i];
-        numberBitsLeft += keysRepartition[i];
-    }
-    numberBitsUnset += (keysRepartition[position] - keyHashSize);
-    numberBitsLeft += (keysRepartition[position] - keyHashSize);
+    vector<int> bitsToSet;
 
-    int numberBitsMiddle = 0;
-    if (position2 > 0) {
-        for (int i = position + 1; i < position2; i++) {
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        if (i == position) {
+            numberBitsUnset += (keysRepartition[i] - keyHashSize);
+            bitsToSet.push_back(keysRepartition[i] - keyHashSize);
+        } else if (i == position2) {
+            numberBitsUnset += (keysRepartition[i] - keyHashSize2);
+            bitsToSet.push_back(keysRepartition[i] - keyHashSize2);
+        } else {
             numberBitsUnset += keysRepartition[i];
-            numberBitsMiddle += keysRepartition[i];
+            bitsToSet.push_back(keysRepartition[i]);
         }
-        numberBitsUnset += (keysRepartition[position2] - keyHashSize2);
-        numberBitsMiddle += (keysRepartition[position2] - keyHashSize2);
-    } else {
-        position2 = position;
     }
 
-    int numberBitsRight = 0;
-    for (int i = position2 + 1; i < keysRepartition.size(); i++) {
-        numberBitsUnset += keysRepartition[i];
-        numberBitsRight += keysRepartition[i];
-    }
-
-    size_t hash = 0;
-    size_t result = 0;
-    size_t leftMask = ((1 << numberBitsLeft) - 1) << (numberBitsMiddle + numberBitsRight);
-    size_t middleMask = ((1 << numberBitsMiddle) - 1) << (numberBitsRight);
     int numberHashes = (int) pow(2.0, (double) numberBitsUnset) - 1;
     hashes.reserve(numberHashes);
+
+    vector<size_t> hash_values;
+    size_t rightOffset;
+    size_t mask;
     for (int i = numberHashes; i >= 0; i--) {
-        hash = 0;
-        result = 0;
-        hash += ((i & leftMask) >> (numberBitsMiddle + numberBitsRight));
-        hash <<= numberBitsToSet;
-        hash += keyHash;
-        hash <<= numberBitsMiddle;
-        hash += ((i & middleMask)) >> (numberBitsRight);
-        hash <<= numberBitsToSet2;
-        hash += keyHash2;
-        hash <<= numberBitsRight;
-        hash += i & ((1 << numberBitsRight) - 1);
-        hashes.push_back(hash);
+        hash_values.clear();
+        rightOffset = 0;
+        mask = 0;
+
+        for (int j = 0; j < keysRepartition.size(); j++) {
+            mask = ((1 << bitsToSet[j]) - 1) << rightOffset;
+
+            if (j == position) {
+                hash_values.push_back((((i & mask) >> rightOffset) << keyHashSize) + keyHash);
+            } else if (j == position2) {
+                hash_values.push_back(((((i & mask) >> rightOffset) << keyHashSize2) + keyHash2));
+            } else {
+                hash_values.push_back((i & mask) >> rightOffset);
+            }
+            rightOffset += bitsToSet[j];
+        }
+
+        hashes.push_back(interleaveHashes(hash_values, keysRepartition));
     }
 }
 
@@ -146,29 +151,9 @@ size_t HashTable::getMultikeyHash(Couple& couple)
         hashes.push_back(getHash(couple.values[i]));
     }
 
-    size_t hash_value = interleaveHashes(hashes);
+    size_t hash_value = interleaveHashes(hashes, keysRepartition);
     couple.key = lexical_cast<string>(hash_value);
     return hash_value;
-}
-
-size_t HashTable::interleaveHashes(vector<size_t> &hashes)
-{
-    size_t key = 0;
-
-    vector<int> repartition = keysRepartition;
-    int hashIndex = 0;
-    int bitIndex = 0;
-    while (bitIndex <= globalDepthLimit) {
-        if (repartition[hashIndex] > 0) {
-            key |= ((hashes[hashIndex] & 1) << bitIndex);
-            bitIndex += 1;
-            hashes[hashIndex] >>= 1;
-            repartition[hashIndex] -= 1;
-        }
-        hashIndex = (hashIndex + 1) % hashes.size();
-    }
-
-    return key;
 }
 
 int HashTable::getNumberBucketFetch()

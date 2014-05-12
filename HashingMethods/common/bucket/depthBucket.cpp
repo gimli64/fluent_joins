@@ -57,6 +57,11 @@ void DepthBucket::setBucketPath(string path)
     bucketPath = path;
 }
 
+void DepthBucket::setNextBucketName(string name)
+{
+    nextBucketName = name;
+}
+
 bool DepthBucket::hasNext()
 {
     return nextBucketName != "";

@@ -57,7 +57,7 @@ void Directory::putCouple(size_t hash, Couple couple)
             bucket = bucket->next();
         } else {
             DepthBucket *nextBucket = factory->newBucket();
-            bucket->nextBucketName = nextBucket->name;
+            bucket->setNextBucketName(nextBucket->name);
             nextBucket->setBucketPath(bucketPath);
             factory->incChainNumber(chainCount);
             factory->writeBucket(bucket, bucketPath);
