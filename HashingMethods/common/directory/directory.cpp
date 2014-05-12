@@ -84,6 +84,12 @@ DepthBucket *Directory::fetchBucket(size_t hash)
     return new DepthBucket();
 }
 
+DepthBucket *Directory::fetchBuddyBucket(size_t hash, int localDepth)
+{
+    hash ^= 1 << (localDepth -1);  // Bit toggling
+    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
+}
+
 void Directory::doubleSize()
 {
     size_t old_size = bucketNames.size();

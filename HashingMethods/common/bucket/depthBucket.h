@@ -15,14 +15,14 @@ public:
 
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
-
     int getLocalDepth();
+
     void setLocalDepth(int depth);
     void setBucketPath(string path);
 
-    bool hasNext();
+    bool hasNext() const;
     void setNextBucketName(string name);
-    DepthBucket *next();
+    DepthBucket *next() const;
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;

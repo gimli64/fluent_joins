@@ -28,8 +28,11 @@ public:
     int getSize();
 
     DepthBucket *getBucket(size_t hash);
-    DepthBucket *fetchBucket(size_t hash);
     vector<DepthBucket *> getBuckets();
+
+    DepthBucket *fetchBucket(size_t hash);
+    DepthBucket *fetchBuddyBucket(size_t hash, int localDepth);
+
     void reset();
 
     string className() const;

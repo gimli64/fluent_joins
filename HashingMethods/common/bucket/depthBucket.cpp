@@ -62,12 +62,12 @@ void DepthBucket::setNextBucketName(string name)
     nextBucketName = name;
 }
 
-bool DepthBucket::hasNext()
+bool DepthBucket::hasNext() const
 {
     return nextBucketName != "";
 }
 
-DepthBucket *DepthBucket::next()
+DepthBucket *DepthBucket::next() const
 {
     return  BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);;
 }
@@ -89,9 +89,9 @@ ostream& DepthBucket::dump(ostream &strm) const
 {
     ostream& output = Bucket::dump(strm);
     output << " , depth : " << localDepth;
-//    if (nextBucket) {
-//        output << " --> ";
-//        return nextBucket->dump(output);
-//    }
+    if (hasNext()) {
+        output << " --> ";
+        return next()->dump(output);
+    }
     return output;
 }

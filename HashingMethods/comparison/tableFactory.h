@@ -48,7 +48,6 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     table.printState();
     writeTable(&table);
 
-    cout << "\nBuilding standard table" << endl;
     BucketFactory<B>::getInstance()->reset();
     int j = 0;
     B* bucket;

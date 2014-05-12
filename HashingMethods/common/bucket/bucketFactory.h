@@ -138,6 +138,10 @@ void BucketFactory<T>::reset()
 {
     numberBuckets = 0;
     bucketCount = 0;
+    numberOverflowBuckets = 0;
+    numberChain = 0;
+    maxChainLength = 0;
+    numberLongChain = 0;
 }
 
 template<class T>
