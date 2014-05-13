@@ -38,6 +38,7 @@ void Directory::putCouple(size_t hash, Couple couple)
     if (bucket->isFull()) {
         if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and factory->getOverflowRatio() >= 0.1) {
             hasher->addBHF();
+            hash = hasher->getMultikeyHash(couple);  // Must rehash the couple because we added a BHF
         }
         if (bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
             if (bucket->getLocalDepth() == globalDepth) {
@@ -81,6 +82,7 @@ DepthBucket *Directory::fetchBucket(size_t hash)
         bucketFetched[name] = true;
         return factory->readBucket(bucketPath + name);
     }
+//    return factory->readBucket(bucketPath + name);
     return new DepthBucket();
 }
 
@@ -184,13 +186,13 @@ ostream& Directory::dump(ostream& strm) const
     output << globalDepth;
     output << " : \n";
 
-//    DepthBucket* bucket;
-//    for(int i = 0; i < buckets.size(); i++) {
-//        bucket = buckets.at(i);
-//        output << "#### " << *bucket;
-//        if (i < buckets.size() - 1)
-//            output << "\n";
-//    }
+    DepthBucket* bucket;
+    for(int i = 0; i < bucketNames.size(); i++) {
+        bucket = factory->readBucket(bucketPath + bucketNames.at(i));
+        output << "#### " << *bucket;
+        if (i < bucketNames.size() - 1)
+            output << "\n";
+    }
     return output;
 }
 

@@ -16,9 +16,10 @@ class HashTable
 {
 public:
     vector<int> keysRepartition;
+    vector<int> interleaveOrder;
     vector<map<string, int> > histograms;
 
-    HashTable(string name = "", vector<int> keysRepartition = vector<int>());
+    HashTable(string name = "", vector<int> keysRepartition = vector<int>(), vector<int> interleaveOrder = vector<int>());
 
     size_t getHash(string key);
     vector<string> get(string key);
@@ -63,6 +64,7 @@ private:
         ar & bucketPath;
         ar & keysRepartition;
         ar & globalDepthLimit;
+        ar & interleaveOrder;
     }
 };
 

@@ -1,7 +1,7 @@
 #include "extendibleHashing.h"
 
-ExtendibleHashing::ExtendibleHashing(string name, vector<int> keysRepartition)
-    :directory(Directory(this)), HashTable(name, keysRepartition)
+ExtendibleHashing::ExtendibleHashing(string name, vector<int> keysRepartition, vector<int> interleaveOrder)
+    :directory(Directory(this)), HashTable(name, keysRepartition, interleaveOrder)
 {
 }
 
@@ -22,8 +22,9 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 Bucket *ExtendibleHashing::fetchBucket(size_t hash)
 {
     Bucket *bucket = directory.fetchBucket(hash);
-    if (bucket->size() > 0)
-        numberBucketFetch++;
+    if (bucket->size() > 0) {
+        numberBucketFetch += bucket->getChainCount();
+    }
 
     return bucket;
 }
@@ -91,10 +92,12 @@ void ExtendibleHashing::addBHF() {
     globalDepthLimit += 1;
     if (maxNeededBHFRatio == 0.0) {
         keysRepartition[minDistanceToUniformIndex] += 1;
+        interleaveOrder.push_back(minDistanceToUniformIndex);
         cout << "Adding BHF on column " << minDistanceToUniformIndex << endl;
     }
     else {
         keysRepartition[maxNeededBHFRatioIndex] += 1;
+        interleaveOrder.push_back(maxNeededBHFRatioIndex);
         cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
     }
 }

@@ -1,7 +1,7 @@
 #include "hashTable.h"
 
-HashTable::HashTable(string name, vector<int> keysRepartition)
-    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberItems(0)
+HashTable::HashTable(string name, vector<int> keysRepartition, vector<int> order)
+    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberItems(0), interleaveOrder(order)
 {
     bucketPath = name + "/";
 
@@ -10,6 +10,8 @@ HashTable::HashTable(string name, vector<int> keysRepartition)
         for (int i = 0; i < keysRepartition.size(); i++) {
             histograms.push_back(map<string, int>());
             globalDepthLimit += keysRepartition[i];
+            if (keysRepartition[i] > 0)
+                interleaveOrder.push_back(i);
         }
     }
 }
@@ -66,13 +68,18 @@ size_t HashTable::interleaveHashes(vector<size_t> &hashes, vector<int> keysRepar
     int hashIndex = 0;
     int bitIndex = 0;
     while (bitIndex <= globalDepthLimit) {
-        if (keysRepartition[hashIndex] > 0) {
-            key |= ((hashes[hashIndex] & 1) << bitIndex);
-            bitIndex += 1;
-            hashes[hashIndex] >>= 1;
-            keysRepartition[hashIndex] -= 1;
-        }
-        hashIndex = (hashIndex + 1) % hashes.size();
+//        if (keysRepartition[hashIndex] > 0) {
+//            key |= ((hashes[hashIndex] & 1) << bitIndex);
+//            bitIndex += 1;
+//            hashes[hashIndex] >>= 1;
+//            keysRepartition[hashIndex] -= 1;
+//        }
+//        hashIndex = (hashIndex + 1) % hashes.size();
+        hashIndex = interleaveOrder[bitIndex];
+        key |= ((hashes[hashIndex] & 1) << bitIndex);
+        bitIndex += 1;
+        hashes[hashIndex] >>= 1;
+        keysRepartition[hashIndex] -= 1;
     }
 
     return key;

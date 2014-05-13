@@ -11,7 +11,7 @@ class Directory;
 class ExtendibleHashing : public HashTable
 {
 public:
-    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>());
+    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>(), vector<int> interleaveOrder = vector<int>());
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
 

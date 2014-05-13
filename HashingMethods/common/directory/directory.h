@@ -35,6 +35,8 @@ public:
 
     void reset();
 
+    void split(DepthBucket *bucket);
+
     string className() const;
     ostream& dump(ostream& strm) const;
 
@@ -49,7 +51,6 @@ private:
     map<string, bool> bucketFetched;
 
     void doubleSize();
-    void split(DepthBucket *bucket);
 
     friend class boost::serialization::access;
     template<class Archive>
