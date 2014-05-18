@@ -20,69 +20,112 @@ int main()
         nontransaction N(C);
         result R;
         vector<int> keysRepartition;
+        vector<int> interleaveOrder;
 
-        R = result( N.exec("SELECT * from partsupp limit 50000"));
+//        R = result( N.exec("SELECT * from part"));
+//        keysRepartition.clear();
+//        keysRepartition.push_back(12);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        factory.createTable(R, "part", keysRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from partsupp"));
         keysRepartition.clear();
         keysRepartition.push_back(1);
         keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        factory.createTable(R, "partsupp", keysRepartition);
+        factory.createAutomatedTable(R, "partsupp", keysRepartition);
 
-        R = result( N.exec( "SELECT * FROM supplier2 limit 10000" ));
+        R = result( N.exec("SELECT * from partsupp"));
         keysRepartition.clear();
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        factory.createTable(R, "supplier", keysRepartition);
+        keysRepartition.push_back(8);
+        keysRepartition.push_back(7);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        factory.createTable(R, "partsupp2", keysRepartition, interleaveOrder);
 
-        R = result( N.exec( "SELECT * FROM nation" ));
-        keysRepartition.clear();
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        keysRepartition.push_back(0);
-        factory.createTable(R, "nation", keysRepartition);
+//        R = result( N.exec( "SELECT * FROM supplier2" ));
+//        keysRepartition.clear();
+//        keysRepartition.push_back(7);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        factory.createTable(R, "supplier", keysRepartition, interleaveOrder);
 
-        ExtendibleHashing *supplierTable = factory.readTable("supplier");
-        ExtendibleHashing *nationTable = factory.readTable("nation");
-        ExtendibleHashing *partsuppTable = factory.readTable("partsupp");
+//        ExtendibleHashing *supplierTable = factory.readTable("supplier");
+//        ExtendibleHashing *partsuppTable = factory.readTable("partsupp");
+//        ExtendibleHashing *partTable = factory.readTable("part");
 
-        cout << "\nExecuting : select supplier.*, nation.n_name from supplier join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(supplierTable, nationTable, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeBinaryJoin("supplier", 10000, "nation", 25, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+////        tStart = clock();
+////        executer.sortMergeBinaryJoin(partsuppTable, supplierTable, 1, 0);
+////        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << " \nExecuting : select partsupp.*, part.p_name from partsupp join part on partsupp.ps_partkey = part.p_partkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(partTable, partsuppTable, 0, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeBinaryJoin("partsupp", 50000, "supplier", 10000, 1, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        partsuppTable = factory.readTable("partsupp2");
+//        cout << " \nExecuting : select partsupp.*, supplier.s_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        cout << " \nExecuting : select partsupp.*, supplier.s_name, nation.n_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join nation on supplier.s_nationkey = nation.n_nationkey" << endl;
-        tStart = clock();
-        executer.multikeyThreeWayJoin(partsuppTable, supplierTable, nationTable, 1, 0, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        cout << " \nExecuting : select partsupp.*, part.p_name from partsupp join part on partsupp.ps_partkey = part.p_partkey" << endl;
+//        tStart = clock();
+//        executer.multikeyBinaryJoin(partTable, partsuppTable, 0, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        tStart = clock();
-        executer.sortMergeThreeWayJoin("partsupp", 50000, "supplier", 10000, "nation", 25, 1, 0, 3, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//        tStart = clock();
+//        executer.sortMergeBinaryJoin(partTable, partsuppTable, 0, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
-        BucketFactory<DepthBucket>::getInstance()->removeAll("nation");
-        BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
+//        cout << " \nExecuting : select partsupp.*, supplier.s_name, part.p_name from partsupp join supplier on partsupp.ps_suppkey = supplier.ps_suppkey join part on partsupp.ps_partkey = part.p_partkey" << endl;
+//        tStart = clock();
+//        executer.multikeyThreeWayJoin(partTable, partsuppTable, supplierTable, 0, 0, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+//        tStart = clock();
+//        executer.sortMergeThreeWayJoin(partTable, partsuppTable, supplierTable, 0, 0, 1, 0);
+//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+//        BucketFactory<DepthBucket>::getInstance()->removeAll("partsupp");
+//        BucketFactory<DepthBucket>::getInstance()->removeAll("part");
+//        BucketFactory<DepthBucket>::getInstance()->removeAll("supplier");
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();

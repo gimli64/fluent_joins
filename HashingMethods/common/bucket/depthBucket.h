@@ -15,7 +15,7 @@ public:
 
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
-    int getLocalDepth();
+    virtual int getLocalDepth();
 
     void setLocalDepth(int depth);
     void setBucketPath(string path);

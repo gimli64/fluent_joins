@@ -17,7 +17,12 @@ public:
 
     void reset();
     virtual void printState();
-    virtual void addBHF();
+    virtual bool addBHF();
+
+    vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = -1);
+    vector<Couple> fetchAllCouples();
+
+    void splitChainedBuckets();
 
 private:
     int maxChainLength;
@@ -29,7 +34,7 @@ private:
 
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
-    virtual Bucket *fetchBucket(size_t hash);
+    virtual DepthBucket *fetchBucket(size_t hash);
 
     friend class boost::serialization::access;
     template<class Archive>

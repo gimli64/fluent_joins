@@ -5,6 +5,7 @@
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"
 #include <boost/algorithm/string/join.hpp>
+#include <time.h>
 
 using namespace boost::algorithm;
 
@@ -15,10 +16,10 @@ public:
     QueryExecuter();
     vector<Couple> readStandardTable(string name, int numberEntries);
 
-    vector<string> sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition);
+    vector<string> sortMergeBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition);
     void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result);
 
-    vector<string> sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3);
+    vector<string> sortMergeThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3);
     void threeWayMergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<Couple> &interCouples);
 
     vector<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
@@ -49,13 +50,16 @@ vector<Couple> QueryExecuter<T, B>::readStandardTable(string name, int numberEnt
 }
 
 template<class T, class B>
-vector<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int numberEntries1, string name2, int numberEntries2, int leftPosition, int rightPosition)
+vector<string> QueryExecuter<T, B>::sortMergeBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition)
 {
     cout << "Using sort merge join" << endl;
-
+    table1->setNumberBucketFetch(0);
+    table1->reset();
+    table2->setNumberBucketFetch(0);
+    table2->reset();
     vector<string> result;
-    vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
-    vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
+    vector<Couple> couples1 = table1->fetchAllCouples();
+    vector<Couple> couples2 = table2->fetchAllCouples();
 
     Comparator comparator(leftPosition);
     sort(couples1.begin(), couples1.end(), comparator);
@@ -64,8 +68,8 @@ vector<string> QueryExecuter<T, B>::sortMergeBinaryJoin(string name1, int number
 
     mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
     cout << result.size() << " values successfully joined" << endl;
-    cout << "table " << name1 << " : " << (int) ceil((double) numberEntries1 / B::BUCKET_SIZE) << " bucket fetch" << endl;
-    cout << "table " << name2 << " : " << (int) ceil((double) numberEntries2 / B::BUCKET_SIZE) << " bucket fetch" << endl;
+    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
 }
 
@@ -102,15 +106,21 @@ void QueryExecuter<T, B>::mergeCouples(vector<Couple> &couples1, vector<Couple> 
 }
 
 template<class T, class B>
-vector<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(string name1, int numberEntries1, string name2, int numberEntries2, string name3, int numberEntries3, int position1, int position1_2, int position2_3, int position3)
+vector<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3)
 {
     cout << "Using sort merge join" << endl;
 
+    table1->setNumberBucketFetch(0);
+    table1->reset();
+    table2->setNumberBucketFetch(0);
+    table2->reset();
+    table3->setNumberBucketFetch(0);
+    table3->reset();
     vector<string> result;
-    vector<Couple> couples1 = readStandardTable(name1, numberEntries1);
-    vector<Couple> couples2 = readStandardTable(name2, numberEntries2);
+    vector<Couple> couples1 = table1->fetchAllCouples();
+    vector<Couple> couples2 = table2->fetchAllCouples();
     vector<Couple> interCouples = vector<Couple>();
-    vector<Couple> couples3 = readStandardTable(name3, numberEntries3);
+    vector<Couple> couples3 = table3->fetchAllCouples();
 
     Comparator comparator(position1);
     sort(couples1.begin(), couples1.end(), comparator);
@@ -125,9 +135,9 @@ vector<string> QueryExecuter<T, B>::sortMergeThreeWayJoin(string name1, int numb
     mergeCouples(interCouples, couples3, position2_3, position3, result);
 
     cout << result.size() << " values successfully joined" << endl;
-    cout << "table " << name1 << " : " << (int) ceil((double) numberEntries1 / B::BUCKET_SIZE) << " bucket fetch" << endl;
-    cout << "table " << name2 << " : " << (int) ceil((double) numberEntries2 / B::BUCKET_SIZE) << " bucket fetch" << endl;
-    cout << "table " << name3 << " : " << (int) ceil((double) numberEntries3 / B::BUCKET_SIZE) << " bucket fetch" << endl;
+    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
+    cout << "table " << table3->getName() << " : " << table3->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
 }
 
@@ -176,20 +186,23 @@ template<class T, class B>
 vector<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition)
 {
     table1->setNumberBucketFetch(0);
+    table1->reset();
     table2->setNumberBucketFetch(0);
+    table2->reset();
     cout << "Using multikeyBinaryJoin" << endl;
 
     vector<string> result;
-    vector<Bucket *>::iterator bucket1;
-    vector<Bucket *>::iterator bucket2;
+    vector<Couple> couples1;
+    vector<Couple> couples2;
     int keyHashSize = min(table1->keysRepartition[leftPosition], table2->keysRepartition[rightPosition]);
+    cout << "key hash size : " << keyHashSize << endl;
     for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
         table1->reset();
         table2->reset();
-        vector<Couple> couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
-        vector<Couple> couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
-
+        couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
+        couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
         binaryJoinCouples(couples1, couples2, leftPosition, rightPosition, result);
+        cout << result.size() << " values joined so far." << endl;
     }
 
     cout << result.size() << " values successfully joined" << endl;
@@ -218,26 +231,25 @@ vector<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T
     table1->setNumberBucketFetch(0);
     table2->setNumberBucketFetch(0);
     table3->setNumberBucketFetch(0);
+    table1->reset();
+    table2->reset();
+    table3->reset();
     cout << "Using multikeyThreeWayJoin" << endl;
 
     vector<string> result;
-    vector<Bucket *>::iterator bucket1;
-    vector<Bucket *>::iterator bucket2;
-    vector<Bucket *>::iterator bucket3;
-    int key_1_2_size = min(table1->keysRepartition[position1], table2->keysRepartition[position1_2]);
-    int key_2_3_size = min(table2->keysRepartition[position2_3], table3->keysRepartition[position3]);
-    for (size_t key_1_2_hash = 0; key_1_2_hash < (int) pow(2.0, (double) key_1_2_size); key_1_2_hash++) {
-        table1->reset();
-        vector<Couple> couples1 = table1->fetchCouples(key_1_2_hash, key_1_2_size, position1);
+    vector<Couple> couples1;
+    vector<Couple> couples2;
+    vector<Couple> couples3 = table3->fetchAllCouples();
+    int key_size = min(table1->keysRepartition[position1], table2->keysRepartition[position1_2]);
+    for (size_t key_hash = 0; key_hash < (int) pow(2.0, (double) key_size); key_hash++) {
+        couples1 = table1->fetchCouples(key_hash, key_size, position1);
+        couples2 = table2->fetchCouples(key_hash, key_size, position1_2);
+//        couples2 = table2->fetchCouples(key_2_3_hash, key_2_3_size, position2_3);
+//        couples3 = table3->fetchCouples(key_2_3_hash, key_2_3_size, position3);
 
-        for (size_t key_2_3_hash = 0; key_2_3_hash < (int) pow(2.0, (double) key_2_3_size); key_2_3_hash++) {
-            table2->reset();
-            table3->reset();
-            vector<Couple> couples2 = table2->fetchCouples(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
-            vector<Couple> couples3 = table3->fetchCouples(key_2_3_hash, key_2_3_size, position3);
-
-            threeWayJoinCouples(couples3, couples2, couples1, position3, position2_3, position1_2, position1, result);
-        }
+//        binaryJoinCouples(couples1, couples2, position1, position1_2, result);
+//        binaryJoinCouples(couples2, couples3, position2_3, position3, result);
+        threeWayJoinCouples(couples1, couples2, couples3, position1, position1_2, position2_3, position3, result);
     }
 
     cout << result.size() << " values successfully joined" << endl;

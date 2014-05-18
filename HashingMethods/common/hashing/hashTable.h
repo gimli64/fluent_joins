@@ -27,7 +27,6 @@ public:
 
     size_t getMultikeyHash(Couple &couple);
     void putMultikey(Couple couple);
-    vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = -1);
 
     virtual void printState();
 
@@ -38,7 +37,7 @@ public:
     string getBucketPath();
     string getName();
 
-    virtual void addBHF();
+    virtual bool addBHF();
 
 protected:
     string bucketPath;
@@ -48,9 +47,10 @@ protected:
     int numberBucketFetch;
     int numberItems;
 
-private:
-    size_t interleaveHashes(vector<size_t> &hashes, vector<int> keysRepartition);
     void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
+
+private:
+    size_t interleaveHashes(vector<size_t> &hashes);
     virtual Bucket* fetchBucket(size_t hash);
 
     virtual void putCouple(size_t hash, Couple couple);
