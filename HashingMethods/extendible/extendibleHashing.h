@@ -22,7 +22,7 @@ public:
     vector<Couple> getCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = -1);
     vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2 = 0, int keyHashSize2 = 0, int position2 = -1);
     vector<Couple> fetchAllCouples();
-    void loadBuckets();
+    void loadBuckets(size_t keyHash = 0, int keyHashSize = 0, int position = -1);
 
 private:
     int maxChainLength;

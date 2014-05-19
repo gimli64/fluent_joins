@@ -68,21 +68,6 @@ void Directory::putCouple(size_t hash, Couple couple)
 //    delete bucket;
 }
 
-DepthBucket* Directory::getBucket(size_t hash)
-{
-    return buckets.at(hash & ((1 << globalDepth) - 1));
-}
-
-DepthBucket *Directory::fetchBucket(size_t hash)
-{
-    string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
-    if (!bucketFetched[name]) {
-        bucketFetched[name] = true;
-        return factory->readBucket(bucketPath + name);
-    }
-    return new DepthBucket();
-}
-
 void Directory::doubleSize()
 {
     size_t old_size = bucketNames.size();
@@ -149,6 +134,21 @@ int Directory::getGlobalDepth()
     return globalDepth;
 }
 
+DepthBucket* Directory::getBucket(size_t hash)
+{
+    return buckets.at(hash & ((1 << globalDepth) - 1));
+}
+
+DepthBucket *Directory::fetchBucket(size_t hash)
+{
+    string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
+    if (!bucketFetched[name]) {
+        bucketFetched[name] = true;
+        return factory->readBucket(bucketPath + name);
+    }
+    return new DepthBucket();
+}
+
 vector<DepthBucket *> Directory::getBuckets()
 {
     set<DepthBucket *> uniqueBuckets = set<DepthBucket *>(buckets.begin(), buckets.end());
@@ -183,12 +183,13 @@ void Directory::reset()
 {
     bucketFetched = map<string, bool>();
     buckets.clear();
+    buckets.resize(bucketNames.size(), new DepthBucket());
 }
 
 void Directory::loadBuckets()
 {
-    for (vector<string>::iterator it = bucketNames.begin(); it != bucketNames.end(); ++it) {
-        buckets.push_back(factory->readBucket(bucketPath + *it));
+    for (int i = 0; i < bucketNames.size(); i++) {
+        buckets[i] = (factory->readBucket(bucketPath + bucketNames[i]));
     }
 
     DepthBucket *bucket;
@@ -201,6 +202,27 @@ void Directory::loadBuckets()
             bucket->setNext(nextBucket);
             bucket = nextBucket;
         }
+    }
+}
+
+void Directory::loadBucket(size_t hash)
+{
+    int bucketIndex = hash & ((1 << globalDepth) - 1);
+    string bucketName = bucketNames[bucketIndex];
+
+    DepthBucket *originalBucket = factory->readBucket(bucketPath + bucketName);
+    DepthBucket *bucket = originalBucket;
+    DepthBucket *nextBucket;
+    while (bucket->hasNext()) {
+        nextBucket = factory->readBucket(bucketPath + bucket->getNextBucketName());
+        bucket->setNext(nextBucket);
+        bucket = nextBucket;
+    }
+
+    bucket = originalBucket;
+    for (int i = 0; i < bucketNames.size(); i++) {
+        if (bucketNames[i] == bucketName)
+            buckets[i] = bucket;
     }
 }
 
@@ -220,10 +242,10 @@ ostream& Directory::dump(ostream& strm) const
     output << " : \n";
 
     DepthBucket* bucket;
-    for(int i = 0; i < bucketNames.size(); i++) {
-        bucket = factory->readBucket(bucketPath + bucketNames.at(i));
+    for(int i = 0; i < buckets.size(); i++) {
+        bucket = buckets[i];
         output << "#### " << *bucket;
-        if (i < bucketNames.size() - 1)
+        if (i < buckets.size() - 1)
             output << "\n";
     }
     return output;

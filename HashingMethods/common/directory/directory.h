@@ -34,6 +34,7 @@ public:
 
     void reset();
     void loadBuckets();
+    void loadBucket(size_t hash);
 
     string className() const;
     ostream& dump(ostream& strm) const;

@@ -241,25 +241,19 @@ vector<string> QueryExecuter<T, B>::multikeyThreeWayJoin(T *table1, T *table2, T
     vector<Couple> couples1;
     vector<Couple> couples2;
     vector<Couple> couples3;
-    size_t key_1_2_hash;
     int key_1_2_size = min(table1->keysRepartition[position1], table2->keysRepartition[position1_2]);
-    size_t key_2_3_hash;
     int key_2_3_size = min(table2->keysRepartition[position2_3], table3->keysRepartition[position3]);
-    int key_size = key_1_2_size + key_2_3_size;
-    for (size_t key_hash = 0; key_hash < (int) pow(2.0, (double) key_size); key_hash++) {
+    for (size_t key_1_2_hash = 0; key_1_2_hash < (int) pow(2.0, (double) key_1_2_size); key_1_2_hash++) {
         table1->reset();
         table2->reset();
-        key_1_2_hash = key_hash & ((1 << key_1_2_size) - 1);
-        key_2_3_hash = key_hash >> key_1_2_size;
         couples1 = table1->fetchCouples(key_1_2_hash, key_1_2_size, position1);
-        couples2 = table2->fetchCouples(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
-//        couples3 = table3->getCouples(key_2_3_hash, key_2_3_size, position3);
-//        cout << couples1.size() << endl;
-//        cout << couples2.size() << endl;
-//        cout << couples3.size() << endl;
+        table2->loadBuckets(key_1_2_hash, key_1_2_size, position1_2);
 
-//        threeWayJoinCouples(couples1, couples2, couples3, position1, position1_2, position2_3, position3, result);
-        binaryJoinCouples(couples1, couples2, position1, position1_2, result);
+        for (size_t key_2_3_hash = 0; key_2_3_hash < (int) pow(2.0, (double) key_2_3_size); key_2_3_hash++) {
+            couples2 = table2->getCouples(key_1_2_hash, key_1_2_size, position1_2, key_2_3_hash, key_2_3_size, position2_3);
+            couples3 = table3->getCouples(key_2_3_hash, key_2_3_size, position3);
+            threeWayJoinCouples(couples1, couples2, couples3, position1, position1_2, position2_3, position3, result);
+        }
         cout << result.size() << " values joined so far." << endl;
     }
 

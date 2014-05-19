@@ -79,7 +79,6 @@ vector<Couple> ExtendibleHashing::getCouples(size_t keyHash, int keyHashSize, in
         vector<Couple> values = bucket->getAllValues();
         couples.insert(couples.end(), values.begin(), values.end());
     }
-//    delete bucket;
     return couples;
 }
 
@@ -88,9 +87,17 @@ void ExtendibleHashing::reset()
     directory.reset();
 }
 
-void ExtendibleHashing::loadBuckets()
+void ExtendibleHashing::loadBuckets(size_t keyHash, int keyHashSize, int position)
 {
-    directory.loadBuckets();
+    if (position >= 0) {
+        vector<size_t> hashes;
+        getHashes(keyHash, keyHashSize, position, 0, 0, -1, hashes);
+        for (int i = 0; i < hashes.size(); i++) {
+            directory.loadBucket(hashes[i]);
+        }
+    } else {
+        directory.loadBuckets();
+    }
 }
 
 string ExtendibleHashing::className() const
