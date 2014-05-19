@@ -22,6 +22,8 @@ public:
 
     bool hasNext() const;
     void setNextBucketName(string name);
+    string getNextBucketName();
+    void setNext(DepthBucket * next);
     DepthBucket *next() const;
 
     virtual string className() const;
@@ -31,7 +33,7 @@ private:
     int localDepth;
     string bucketPath;
     string nextBucketName;
-
+    DepthBucket * nextBucket;
 
     friend class boost::serialization::access;
     template<class Archive>

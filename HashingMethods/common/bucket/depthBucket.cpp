@@ -62,6 +62,16 @@ void DepthBucket::setNextBucketName(string name)
     nextBucketName = name;
 }
 
+string DepthBucket::getNextBucketName()
+{
+    return nextBucketName;
+}
+
+void DepthBucket::setNext(DepthBucket * next)
+{
+    nextBucket = next;
+}
+
 bool DepthBucket::hasNext() const
 {
     return nextBucketName != "";
@@ -69,7 +79,7 @@ bool DepthBucket::hasNext() const
 
 DepthBucket *DepthBucket::next() const
 {
-    return  BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);;
+    return nextBucket;
 }
 
 int DepthBucket::getLocalDepth() {

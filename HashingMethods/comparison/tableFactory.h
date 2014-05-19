@@ -42,7 +42,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition, interleaveOrder);
     clock_t tStart = clock();
-    insertionLimit = 240;
+    insertionLimit = 160;
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
 
@@ -78,7 +78,7 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition, interleaveOrder);
     clock_t tStart = clock();
-    insertionLimit = 240;
+    insertionLimit = 160;
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
 
@@ -95,8 +95,6 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
     cout << "\n\nFinished building table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     table.printState();
-//    table.splitChainedBuckets();
-//    table.printState();
     writeTable(&table);
 
 //    BucketFactory<B>::getInstance()->reset();

@@ -23,7 +23,19 @@ DepthBucket *ExtendibleHashing::fetchBucket(size_t hash)
 {
     DepthBucket *bucket = directory.fetchBucket(hash);
     if (bucket->size() > 0) {
-        numberBucketFetch += bucket->getChainCount();
+//        numberBucketFetch += bucket->getChainCount();
+        numberBucketFetch++;
+    }
+
+    return bucket;
+}
+
+DepthBucket *ExtendibleHashing::getBucket(size_t hash)
+{
+    DepthBucket *bucket = directory.getBucket(hash);
+    if (bucket->size() > 0) {
+//        numberBucketFetch += bucket->getChainCount();
+        numberBucketFetch++;
     }
 
     return bucket;
@@ -32,7 +44,7 @@ DepthBucket *ExtendibleHashing::fetchBucket(size_t hash)
 vector<Couple> ExtendibleHashing::fetchAllCouples()
 {
     vector<Couple> couples;
-    vector<DepthBucket *> buckets = directory.getBuckets();
+    vector<DepthBucket *> buckets = directory.fetchBuckets();
     for (int i = 0; i < buckets.size(); i++) {
         vector<Couple> values = buckets[i]->getAllValues();
         couples.insert(couples.end(), values.begin(), values.end());
@@ -56,10 +68,29 @@ vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, 
     return couples;
 }
 
+vector<Couple> ExtendibleHashing::getCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
+{
+    DepthBucket *bucket;
+    vector<Couple> couples;
+    vector<size_t> hashes;
+    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
+    for (int i = 0; i < hashes.size(); i++) {
+        bucket = getBucket(hashes[i]);
+        vector<Couple> values = bucket->getAllValues();
+        couples.insert(couples.end(), values.begin(), values.end());
+    }
+//    delete bucket;
+    return couples;
+}
 
 void ExtendibleHashing::reset()
 {
     directory.reset();
+}
+
+void ExtendibleHashing::loadBuckets()
+{
+    directory.loadBuckets();
 }
 
 string ExtendibleHashing::className() const
@@ -87,31 +118,8 @@ void ExtendibleHashing::printState()
         cout << keysRepartition[i] << ", ";
     cout << "]" << endl;
     cout << "load factor : " << (double) numberItems / (BucketFactory<DepthBucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE) << "\n" << endl;
-}
 
-void ExtendibleHashing::splitChainedBuckets()
-{
-    vector<DepthBucket *> buckets = directory.getBuckets();
-    int localDepthTotal = 0;
-    int minLocalDepth = directory.getGlobalDepth();
-    int numberBucket13 = 0;
-    int numberBucket12 = 0;
-    for (int i = 0; i < buckets.size(); i++) {
-        localDepthTotal += buckets[i]->getLocalDepth();
-        if (buckets[i]->getLocalDepth() < minLocalDepth)
-            minLocalDepth = buckets[i]->getLocalDepth();
-        //        if (buckets[i]->getChainCount() > 1) {
-        //            directory.split(buckets[i]);
-        //        }
-        if (buckets[i]->getLocalDepth() == 12)
-            numberBucket12 += 1;
-        if (buckets[i]->getLocalDepth() == 13)
-            numberBucket13 += 1;
-    }
-    cout << numberBucket12 << endl;
-    cout << numberBucket13 << endl;
-    cout << minLocalDepth << endl;
-    cout << (double) localDepthTotal / buckets.size() << endl;
+    BucketFactory<DepthBucket>::getInstance()->writeAll(directory.getBuckets(), bucketPath);
 }
 
 bool ExtendibleHashing::addBHF() {
@@ -127,13 +135,14 @@ bool ExtendibleHashing::addBHF() {
                 totalDistance += abs(((double) it->second / numberItems) - (1.0 / histograms[i].size()));
             }
 
-            int neededNumberBuckets = (int) round((double) histograms[i].size() / Bucket::BUCKET_SIZE);
-            int neededBHF = 1;
-            while (neededNumberBuckets > 1) {
-                neededNumberBuckets >>= 1;
-                neededBHF += 1;
-            }
-            double neededBHFRatio = ((double) neededBHF - keysRepartition[i])/* * (1 - totalDistance)*/;
+            int neededNumberBuckets = (double) histograms[i].size() / Bucket::BUCKET_SIZE;
+//            int neededBHF = 1;
+//            while (neededNumberBuckets > 1) {
+//                neededNumberBuckets >>= 1;
+//                neededBHF += 1;
+//            }
+            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - keysRepartition[i]) /** (1 - totalDistance)*/;
+            cout << neededBHFRatio << endl;
             if (neededBHFRatio > maxNeededBHFRatio) {
                 maxNeededBHFRatio = neededBHFRatio;
                 maxNeededBHFRatioIndex = i;
@@ -142,7 +151,7 @@ bool ExtendibleHashing::addBHF() {
         }
     }
 
-    if (maxNeededBHFRatio == 0.0 or totalKeysRepartition > directory.getGlobalDepth()) {
+    if (maxNeededBHFRatio <= 0.01 or totalKeysRepartition > directory.getGlobalDepth()) {
         cout << "Not Adding BHF " << endl;
         return false;
     } else {

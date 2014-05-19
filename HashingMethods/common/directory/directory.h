@@ -25,17 +25,15 @@ public:
     void putCouple(size_t hash, Couple couple);
 
     int getGlobalDepth();
-    int getSize();
 
     DepthBucket *getBucket(size_t hash);
     vector<DepthBucket *> getBuckets();
 
     DepthBucket *fetchBucket(size_t hash);
-    DepthBucket *fetchBuddyBucket(size_t hash, int localDepth);
+    vector<DepthBucket *> fetchBuckets();
 
     void reset();
-
-    void split(DepthBucket *bucket);
+    void loadBuckets();
 
     string className() const;
     ostream& dump(ostream& strm) const;
@@ -44,12 +42,14 @@ private:
     int globalDepth;
     string bucketPath;
     vector<string> bucketNames;
+    vector<DepthBucket*> buckets;
 
     BucketFactory<DepthBucket> *factory;
     HashTable *hasher;
 
     map<string, bool> bucketFetched;
 
+    void split(DepthBucket *bucket);
     void doubleSize();
 
     friend class boost::serialization::access;

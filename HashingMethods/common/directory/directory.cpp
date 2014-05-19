@@ -14,7 +14,8 @@ Directory::Directory(HashTable *hasher)
     DepthBucket *bucket = factory->newBucket();
     bucket->setBucketPath(bucketPath);
     bucketNames.push_back(bucket->name);
-    factory->writeBucket(bucket, bucketPath);
+    buckets.push_back(bucket);
+//    factory->writeBucket(bucket, bucketPath);
 }
 
 vector<string> Directory::getValue(size_t hash, string key)
@@ -36,10 +37,6 @@ void Directory::putCouple(size_t hash, Couple couple)
     DepthBucket *bucket = getBucket(hash);
 
     if (bucket->isFull()) {
-        if (bucket->getLocalDepth() > hasher->getGlobalDepthLimit() and factory->getOverflowRatio() >= 0.1) {
-            hasher->addBHF();
-            hash = hasher->getMultikeyHash(couple);  // Must rehash the couple because we added a BHF
-        }
         if (bucket->getLocalDepth() <= hasher->getGlobalDepthLimit()) {
             if (bucket->getLocalDepth() == globalDepth) {
                 doubleSize();
@@ -59,20 +56,21 @@ void Directory::putCouple(size_t hash, Couple couple)
         } else {
             DepthBucket *nextBucket = factory->newBucket();
             bucket->setNextBucketName(nextBucket->name);
+            bucket->setNext(nextBucket);
             nextBucket->setBucketPath(bucketPath);
             factory->incChainNumber(chainCount);
-            factory->writeBucket(bucket, bucketPath);
+//            factory->writeBucket(bucket, bucketPath);
             bucket = nextBucket;
         }
     }
     bucket->putCouple(couple);
-    factory->writeBucket(bucket, bucketPath);
-    delete bucket;
+//    factory->writeBucket(bucket, bucketPath);
+//    delete bucket;
 }
 
 DepthBucket* Directory::getBucket(size_t hash)
 {
-    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
+    return buckets.at(hash & ((1 << globalDepth) - 1));
 }
 
 DepthBucket *Directory::fetchBucket(size_t hash)
@@ -82,22 +80,17 @@ DepthBucket *Directory::fetchBucket(size_t hash)
         bucketFetched[name] = true;
         return factory->readBucket(bucketPath + name);
     }
-//    return factory->readBucket(bucketPath + name);
     return new DepthBucket();
-}
-
-DepthBucket *Directory::fetchBuddyBucket(size_t hash, int localDepth)
-{
-    hash ^= 1 << (localDepth -1);  // Bit toggling
-    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
 void Directory::doubleSize()
 {
     size_t old_size = bucketNames.size();
     bucketNames.reserve(2 * old_size);
+    buckets.reserve(2 * old_size);
     for (size_t i = 0; i < old_size; i++) {
         bucketNames.push_back(bucketNames.at(i));
+        buckets.push_back(buckets.at(i));
     }
     globalDepth++;
 }
@@ -131,9 +124,11 @@ void Directory::split(DepthBucket* bucket)
     for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
         if ((*it | (1 << bucket->getLocalDepth())) == *it) {
             bucketNames.at(*it) = newBucket2->name;
+            buckets.at(*it) = newBucket2;
         }
         else {
             bucketNames.at(*it) = newBucket1->name;
+            buckets.at(*it) = newBucket1;
         }
     }
 
@@ -141,11 +136,11 @@ void Directory::split(DepthBucket* bucket)
     newBucket1->setBucketPath(bucketPath);
     newBucket2->setLocalDepth(newBucket1->getLocalDepth());
     newBucket2->setBucketPath(bucketPath);
-    factory->writeBucket(newBucket1, bucketPath);
-    factory->writeBucket(newBucket2, bucketPath);
+//    factory->writeBucket(newBucket1, bucketPath);
+//    factory->writeBucket(newBucket2, bucketPath);
 
-    delete newBucket1;
-    delete newBucket2;
+//    delete newBucket1;
+//    delete newBucket2;
     factory->deleteBucket(bucket);
 }
 
@@ -155,6 +150,24 @@ int Directory::getGlobalDepth()
 }
 
 vector<DepthBucket *> Directory::getBuckets()
+{
+    set<DepthBucket *> uniqueBuckets = set<DepthBucket *>(buckets.begin(), buckets.end());
+    vector<DepthBucket *> buckets;
+    buckets.reserve(uniqueBuckets.size());
+    DepthBucket * bucket;
+    for (set<DepthBucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
+        bucket = *it;
+        buckets.push_back(bucket);
+        while (bucket->hasNext()) {
+            bucket = bucket->next();
+            buckets.push_back(bucket);
+        }
+    }
+
+    return buckets;
+}
+
+vector<DepthBucket *> Directory::fetchBuckets()
 {
     set<string> uniqueNames = set<string>(bucketNames.begin(), bucketNames.end());
     vector<DepthBucket *> buckets;
@@ -169,6 +182,26 @@ vector<DepthBucket *> Directory::getBuckets()
 void Directory::reset()
 {
     bucketFetched = map<string, bool>();
+    buckets.clear();
+}
+
+void Directory::loadBuckets()
+{
+    for (vector<string>::iterator it = bucketNames.begin(); it != bucketNames.end(); ++it) {
+        buckets.push_back(factory->readBucket(bucketPath + *it));
+    }
+
+    DepthBucket *bucket;
+    DepthBucket *nextBucket;
+    for (vector<DepthBucket *>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
+        bucket = *it;
+
+        while (bucket->hasNext()) {
+            nextBucket = factory->readBucket(bucketPath + bucket->getNextBucketName());
+            bucket->setNext(nextBucket);
+            bucket = nextBucket;
+        }
+    }
 }
 
 string Directory::className() const
@@ -194,11 +227,6 @@ ostream& Directory::dump(ostream& strm) const
             output << "\n";
     }
     return output;
-}
-
-int Directory::getSize()
-{
-    return bucketNames.size();
 }
 
 ostream& operator<<(ostream& strm, const Directory& dir)
