@@ -120,13 +120,38 @@ void ExtendibleHashing::printState()
 {
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     BucketFactory<DepthBucket>::getInstance()->printState();
+
+    vector<DepthBucket *> buckets = directory.getBuckets();
+    DepthBucket* bucket;
+    int maxChainLength = 0;
+    int numberOverflowBuckets = 0;
+    int numberLongChain = 0;
+    int numberChain = 0;
+    for (int i = 0; i < buckets.size(); i++) {
+        bucket = buckets[i];
+        int chainCount = bucket->getChainCount() - 1;
+
+        if (chainCount > 0)
+            numberOverflowBuckets += 1;
+        if (chainCount == 1)
+            numberChain += 1;
+        if (chainCount > maxChainLength)
+            maxChainLength = chainCount;
+        if (chainCount > 1)
+            numberLongChain += 1;
+    }
+
+    cout << "number overflow buckets : " << numberOverflowBuckets << endl;
+    cout << "number chains : " << numberChain << endl;
+    cout << "max chain length : " << maxChainLength << endl;
+    cout << "number long chains : " << numberLongChain << endl;
     cout << "keys repartition : [";
     for (int i = 0; i < keysRepartition.size(); i++)
         cout << keysRepartition[i] << ", ";
     cout << "]" << endl;
     cout << "load factor : " << (double) numberItems / (BucketFactory<DepthBucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE) << "\n" << endl;
 
-    BucketFactory<DepthBucket>::getInstance()->writeAll(directory.getBuckets(), bucketPath);
+    BucketFactory<DepthBucket>::getInstance()->writeAll(buckets, bucketPath);
 }
 
 bool ExtendibleHashing::addBHF() {
@@ -136,19 +161,8 @@ bool ExtendibleHashing::addBHF() {
 
     for (int i = 0; i < keysRepartition.size(); i++) {
         if (keysRepartition[i] > 0) {
-            double totalDistance = 0.0;
-            map<string, int>::iterator it;
-            for (it = histograms[i].begin(); it != histograms[i].end(); ++it) {
-                totalDistance += abs(((double) it->second / numberItems) - (1.0 / histograms[i].size()));
-            }
-
             int neededNumberBuckets = (double) histograms[i].size() / Bucket::BUCKET_SIZE;
-//            int neededBHF = 1;
-//            while (neededNumberBuckets > 1) {
-//                neededNumberBuckets >>= 1;
-//                neededBHF += 1;
-//            }
-            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - keysRepartition[i]) /** (1 - totalDistance)*/;
+            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - keysRepartition[i]);
             cout << neededBHFRatio << endl;
             if (neededBHFRatio > maxNeededBHFRatio) {
                 maxNeededBHFRatio = neededBHFRatio;

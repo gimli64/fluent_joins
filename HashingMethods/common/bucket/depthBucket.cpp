@@ -5,6 +5,11 @@ DepthBucket::DepthBucket(string name)
 {
 }
 
+DepthBucket::~DepthBucket()
+{
+    delete nextBucket;
+}
+
 vector<string> DepthBucket::getValue(string key)
 {
     vector<string> result;
@@ -16,12 +21,10 @@ vector<string> DepthBucket::getValue(string key)
         } else {
             DepthBucket *bucket;
             try {
-                bucket = next();
+                bucket = this->next();
                 result = bucket->getValue(key);
-                delete bucket;
             } catch (string &e) {
                 throw e;
-                delete bucket;
             }
         }
     }
@@ -43,9 +46,7 @@ vector<Couple> DepthBucket::getAllValues()
 
 int DepthBucket::getChainCount() {
     if (hasNext()) {
-        DepthBucket *nextBucket = next();
-        int chainCount = 1 + nextBucket->getChainCount();
-        delete nextBucket;
+        int chainCount = 1 + this->next()->getChainCount();
         return chainCount;
     } else {
         return 1;
@@ -101,7 +102,7 @@ ostream& DepthBucket::dump(ostream &strm) const
     output << " , depth : " << localDepth;
     if (hasNext()) {
         output << " --> ";
-        return next()->dump(output);
+        return this->next()->dump(output);
     }
     return output;
 }

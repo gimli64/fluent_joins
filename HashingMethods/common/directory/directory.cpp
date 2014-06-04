@@ -48,9 +48,7 @@ void Directory::putCouple(size_t hash, Couple couple)
         }
     }
 
-    int chainCount = 0;
     while (bucket->isFull()) {
-        chainCount += 1;
         if (bucket->hasNext()) {
             bucket = bucket->next();
         } else {
@@ -58,7 +56,6 @@ void Directory::putCouple(size_t hash, Couple couple)
             bucket->setNextBucketName(nextBucket->name);
             bucket->setNext(nextBucket);
             nextBucket->setBucketPath(bucketPath);
-            factory->incChainNumber(chainCount);
 //            factory->writeBucket(bucket, bucketPath);
             bucket = nextBucket;
         }

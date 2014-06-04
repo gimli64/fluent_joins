@@ -10,6 +10,7 @@ class DepthBucket : public Bucket
 {
 public:
     DepthBucket(string name = "");
+    ~DepthBucket();
 
     virtual vector<string> getValue(string key);
 

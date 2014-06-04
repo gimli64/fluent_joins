@@ -25,11 +25,6 @@ public:
     void loadBuckets(size_t keyHash = 0, int keyHashSize = 0, int position = -1);
 
 private:
-    int maxChainLength;
-    int numberOverflowBuckets;
-    int numberLongChain;
-    int numberChain;
-
     Directory directory;
 
     virtual vector<string> getValue(size_t hash, string key);
