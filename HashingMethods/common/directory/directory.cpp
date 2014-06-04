@@ -15,7 +15,6 @@ Directory::Directory(HashTable *hasher)
     bucket->setBucketPath(bucketPath);
     bucketNames.push_back(bucket->name);
     buckets.push_back(bucket);
-//    factory->writeBucket(bucket, bucketPath);
 }
 
 vector<string> Directory::getValue(size_t hash, string key)
@@ -56,13 +55,10 @@ void Directory::putCouple(size_t hash, Couple couple)
             bucket->setNextBucketName(nextBucket->name);
             bucket->setNext(nextBucket);
             nextBucket->setBucketPath(bucketPath);
-//            factory->writeBucket(bucket, bucketPath);
             bucket = nextBucket;
         }
     }
     bucket->putCouple(couple);
-//    factory->writeBucket(bucket, bucketPath);
-//    delete bucket;
 }
 
 void Directory::doubleSize()
@@ -118,11 +114,6 @@ void Directory::split(DepthBucket* bucket)
     newBucket1->setBucketPath(bucketPath);
     newBucket2->setLocalDepth(newBucket1->getLocalDepth());
     newBucket2->setBucketPath(bucketPath);
-//    factory->writeBucket(newBucket1, bucketPath);
-//    factory->writeBucket(newBucket2, bucketPath);
-
-//    delete newBucket1;
-//    delete newBucket2;
     factory->deleteBucket(bucket);
 }
 
@@ -151,14 +142,8 @@ vector<DepthBucket *> Directory::getBuckets()
     set<DepthBucket *> uniqueBuckets = set<DepthBucket *>(buckets.begin(), buckets.end());
     vector<DepthBucket *> buckets;
     buckets.reserve(uniqueBuckets.size());
-    DepthBucket * bucket;
     for (set<DepthBucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
-        bucket = *it;
-        buckets.push_back(bucket);
-        while (bucket->hasNext()) {
-            bucket = bucket->next();
-            buckets.push_back(bucket);
-        }
+        buckets.push_back(*it);
     }
 
     return buckets;

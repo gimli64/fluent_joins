@@ -9,7 +9,7 @@ int main()
         QueryExecuter<ExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
-        connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=movielens user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
@@ -19,12 +19,12 @@ int main()
 
         nontransaction N(C);
         result R;
-        vector<int> keysRepartition;
+        vector<int> BHFsRepartition;
         vector<int> interleaveOrder;
 
         //        R = result( N.exec("SELECT * from part"));
-        //        keysRepartition.clear();
-        //        keysRepartition.push_back(12);
+        //        BHFsRepartition.clear();
+        //        BHFsRepartition.push_back(12);
         //        interleaveOrder.clear();
         //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(0);
@@ -38,39 +38,40 @@ int main()
         //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(0);
-        //        factory.createTable(R, "part", keysRepartition, interleaveOrder);
+        //        factory.createTable(R, "part", BHFsRepartition, interleaveOrder);
 
-        R = result( N.exec("SELECT * from partsupp"));
-        keysRepartition.clear();
-        keysRepartition.push_back(1);
-        keysRepartition.push_back(1);
-        factory.createAutomatedTable(R, "partsupp", keysRepartition);
+        R = result( N.exec("SELECT * from ratings limit 20000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(1);
+        factory.createAutomatedTable(R, "ratings", BHFsRepartition);
 
-        R = result( N.exec("SELECT * from partsupp"));
-        keysRepartition.clear();
-        keysRepartition.push_back(8);
-        keysRepartition.push_back(7);
-        interleaveOrder.clear();
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(1);
-        interleaveOrder.push_back(0);
-        factory.createTable(R, "partsupp2", keysRepartition, interleaveOrder);
+//        R = result( N.exec("SELECT * from partsupp"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(8);
+//        BHFsRepartition.push_back(7);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(1);
+//        interleaveOrder.push_back(0);
+//        factory.createTable(R, "partsupp2", BHFsRepartition, interleaveOrder);
 
 //        R = result( N.exec( "SELECT * FROM supplier" ));
-//        keysRepartition.clear();
-//        keysRepartition.push_back(7);
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(7);
 //        interleaveOrder.clear();
 //        interleaveOrder.push_back(0);
 //        interleaveOrder.push_back(0);
@@ -79,7 +80,7 @@ int main()
 //        interleaveOrder.push_back(0);
 //        interleaveOrder.push_back(0);
 //        interleaveOrder.push_back(0);
-//        factory.createTable(R, "supplier", keysRepartition, interleaveOrder);
+//        factory.createTable(R, "supplier", BHFsRepartition, interleaveOrder);
 
 //        ExtendibleHashing *supplierTable = factory.readTable("supplier");
 //        ExtendibleHashing *partsuppTable = factory.readTable("partsupp");

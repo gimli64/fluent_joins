@@ -137,6 +137,8 @@ void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
             bucket = bucket->next();
             writeBucket(bucket, bucketPath);
         }
+
+        delete *it;
     }
 }
 

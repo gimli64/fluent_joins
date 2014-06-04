@@ -52,23 +52,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     cout << "\n\nFinished building table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     table.printState();
-//    table.splitChainedBuckets();
-//    table.printState();
     writeTable(&table);
-
-//    BucketFactory<B>::getInstance()->reset();
-//    int j = 0;
-//    B* bucket;
-//    vector<B*> buckets;
-//    for (int i = 0; i < relation.size(); i++) {
-//        if (j == 0) {
-//            bucket = BucketFactory<B>::getInstance()->newBucket();
-//            buckets.push_back(bucket);
-//        }
-//        bucket->putCouple(Couple(relation[i][0].c_str(), relation[i]));
-//        j = (j + 1) % B::BUCKET_SIZE;
-//    }
-//    BucketFactory<B>::getInstance()->writeAll(buckets, table.getName() + "_aux/");
 }
 
 template<class T, class B>
@@ -96,20 +80,6 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     table.printState();
     writeTable(&table);
-
-//    BucketFactory<B>::getInstance()->reset();
-//    int j = 0;
-//    B* bucket;
-//    vector<B*> buckets;
-//    for (int i = 0; i < relation.size(); i++) {
-//        if (j == 0) {
-//            bucket = BucketFactory<B>::getInstance()->newBucket();
-//            buckets.push_back(bucket);
-//        }
-//        bucket->putCouple(Couple(relation[i][0].c_str(), relation[i]));
-//        j = (j + 1) % B::BUCKET_SIZE;
-//    }
-//    BucketFactory<B>::getInstance()->writeAll(buckets, table.getName() + "_aux/");
 }
 
 
