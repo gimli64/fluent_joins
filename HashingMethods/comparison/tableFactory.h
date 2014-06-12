@@ -8,6 +8,8 @@
 #include <fstream>
 #include <sys/resource.h>
 #include <time.h>
+#include <ctime>        // std::time
+#include <cstdlib>      // std::rand, std::srand
 #include <pqxx/pqxx>
 
 using namespace std;
@@ -39,10 +41,16 @@ template<class T, class B>
 void TableFactory<T, B>::createTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder)
 {
     cout << "Building table " << name << endl;
+    system(("exec mkdir -p /tmp/buckets/" + name).c_str());
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition, interleaveOrder);
     clock_t tStart = clock();
-    insertionLimit = 160;
+
+    int totalNumberKeys = 0;
+    for (int i = 0; i < keysRepartition.size(); i++)
+        totalNumberKeys += keysRepartition[i];
+    insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE;
+
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
 
@@ -59,10 +67,20 @@ template<class T, class B>
 void TableFactory<T, B>::createAutomatedTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder)
 {
     cout << "Building table " << name << endl;
+    system(("exec mkdir -p /tmp/buckets/" + name).c_str());
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition, interleaveOrder);
+
+    int totalNumberKeys = 0;
+    for (int i = 0; i < keysRepartition.size(); i++)
+        totalNumberKeys += keysRepartition[i];
+    insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE;
+
     clock_t tStart = clock();
-    insertionLimit = 160;
+
+//    srand (unsigned(std::time(0)));
+//    random_shuffle(relation.begin(), relation.end());
+
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
 
@@ -70,7 +88,7 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
             if(table.addBHF()) {
                 insertionLimit *= 2;
             } else {
-                insertionLimit += (insertionLimit / 10);
+                insertionLimit *= 1.1;
             }
         }
         if (i % 10000 == 0)
