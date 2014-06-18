@@ -27,30 +27,24 @@ using namespace std;
 //    return 0;
 //}
 
-int main()
+void createTables(TableFactory<ExtendibleHashing, DepthBucket> factory)
 {
     try {
-        TableFactory<ExtendibleHashing, DepthBucket> factory;
-        QueryExecuter<ExtendibleHashing, DepthBucket> executer;
-        clock_t tStart;
-
-        connection C("dbname=tpch-normal user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=tpch user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
             cout << "\nCan't open database" << endl;
-            return 1;
         }
-
         nontransaction N(C);
         result R;
         vector<int> BHFsRepartition;
         vector<int> interleaveOrder;
 
-//        R = result( N.exec("SELECT * from customer"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(1);
-//        factory.createAutomatedTable(R, "customer", BHFsRepartition);
+        //        R = result( N.exec("SELECT * from customer"));
+        //        BHFsRepartition.clear();
+        //        BHFsRepartition.push_back(1);
+        //        factory.createAutomatedTable(R, "customer", BHFsRepartition);
 
 //        R = result( N.exec("SELECT * from part"));
 //        BHFsRepartition.clear();
@@ -62,141 +56,153 @@ int main()
 //        BHFsRepartition.push_back(1);
 //        factory.createAutomatedTable(R, "supplier", BHFsRepartition);
 
-//        R = result( N.exec("SELECT * from date"));
+        //        R = result( N.exec("SELECT * from date"));
+        //        BHFsRepartition.clear();
+        //        BHFsRepartition.push_back(1);
+        //        factory.createAutomatedTable(R, "date", BHFsRepartition);
+
+        R = result( N.exec("SELECT * from partsupp limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(8);
+        BHFsRepartition.push_back(7);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(0);
+        factory.createTable(R, "partsupp", BHFsRepartition, interleaveOrder);
+
+//        R = result( N.exec("SELECT * from partsupp limit 1000000"));
 //        BHFsRepartition.clear();
 //        BHFsRepartition.push_back(1);
-//        factory.createAutomatedTable(R, "date", BHFsRepartition);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(5);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
 //        BHFsRepartition.push_back(1);
-//        BHFsRepartition.push_back(1);
-//        BHFsRepartition.push_back(1);
-//        factory.createAutomatedTable(R, "lineorder2", BHFsRepartition);
+//        factory.createAutomatedTable(R, "partsupp2", BHFsRepartition);
 
-        ExtendibleHashing *customerTable = factory.readTable("customer");
-        ExtendibleHashing *partTable = factory.readTable("part");
-        ExtendibleHashing *supplierTable = factory.readTable("supplier");
-        ExtendibleHashing *dateTable = factory.readTable("date");
-        ExtendibleHashing *lineorderTable = factory.readTable("lineorder");
-
-        /***** sort merge *****/
-//        cout << " \nJoining lineorder and customer" << endl;
-//        tStart = clock();
-//        executer.sortMergeBinaryJoin(lineorderTable, customerTable, 2, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and part" << endl;
-//        tStart = clock();
-//        executer.sortMergeBinaryJoin(lineorderTable, partTable, 3, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and supplier" << endl;
-//        tStart = clock();
-//        executer.sortMergeBinaryJoin(lineorderTable, supplierTable, 4, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder, customer and part" << endl;
-//        tStart = clock();
-//        executer.sortMergeThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-        /***** Standard table ******/
-        cout << " \nJoining lineorder and customer" << endl;
-        tStart = clock();
-        executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
-        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and part" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and supplier" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and date" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and date" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, dateTable, 15, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder, customer and part" << endl;
-//        tStart = clock();
-//        executer.multikeyThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-        /***** Automated scheme table ******/
-//        lineorderTable = factory.readTable("lineorder2");
-
-//        cout << " \nJoining lineorder and customer" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and part" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and supplier" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and date" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder and date" << endl;
-//        tStart = clock();
-//        executer.multikeyBinaryJoin(lineorderTable, dateTable, 15, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-//        cout << " \nJoining lineorder, customer and part" << endl;
-//        tStart = clock();
-//        executer.multikeyThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
-//        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-        cout << "\nOperation done successfully" << endl;
         C.disconnect ();
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         cerr << e.what() << std::endl;
-        return 1;
     }
+}
+
+int main()
+{
+    TableFactory<ExtendibleHashing, DepthBucket> factory;
+    QueryExecuter<ExtendibleHashing, DepthBucket> executer;
+    time_t start,end;
+
+    createTables(factory);
+
+//    ExtendibleHashing *customerTable = factory.readTable("customer");
+    ExtendibleHashing *partTable = factory.readTable("part");
+    ExtendibleHashing *supplierTable = factory.readTable("supplier");
+    ExtendibleHashing *partsuppTable = factory.readTable("partsupp");
+//    ExtendibleHashing *dateTable = factory.readTable("date");
+//    ExtendibleHashing *lineorderTable = factory.readTable("lineorder");
+
+    /***** sort merge *****/
+//    cout << " \nJoining lineorder and customer" << endl;
+//    time(&start);
+//    executer.sortMergeBinaryJoin(lineorderTable, customerTable, 2, 0);
+//    time (&end);
+//    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and part" << endl;
+    time(&start);
+    executer.sortMergeBinaryJoin(partsuppTable, partTable, 0, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and supplier" << endl;
+    time(&start);
+    executer.sortMergeBinaryJoin(partsuppTable, supplierTable, 1, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //        cout << " \nJoining lineorder, customer and part" << endl;
+    //        tStart = clock();
+    //        executer.sortMergeThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    /***** Standard table ******/
+//    cout << " \nJoining lineorder and customer" << endl;
+//    time (&start);
+//    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
+//    time (&end);
+//    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and part" << endl;
+    time (&start);
+    executer.multikeyBinaryJoin(partsuppTable, partTable, 0, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and supplier" << endl;
+    time (&start);
+    executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //        cout << " \nJoining lineorder and date" << endl;
+    //        tStart = clock();
+    //        executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    //        cout << " \nJoining lineorder and date" << endl;
+    //        tStart = clock();
+    //        executer.multikeyBinaryJoin(lineorderTable, dateTable, 15, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    //        cout << " \nJoining lineorder, customer and part" << endl;
+    //        tStart = clock();
+    //        executer.multikeyThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    /***** Automated scheme table ******/
+    partsuppTable = factory.readTable("partsupp2");
+
+//    cout << " \nJoining lineorder and customer" << endl;
+//    time (&start);
+//    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
+//    time (&end);
+//    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and part" << endl;
+    time (&start);
+    executer.multikeyBinaryJoin(partsuppTable, partTable, 0, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    cout << " \nJoining lineorder and supplier" << endl;
+    time (&start);
+    executer.multikeyBinaryJoin(partsuppTable, supplierTable, 1, 0);
+    time (&end);
+    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //        cout << " \nJoining lineorder and date" << endl;
+    //        tStart = clock();
+    //        executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    //        cout << " \nJoining lineorder and date" << endl;
+    //        tStart = clock();
+    //        executer.multikeyBinaryJoin(lineorderTable, dateTable, 15, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    //        cout << " \nJoining lineorder, customer and part" << endl;
+    //        tStart = clock();
+    //        executer.multikeyThreeWayJoin(partTable, lineorderTable, customerTable, 0, 3, 2, 0);
+    //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
     return 0;
 }

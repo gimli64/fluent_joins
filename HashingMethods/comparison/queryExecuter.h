@@ -206,11 +206,6 @@ void * QueryExecuter<T, B>::binaryJoinCouples(T *table1, T *table2, int leftPosi
     vector<Couple> couples1;
     vector<Couple> couples2;
 
-//    posix_time::seconds workTime(3);
-//    cout << "Worker " << keyHash << " running" << endl;
-//    this_thread::sleep(workTime);
-//    cout << "Worker " << keyHash << " finished" << endl;
-
     couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
     couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
     Comparator comparator(leftPosition);
@@ -218,7 +213,7 @@ void * QueryExecuter<T, B>::binaryJoinCouples(T *table1, T *table2, int leftPosi
     comparator = Comparator(rightPosition);
     sort(couples2.begin(), couples2.end(), comparator);
     mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
-    cout << result.size() << " values joined from thread " << keyHash << endl;
+//    cout << result.size() << " values joined from thread " << keyHash << endl;
 //    return result;
 }
 
