@@ -18,6 +18,7 @@ public:
     vector<int> keysRepartition;
     vector<int> interleaveOrder;
     vector<map<string, int> > histograms;
+    string name;
 
     HashTable(string name = "", vector<int> keysRepartition = vector<int>(), vector<int> interleaveOrder = vector<int>());
 
@@ -41,7 +42,6 @@ public:
 
 protected:
     string bucketPath;
-    string name;
     boost::hash<string> string_hasher;
     int globalDepthLimit;
     int numberBucketFetch;

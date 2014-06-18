@@ -1,5 +1,6 @@
 #ifndef TABLEFACTORY_H
 #define TABLEFACTORY_H
+
 #include "extendible/extendibleHashing.h"
 #include "common/bucket/bucketFactory.h"
 #include "common/bucket/bucket.h"
@@ -75,7 +76,7 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
     int totalNumberKeys = 0;
     for (int i = 0; i < keysRepartition.size(); i++)
         totalNumberKeys += keysRepartition[i];
-    insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE * 0.69;
+    insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE;
 
     clock_t tStart = clock();
 
@@ -87,7 +88,7 @@ void TableFactory<T, B>::createAutomatedTable(result relation, string name, vect
 
         if (i >= insertionLimit) {
             if(table.addBHF()) {
-                insertionLimit *= 2;
+                insertionLimit *= 1.9;
             } else {
                 insertionLimit *= 1.1;
             }

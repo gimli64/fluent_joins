@@ -130,11 +130,12 @@ DepthBucket* Directory::getBucket(size_t hash)
 DepthBucket *Directory::fetchBucket(size_t hash)
 {
     string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
-    if (!bucketFetched[name]) {
-        bucketFetched[name] = true;
-        return factory->readBucket(bucketPath + name);
-    }
-    return new DepthBucket();
+//    if (!bucketFetched[name]) {
+//        bucketFetched[name] = true;
+//        return factory->readBucket(bucketPath + name);
+//    }
+    return factory->readBucket(bucketPath + name);
+//    return new DepthBucket();
 }
 
 vector<DepthBucket *> Directory::getBuckets()

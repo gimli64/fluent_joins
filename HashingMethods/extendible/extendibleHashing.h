@@ -1,5 +1,6 @@
 #ifndef EXTENDIBLEHASHING_H
 #define EXTENDIBLEHASHING_H
+
 #include "common/hashing/hashTable.h"
 #include "common/directory/directory.h"
 #include <sstream>

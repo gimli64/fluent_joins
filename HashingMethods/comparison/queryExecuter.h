@@ -6,24 +6,25 @@
 #include "common/bucket/bucket.h"
 #include <boost/algorithm/string/join.hpp>
 #include <time.h>
+#include <boost/thread.hpp>
 
-using namespace boost::algorithm;
-
+using namespace boost;
 
 template<class T, class B> class QueryExecuter
 {
 public:
+
     QueryExecuter();
     vector<Couple> readStandardTable(string name, int numberEntries);
 
     vector<string> sortMergeBinaryJoin(T *table1, T *table2, int leftPosition, int rightPosition);
-    void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result);
+    static void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result);
 
     vector<string> sortMergeThreeWayJoin(T *table1, T *table2, T *table3, int position1, int position1_2, int position2_3, int position3);
     void threeWayMergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<Couple> &interCouples);
 
     vector<string> multikeyBinaryJoin(T* table1, T* table2, int leftPosition, int rightPosition);
-    void binaryJoinCouples(vector<Couple> &values1, vector<Couple> &values2, int leftPosition, int rightPosition, vector<string> &result);
+    static void * binaryJoinCouples(T *table1, T *table2, int leftPosition, int rightPosition, size_t keyHash, int keyHashSize);
 
     vector<string> multikeyThreeWayJoin(T* table1, T* table2, T* table3, int position1, int position1_2, int position2_3, int position3);
     void threeWayJoinCouples(vector<Couple> &couples1, vector<Couple> &couples2, vector<Couple> &couples3, int position1, int position1_2, int position2_3, int position3, vector<string> &result);
@@ -176,29 +177,49 @@ vector<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int
     table2->reset();
 
     vector<string> result;
-    vector<Couple> couples1;
-    vector<Couple> couples2;
+    vector<thread *> workerThreads;
     int keyHashSize = min(table1->keysRepartition[leftPosition], table2->keysRepartition[rightPosition]);
     cout << "Using multikeyBinaryJoin, key hash size : " << keyHashSize << endl;
 
-//    #pragma omp parallel for
-    for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
-//        table1->reset();
-//        table2->reset();
-        couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
-        couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
-        Comparator comparator(leftPosition);
-        sort(couples1.begin(), couples1.end(), comparator);
-        comparator = Comparator(rightPosition);
-        sort(couples2.begin(), couples2.end(), comparator);
-        mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
-        cout << result.size() << " values joined." << endl;
-    }
+    int numberThreads = (int) pow(2.0, (double) keyHashSize);
+//    pthread_t threads[numberThreads];
 
-    cout << result.size() << " values successfully joined" << endl;
-    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
-    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
+    for (size_t keyHash = 0; keyHash < numberThreads; keyHash++) {
+        workerThreads.push_back(new thread(binaryJoinCouples, table1, table2, leftPosition, rightPosition, keyHash, keyHashSize));
+    }
+    for (size_t i = 0; i < numberThreads; i++) {
+        workerThreads[i]->join();
+        delete workerThreads[i];
+    }
+    cout << "Values successfully joined" << endl;
+
+    //    cout << result.size() << " values successfully joined" << endl;
+    //    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
+    //    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
+}
+
+template<class T, class B>
+void * QueryExecuter<T, B>::binaryJoinCouples(T *table1, T *table2, int leftPosition, int rightPosition, size_t keyHash, int keyHashSize)
+{
+    vector<string> result;
+    vector<Couple> couples1;
+    vector<Couple> couples2;
+
+//    posix_time::seconds workTime(3);
+//    cout << "Worker " << keyHash << " running" << endl;
+//    this_thread::sleep(workTime);
+//    cout << "Worker " << keyHash << " finished" << endl;
+
+    couples1 = table1->fetchCouples(keyHash, keyHashSize, leftPosition);
+    couples2 = table2->fetchCouples(keyHash, keyHashSize, rightPosition);
+    Comparator comparator(leftPosition);
+    sort(couples1.begin(), couples1.end(), comparator);
+    comparator = Comparator(rightPosition);
+    sort(couples2.begin(), couples2.end(), comparator);
+    mergeCouples(couples1, couples2, leftPosition, rightPosition, result);
+    cout << result.size() << " values joined from thread " << keyHash << endl;
+//    return result;
 }
 
 template<class T, class B>

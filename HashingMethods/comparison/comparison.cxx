@@ -2,6 +2,31 @@
 #include "queryExecuter.h"
 #include <time.h>
 
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+//#define NUM_THREADS     5
+
+//void workerFunc()
+//{
+//    posix_time::seconds workTime(3);
+//    cout << "Worker running" << endl;
+//    this_thread::sleep(workTime);
+//    cout << "Worker finished" << endl;
+//}
+
+//int main ()
+//{
+//    cout << "main startup" << endl;
+//    thread workerThread(workerFunc);
+//    cout << "waiting for thread" << endl;
+//    workerThread.join();
+//    cout << "main done" << endl;
+//    return 0;
+//}
+
 int main()
 {
     try {
@@ -9,7 +34,7 @@ int main()
         QueryExecuter<ExtendibleHashing, DepthBucket> executer;
         clock_t tStart;
 
-        connection C("dbname=tpch-skewed-part user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=tpch-normal user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
@@ -46,41 +71,25 @@ int main()
 //        BHFsRepartition.clear();
 //        BHFsRepartition.push_back(0);
 //        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(3);
-//        BHFsRepartition.push_back(3);
-//        BHFsRepartition.push_back(3);
-//        BHFsRepartition.push_back(3);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(3);
+//        BHFsRepartition.push_back(5);
+//        BHFsRepartition.push_back(5);
+//        BHFsRepartition.push_back(5);
 //        interleaveOrder.clear();
 //        interleaveOrder.push_back(2);
 //        interleaveOrder.push_back(3);
 //        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(5);
-//        interleaveOrder.push_back(15);
 //        interleaveOrder.push_back(2);
 //        interleaveOrder.push_back(3);
 //        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(5);
-//        interleaveOrder.push_back(15);
 //        interleaveOrder.push_back(2);
 //        interleaveOrder.push_back(3);
 //        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(5);
-//        interleaveOrder.push_back(15);
 //        interleaveOrder.push_back(2);
 //        interleaveOrder.push_back(3);
 //        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(5);
-//        interleaveOrder.push_back(15);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
 //        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
 
 //        R = result( N.exec("SELECT * from lineorder limit 1000000"));
@@ -89,17 +98,6 @@ int main()
 //        BHFsRepartition.push_back(0);
 //        BHFsRepartition.push_back(1);
 //        BHFsRepartition.push_back(1);
-//        BHFsRepartition.push_back(1);
-//        BHFsRepartition.push_back(1);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
 //        BHFsRepartition.push_back(1);
 //        factory.createAutomatedTable(R, "lineorder2", BHFsRepartition);
 
@@ -162,7 +160,7 @@ int main()
 //        printf("Time taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
         /***** Automated scheme table ******/
-        lineorderTable = factory.readTable("lineorder2");
+//        lineorderTable = factory.readTable("lineorder2");
 
 //        cout << " \nJoining lineorder and customer" << endl;
 //        tStart = clock();
@@ -196,7 +194,6 @@ int main()
 
         cout << "\nOperation done successfully" << endl;
         C.disconnect ();
-
     } catch (const std::exception &e){
         cerr << e.what() << std::endl;
         return 1;
