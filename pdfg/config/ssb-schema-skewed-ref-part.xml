@@ -1,0 +1,1173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2013, www.paralleldatageneration.org. All rights reserved. 
+-->
+<schema name="ssb"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xi="http://www.w3.org/2001/XInclude" 
+xsi:noNamespaceSchemaLocation="structure/pdgfSchema.xsd">
+
+    <seed>1234567890</seed>
+	<rng name="PdgfDefaultRandom"/>
+    
+	<property name="SF" type="double">1</property>
+	<property name="L" type="double">1000000 * ${SF} / 4 </property>
+	<property name="P" type="double">200000 * Math.floor(1 + (Math.log(${SF}) / Math.log(2.0)))</property>
+	<property name="S" type="double">2000 * ${SF}</property>
+	<property name="C" type="double">30000 * ${SF}</property>
+	
+	<property name="DateBeginDate" type="date">1992-01-01</property>
+	<property name="DateEndDate" type="date">1998-12-31</property>
+	<property name="ONE_DAY_IN_MILLISECONDS" type="double">86400000</property>
+
+	<property name="QUERY_ROUNDS" type="double">2</property>
+	
+	
+	<table name="LINEORDER">
+		<size>${L}</size>
+		
+		<field name="LO_ORDERKEY" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(gc.getID() / 8 * 32) + (gc.getID() % 8)</formula>
+				<decimalPlaces>0</decimalPlaces>
+			</gen_FormulaGenerator>
+		</field>
+
+		<field name="LO_NUMBER_OF_LINEITEMS" size="" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>7</max>
+			</gen_LongGenerator>
+		</field>
+
+		<field name="LO_LINENUMBER_1" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>1</value>
+			</gen_StaticValueGenerator>
+		</field>
+
+		<field name="LO_LINENUMBER_2" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>2</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_LINENUMBER_3" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>3</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_LINENUMBER_4" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>4</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_LINENUMBER_5" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>5</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_LINENUMBER_6" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>6</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_LINENUMBER_7" size="" type="NUMERIC">
+			<gen_StaticValueGenerator>
+				<value>7</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_CUSTKEY" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="CUSTOMER" field="C_CUSTKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_1" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.8" pk="100" /> 
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_2" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_3" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_4" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_5" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_6" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_PARTKEY_7" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="PART" field="P_PARTKEY"/>
+				<distribution name="Zeta" ro="0.2" pk="100" />
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_1" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_2" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_3" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_4" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_5" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_6" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_SUPPKEY_7" size="" type="INTEGER">
+			<gen_DefaultReferenceGenerator>
+				<reference table="SUPPLIER" field="S_SUPPKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		<field name="LO_ORDERDATE" size="" type="DATE">
+			<gen_DefaultReferenceGenerator>
+				<reference table="DATE" field="D_DATEKEY"/>
+			</gen_DefaultReferenceGenerator>
+		</field>
+		
+		<field name="LO_ORDERPRIORITY" size="15" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/priorities.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPPRIORITY" size="" type="INTEGER">
+			<gen_StaticValueGenerator>
+				<value>0</value>
+			</gen_StaticValueGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_1" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_2" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_3" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_4" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_5" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_6" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_QUANTITY_7" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_1" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_2" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_3" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_4" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_5" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_6" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_EXTENDEDPRICE_7" size="2" type="NUMERIC">
+			<gen_DoubleGenerator>
+				<minD>1</minD>
+				<maxD>55450</maxD>
+				<decimalPlaces>2</decimalPlaces>
+			</gen_DoubleGenerator>
+		</field>
+		
+		<field name="LO_ORDTOTALPRICE" size="2" type="NUMERIC">
+			<gen_SwitchGenerator>
+				<gen_OtherFieldValueGenerator>
+					<reference field="LO_NUMBER_OF_LINEITEMS" />
+				</gen_OtherFieldValueGenerator>
+				<case value="2">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<case value="3">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1] + generator[2]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_3" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<case value="4">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1] + generator[2] + generator[3]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_3" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_4" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<case value="2">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1] + generator[2] + generator[3] + generator[4]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_3" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_4" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_5" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<case value="2">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1] + generator[2] + generator[3] + generator[4] + generator[5]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_3" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_4" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_5" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_6" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<case value="2">
+					<gen_FormulaGenerator>
+						<formula>generator[0] + generator[1] + generator[2] + generator[3] + generator[4] + generator[5] + generator[6]</formula>
+						<decimalPlaces>2</decimalPlaces>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_1" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_2" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_3" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_4" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_5" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_6" />
+						</gen_OtherFieldValueGenerator>
+						<gen_OtherFieldValueGenerator>
+							<reference field="LO_EXTENDEDPRICE_7" />
+						</gen_OtherFieldValueGenerator>
+					</gen_FormulaGenerator>
+				</case>
+				<default>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_1" />
+					</gen_OtherFieldValueGenerator>
+				</default>
+			</gen_SwitchGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_1" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_2" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_3" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_4" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_5" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_6" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_DISCOUNT_7" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>10</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_1" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_1" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_1" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_2" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_2" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_2" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_3" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_3" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_3" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_4" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_4" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_4" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_5" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_5" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_5" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_6" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_6" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_6" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_REVENUE_7" size="" type="NUMERIC">
+			<gen_FormulaGenerator>
+				<formula>(generator[0] * (100 - generator[1]))/100 </formula>
+					<decimalPlaces>2</decimalPlaces>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_EXTENDEDPRICE_7" />
+					</gen_OtherFieldValueGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="LO_DISCOUNT_7" />
+					</gen_OtherFieldValueGenerator>
+			</gen_FormulaGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_1" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_2" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_3" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_4" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_5" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_6" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_SUPPLYCOST_7" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>1000</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_1" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_2" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_3" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_4" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_5" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_6" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_TAX_7" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>0</min>
+				<max>8</max>
+			</gen_LongGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_1" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_2" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_3" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_4" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_5" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_6" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_COMMITDATE_7" size="" type="DATE">
+			<gen_AddRandomSecondsGenerator>
+				<reference field="LO_ORDERDATE" />
+				<format>yyyyMMdd</format>
+				<min>2592000</min>
+				<max>7776000</max>
+			</gen_AddRandomSecondsGenerator>
+		</field>
+		
+		<field name="LO_SHIPMODE_1" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_2" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_3" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_4" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_5" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_6" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="LO_SHIPMODE_7" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/modes.dict</file>
+			</gen_DictList>
+		</field>
+	</table>
+	
+	<table name="PART">
+		<size>${P}</size>
+		
+		<field name="P_PARTKEY" size="" type="NUMERIC" primary="true" unique="true">
+			<gen_IdGenerator />
+		</field>
+		
+		<field name="P_NAME" size="22" type="VARCHAR">
+			<gen_DictList>
+				<unique>true</unique>
+				<size>2</size>
+				<seperator> </seperator>
+				<file>dicts/ssb/colors.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="P_MFGR" size="6" type="VARCHAR">
+			<gen_PrePostfixGenerator>
+				<gen_LongGenerator>
+					<min>1</min>
+					<max>5</max>
+				</gen_LongGenerator>
+				<prefix>MFGR#</prefix>
+			</gen_PrePostfixGenerator>
+		</field>
+		
+		<field name="P_CATEGORY" size="7" type="VARCHAR">
+			<gen_SequentialGenerator concatenateResults="true">
+				<gen_OtherFieldValueGenerator>
+					<reference field="P_MFGR" />
+				</gen_OtherFieldValueGenerator>			
+				<gen_LongGenerator>
+					<min>1</min>
+					<max>5</max>
+				</gen_LongGenerator>
+			</gen_SequentialGenerator>
+		</field>
+		
+		<field name="P_BRAND" size="9" type="VARCHAR">
+			<gen_SequentialGenerator concatenateResults="true">
+				<gen_OtherFieldValueGenerator>
+					<reference field="P_CATEGORY" />
+				</gen_OtherFieldValueGenerator>			
+				<gen_LongGenerator>
+					<min>1</min>
+					<max>40</max>
+				</gen_LongGenerator>
+			</gen_SequentialGenerator>
+		</field>
+		
+		<field name="P_COLOR" size="11" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/colors.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="P_TYPE" size="25" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/types.dict</file>
+			</gen_DictList>
+		</field>
+		
+		<field name="P_SIZE" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1</min>
+				<max>50</max>
+			</gen_LongGenerator>	
+		</field>
+		
+		<field name="P_CONTAINER" size="10" type="VARCHAR">
+			<gen_DictList>
+				<file>dicts/ssb/containers.dict</file>
+			</gen_DictList>
+		</field>
+		
+	</table>
+			
+	<table name="SUPPLIER">
+		<size>${S}</size>
+		
+		<field name="S_SUPPKEY" size="" type="NUMERIC" primary="true" unique="true">
+			<gen_IdGenerator />
+		</field>
+		
+		<field name="S_NAME" size="25" type="VARCHAR">
+			<gen_PrePostfixGenerator>
+				<gen_PaddingGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="S_SUPPKEY" />
+					</gen_OtherFieldValueGenerator>
+					<character>0</character>
+					<padToLeft>true</padToLeft>
+					<size>9</size>
+				</gen_PaddingGenerator>
+				<prefix>Supplier</prefix>
+			</gen_PrePostfixGenerator>
+		</field>
+		
+		<field name="S_ADDRESS" size="25" type="VARCHAR">
+			<gen_RandomAString>
+				<size>25</size>
+			</gen_RandomAString>
+		</field>
+		
+		<field name="S_CITY" size="10" type="VARCHAR">
+			<gen_SequentialGenerator concatenateResults="true">
+				<gen_PaddingGenerator>
+					<gen_DefaultReferenceGenerator id="S_CITY_id">
+						<reference table="NATION-REGION" field="NATION" />	
+					</gen_DefaultReferenceGenerator>
+					<character> </character>
+					<padToLeft>false</padToLeft>
+					<size>9</size>
+				</gen_PaddingGenerator>
+				<gen_LongGenerator>
+					<min>0</min>
+					<max>9</max>
+				</gen_LongGenerator>
+			</gen_SequentialGenerator>
+		</field>
+		<field name="S_NATION" size="15" type="VARCHAR">	
+			<gen_DefaultReferenceGenerator>
+				<reference table="NATION-REGION" field="NATION" />
+				<sameIDAs field="S_CITY" generatorByID="S_CITY_id"/> 	
+			</gen_DefaultReferenceGenerator>	
+		</field>
+		<field name="S_REGION" size="12" type="VARCHAR">	
+			<gen_DefaultReferenceGenerator>
+				<reference table="NATION-REGION" field="REGION" />
+				<sameIDAs field="S_CITY" generatorByID="S_CITY_id"/>
+			</gen_DefaultReferenceGenerator>		
+		</field>
+		
+		<field name="S_PHONE" size="15" type="VARCHAR">
+			<gen_SimpleFormatNumberGenerator>
+				<gen_LongGenerator>
+					<min>010010010001</min>
+					<max>999999999999</max>
+				</gen_LongGenerator>
+				<format>%d%d-%d%d%d-%d%d%d-%d%d%d%d</format>
+			</gen_SimpleFormatNumberGenerator>		
+		</field>
+		
+	</table>
+	 
+	<table name="CUSTOMER">
+		<size>${C}</size>
+		
+		<field name="C_CUSTKEY" size="" type="NUMERIC" primary="true" unique="true">
+			<gen_IdGenerator />
+		</field>
+		
+		<field name="C_NAME" size="25" type="VARCHAR">
+			<gen_PrePostfixGenerator>
+				<gen_PaddingGenerator>
+					<gen_OtherFieldValueGenerator>
+						<reference field="C_CUSTKEY" />
+					</gen_OtherFieldValueGenerator>
+					<character>0</character>
+					<padToLeft>true</padToLeft>
+					<size>9</size>
+				</gen_PaddingGenerator>
+				<prefix>Customer</prefix>
+			</gen_PrePostfixGenerator>
+		</field>
+		
+		<field name="C_ADDRESS" size="25" type="VARCHAR">
+			<gen_RandomAString>
+				<size>25</size>
+			</gen_RandomAString>
+		</field>
+		
+		<field name="C_CITY" size="10" type="VARCHAR">	
+			<gen_SequentialGenerator concatenateResults="true">
+				<gen_PaddingGenerator>
+					<gen_DefaultReferenceGenerator id="C_CITY_id">
+						<reference table="NATION-REGION" field="NATION" />	
+					</gen_DefaultReferenceGenerator>
+					<character> </character>
+					<padToLeft>false</padToLeft>
+					<size>9</size>
+				</gen_PaddingGenerator>
+				<gen_LongGenerator>
+					<min>0</min>
+					<max>9</max>
+				</gen_LongGenerator>
+			</gen_SequentialGenerator>
+		</field>
+		<field name="C_NATION" size="15" type="VARCHAR">	
+			<gen_DefaultReferenceGenerator>
+				<reference table="NATION-REGION" field="NATION" />
+				<sameIDAs field="C_CITY" generatorByID="C_CITY_id"/>
+			</gen_DefaultReferenceGenerator>		
+		</field>
+		<field name="C_REGION" size="12" type="VARCHAR">	
+			<gen_DefaultReferenceGenerator>
+				<reference table="NATION-REGION" field="REGION" />
+				<sameIDAs field="C_CITY" generatorByID="C_CITY_id"/>
+			</gen_DefaultReferenceGenerator>		
+		</field>
+		
+		<field name="C_PHONE" size="15" type="VARCHAR">
+			<gen_SequentialGenerator concatenateResults="true">
+				<gen_SimpleFormatNumberGenerator>
+					<gen_LongGenerator>
+						<min>01</min>
+						<max>99</max>
+					</gen_LongGenerator>
+					<format>%d%d-</format>
+				</gen_SimpleFormatNumberGenerator>
+				<gen_LongGenerator>
+					<min>001</min>
+					<max>999</max>
+				</gen_LongGenerator>
+				<gen_SimpleFormatNumberGenerator>
+					<gen_LongGenerator>
+						<min>0010001</min>
+						<max>9999999</max>
+					</gen_LongGenerator>
+					<format>-%d%d%d-%d%d%d%d</format>
+				</gen_SimpleFormatNumberGenerator>
+			</gen_SequentialGenerator>		
+		</field>
+		
+		<field name="C_MKTSEGMENT" size="10" type="VARCHAR">	
+			<gen_DictList>
+				<file>dicts/ssb/segments.dict</file>
+			</gen_DictList>
+		</field>
+		
+	</table>
+	
+
+	<table name="DATE">
+		<size>(${DateEndDate} - ${DateBeginDate}) / ${ONE_DAY_IN_MILLISECONDS} + 1</size>
+		
+		<field name="D_DATEKEY" size="8" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>yyyyMMdd</format>
+			</gen_ExtendedDateGenerator>				
+		</field>
+		
+		<field name="D_DATE" size="20" type="VARCHAR">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>MMMM d, yyyy</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_DAYOFWEEK" size="" type="VARCHAR">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>EEEE</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_MONTH" size="9" type="VARCHAR">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>MMMM</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_YEAR" size="4" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>yyyy</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_YEARMONTHNUM" size="6" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>yyyyMM</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_YEARMONTH" size="7" type="VARCHAR">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>MMMyyyy</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_DAYNUMINWEEK" size="1" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'DAY_OF_WEEK_NUM'</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_DAYNUMINMONTH" size="2" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>d</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_DAYNUMINYEAR" size="3" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>D</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_MONTHNUMINYEAR" size="2" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>M</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_WEEKNUMINYEAR" size="2" type="NUMERIC">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>w</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_SELLINGSEASON" size="12" type="VARCHAR">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'SELLING_SEASON'</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_LASTDAYINWEEKFL" size="" type="BOOLEAN">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'IS_LAST_DAY_IN_WEEK'</format>
+			</gen_ExtendedDateGenerator>
+		</field>
+		
+		<field name="D_LASTDAYINMONTHFL" size="" type="BOOLEAN">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'IS_LAST_DAY_IN_MONTH'</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_HOLIDAYFL" size="" type="BOOLEAN">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'IS_HOLIDAY'</format>
+			</gen_ExtendedDateGenerator>		
+		</field>
+		
+		<field name="D_WEEKDAYFL" size="" type="BOOLEAN">
+			<gen_ExtendedDateGenerator>
+				<disableRng>true</disableRng>
+				<format>'IS_WEEK_DAY'</format>
+			</gen_ExtendedDateGenerator>			
+		</field>
+	</table>
+	
+	<!-- This table is for correct reference generation only and will not be generated -->
+	<table name="NATION-REGION">
+		<size>25</size>
+		<field name="REGION" size="12" type="VARCHAR">
+			<gen_DictList>
+				<disableRng>true</disableRng>
+				<file>dicts/ssb/regions.dict</file>
+			</gen_DictList>
+		</field>
+		<field name="NATION" size="15" type="VARCHAR">
+			<gen_DictList>
+				<disableRng>true</disableRng>
+				<file>dicts/ssb/nations.dict</file>
+			</gen_DictList>
+		</field>
+	</table>
+
+	<!-- Table for query flight 1 -->
+	<table name="QUERY_PARAMETERS">
+		<size>13 * ${QUERY_ROUNDS}</size>
+		<field name="YEAR" size="4" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>1993</min>
+				<max>1997</max>
+			</gen_LongGenerator>
+		</field>
+		<field name="DISCOUNT" size="1" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>2</min>
+				<max>9</max>
+			</gen_LongGenerator>
+		</field>
+		<field name="QUANTITY" size="2" type="NUMERIC">
+			<gen_LongGenerator>
+				<min>24</min>
+				<max>25</max>
+			</gen_LongGenerator>
+		</field>
+	</table>
+</schema>

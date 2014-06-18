@@ -1,0 +1,56 @@
+<generation>
+
+<!--
+  Copyright (c) 2013, www.paralleldatageneration.org. All rights reserved. 
+-->
+
+    <!-- DEFAULT Scheduler for all Tables, if no table specific scheduler is specified -->
+
+    <scheduler name="DefaultScheduler" >
+    </scheduler>
+    <!-- DEFAULT output for all Tables, if no table specific output is specified -->
+
+    <output name="CSVRowOutput" >
+        <fileTemplate>outputDir + table.getName() + fileEnding</fileTemplate>
+        <outputDir>output/</outputDir>
+        <fileEnding>.txt</fileEnding>
+        <delimiter>|</delimiter>
+		<delimiterAtLineEnd>true</delimiterAtLineEnd>
+    </output>
+    <!--
+		tables can be defined here for overwriting the default output
+		on a per table basis or for including/excluding fields of a table
+    -->
+    <schema name="ssb" >
+        <tables>
+        	<table name="LINEORDER" exclude="true" />
+        	<table name="PART" exclude="true" />
+        	<table name="SUPPLIER" exclude="true" />
+        	<table name="CUSTOMER" exclude="true" />
+        	<table name="DATE" exclude="true" />
+        	<table name="NATION-REGION" exclude="true" />
+        	
+            <table name="QUERY_PARAMETERS" exclude="false" >
+                <output name="CompiledTemplateOutput" >
+                    <sortByRowID>true</sortByRowID>
+                    <fileTemplate>outputDir + "/" + "Queries" + fileEnding</fileTemplate>
+                    <outputDir>output/</outputDir>
+                    <fileEnding>.sql</fileEnding>
+                    <template><!-- 
+int year     = ((Number)fields[0].getPlainValue()).intValue();
+int discount = ((Number)fields[1].getPlainValue()).intValue();
+int quantity = ((Number)fields[2].getPlainValue()).intValue();
+String nl    = LINESEPARATOR;
+buffer.append("-"+"- Q1.1" + nl);
+buffer.append("select sum(lo_extendedprice*lo_discount) as revenue" + nl);
+buffer.append("  from lineorder, date" + nl);
+buffer.append("  where lo_orderdate = d_datekey" + nl);
+buffer.append("    and d_year = " + year + nl);
+buffer.append("    and lo_discount between " + (discount - 1) + " and " + (discount + 1) + nl);
+buffer.append("    and lo_quantity < " + quantity + ";" + nl);
+                 --></template>
+                </output>
+            </table>
+        </tables>
+    </schema>
+</generation>

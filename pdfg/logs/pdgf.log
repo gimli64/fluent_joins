@@ -1,0 +1,126 @@
+DEBUG main pdgf.Controller - TIMESTAMP: 2014/06/18 00:07:39
+DEBUG main pdgf.Controller - execution root folder : /Users/gimli/projects/fluent_joins/pdfg
+DEBUG main pdgf.Controller - execution getJarFolder: /Users/gimli/projects/fluent_joins/pdfg/pdgf.jar
+INFO main pdgf.Controller - found plugin folder: /Users/gimli/projects/fluent_joins/pdfg/lib
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: javassist.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: log4j-1.2.15.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: lucene-core-3.6.0.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: lucene-spellchecker-3.6.0.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: resolver.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: serializer.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: xercesImpl.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: xml-apis.jar to classpath
+DEBUG main pdgf.util.ClassLoading.PluginLoader - Adding File: pdgf.jar to classpath
+INFO main pdgf.Controller - loading plugins..
+DEBUG main pdgf.Controller - init time: 638
+INFO main pdgf.Controller - ################################################################################
+                   PDGF_Demo(single cpu) v2.5_SVNrev781_b106
+                       Parallel Data Generation Framework
+    by: Frank M., Danisch M., Rabl T. http://www.paralleldatageneration.org
+################################################################################
+################################################################################
+for a command overview start with commandline parameter: -help
+or type "help" in the built in shell: PDGF:> 
+
+DEBUG main pdgf.Controller - Controller execute command: load
+DEBUG main pdgf.actions.LoadConfigAction - Config file "ssb-schema-skewed-ref-part.xml" not found. Searching for file in standard config file dir: config/
+INFO main pdgf.actions.LoadConfigAction - 
+Loading cfg file: /Users/gimli/projects/fluent_joins/pdfg/config/ssb-schema-skewed-ref-part.xml
+INFO main pdgf.core.dbSchema.Project - processing  <schema> config file
+DEBUG main pdgf.core.dbSchema.Project - Load time for config file (ms):358
+INFO main pdgf.core.dbSchema.Project - Loading sucessfull.
+DEBUG main pdgf.Controller - Controller execute command: load
+DEBUG main pdgf.actions.LoadConfigAction - Config file "ssb-generation.xml" not found. Searching for file in standard config file dir: config/
+INFO main pdgf.actions.LoadConfigAction - 
+Loading cfg file: /Users/gimli/projects/fluent_joins/pdfg/config/ssb-generation.xml
+INFO main pdgf.core.dbSchema.Project - processing  <generation> config file
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CompiledTemplateOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.output.FileOutputSkeleton - CSVRowOutput - use File ending for output: .tbl
+DEBUG main pdgf.output.FileOutputSkeleton - Using charset "UTF-8" for output files
+DEBUG main pdgf.output.FileOutputSkeleton - <output name="CSVRowOutput"> - Internal sorting enabled: true
+DEBUG main pdgf.core.dbSchema.Project - Load time for config file (ms):69
+INFO main pdgf.core.dbSchema.Project - Loading sucessfull.
+INFO main pdgf.core.dbSchema.Project - All required configuration files are loaded. You may start the generation process.
+DEBUG main pdgf.Controller - Controller execute command: start
+INFO main pdgf.core.dataGenerator.DataGenerator - Initializing system...
+DEBUG main pdgf.core.dataGenerator.DataGenerator - preinitialization of project finished. Next task: cloning per worker
+INFO main pdgf.core.dataGenerator.DataGenerator - initialized 0h:00m:00s:418ms
+WARN main pdgf.core.dataGenerator.DataGenerator - Starting data generation proccess...
+INFO main pdgf.core.dataGenerator.DataGenerator - Startuptime: 0h:00m:01s:578ms
+DEBUG main pdgf.output.FileOutputSkeleton - <schema name="ssb"><table name="LINEORDER"><output name="CompiledTemplateOutput"> writing to file: output/LINEORDER.tbl Absolute:/Users/gimli/projects/fluent_joins/pdfg/output/LINEORDER.tbl
+INFO main pdgf.core.dataGenerator.scheduler.MetaScheduler - 
+generating 1/7 "LINEORDER"	  rows: 0-249999 of 250000
+DEBUG Worker0/1 pdgf.core.dataGenerator.worker.AbstractWorker - Node: 1 worker 1/1 is now running
+DEBUG main pdgf.core.dataGenerator.scheduler.MetaScheduler - Data generation procces started on node 1/1. Created 1 workers for this task.
+DEBUG Worker0/1 pdgf.core.dataGenerator.scheduler.DefaultScheduler - UpdateScheduler: Rows: 249999 fields per second: 3526434
+DEBUG MetaScheduler#PausedThread pdgf.output.FileOutputSkeleton - <schema name="ssb"><table name="PART"><output name="CSVRowOutput"> writing to file: output/PART.tbl Absolute:/Users/gimli/projects/fluent_joins/pdfg/output/PART.tbl
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler -   finished 1/7 "LINEORDER"	  in: 0h:00m:05s:974ms size: 90.4 MiB speed: 15.1 MiB/s
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler - 
+generating 2/7 "PART"	  rows: 0-199999 of 200000
+DEBUG Worker0/1 pdgf.core.dataGenerator.scheduler.DefaultScheduler - UpdateScheduler: Rows: 199999 fields per second: 4477589
+DEBUG MetaScheduler#PausedThread pdgf.output.FileOutputSkeleton - <schema name="ssb"><table name="SUPPLIER"><output name="CSVRowOutput"> writing to file: output/SUPPLIER.tbl Absolute:/Users/gimli/projects/fluent_joins/pdfg/output/SUPPLIER.tbl
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler -   finished 2/7 "PART"	  in: 0h:00m:00s:404ms size: 17.4 MiB speed: 43.1 MiB/s
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler - 
+generating 3/7 "SUPPLIER"	  rows: 0-1999 of 2000
+DEBUG Worker0/1 pdgf.core.dataGenerator.scheduler.DefaultScheduler - UpdateScheduler: Rows: 1999 fields per second: 291520
+DEBUG MetaScheduler#PausedThread pdgf.output.FileOutputSkeleton - <schema name="ssb"><table name="CUSTOMER"><output name="CSVRowOutput"> writing to file: output/CUSTOMER.tbl Absolute:/Users/gimli/projects/fluent_joins/pdfg/output/CUSTOMER.tbl
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler -   finished 3/7 "SUPPLIER"	  in: 0h:00m:00s:50ms size: 153.7 KiB speed: 3.0 MiB/s
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler - 
+generating 4/7 "CUSTOMER"	  rows: 0-29999 of 30000
+DEBUG Worker0/1 pdgf.core.dataGenerator.scheduler.DefaultScheduler - UpdateScheduler: Rows: 29999 fields per second: 2424161
+DEBUG MetaScheduler#PausedThread pdgf.output.FileOutputSkeleton - <schema name="ssb"><table name="DATE"><output name="CSVRowOutput"> writing to file: output/DATE.tbl Absolute:/Users/gimli/projects/fluent_joins/pdfg/output/DATE.tbl
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler -   finished 4/7 "CUSTOMER"	  in: 0h:00m:00s:101ms size: 2.6 MiB speed: 25.5 MiB/s
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler - 
+generating 5/7 "DATE"	  rows: 0-2556 of 2557
+DEBUG Worker0/1 pdgf.core.dataGenerator.scheduler.DefaultScheduler - UpdateScheduler: Rows: 2556 fields per second: 278538
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - All work done
+DEBUG MetaScheduler#PausedThread pdgf.core.dataGenerator.scheduler.MetaScheduler - Node 1: All workers stopped successfully!
+WARN MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Data generation finished successfuly
+DEBUG MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Node 1 Max time of a worker: 0h:00m:06s:688ms average time: 0h:00m:06s:688ms
+DEBUG MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Node 1 Generator overall time: 0h:00m:06s:709ms
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Statistics
+=========
+Overall time	0h:00m:06s:709ms
+Generated	110.8 MiB
+Speed		16.5 MiB/s
+
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Node 1. logged detailed processing statistics to file:/Users/gimli/projects/fluent_joins/pdfg/logs/GenerationStatistics_1.csv
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Node 1. logged detailed processing statistics to file:/Users/gimli/projects/fluent_joins/pdfg/logs/TableGenerationStatistics_1.csv
+DEBUG MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - 1403017666899;1;1;ssb;1.0;1;ALL#SCHEDULERS;12504000;8930000;0;0;0;0;12504000;100.0;1.186
+1403017666899;1;1;ssb;1.0;1;ALL#worker#0;6290745000;6140429000;0;0;10;11000000;6301745000;99.825;94.766
+1403017666899;1;1;ssb;1.0;1;All#PausedThread;21938000;14967000;4;0;10;1401000000;1422938000;1.542;1.327
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.scheduler.DefaultScheduler#CUSTOMER;101000;57000;0;0;0;0;101000;99.999;1.002
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.scheduler.DefaultScheduler#DATE;131000;60000;0;0;0;0;131000;99.999;1.002
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.scheduler.DefaultScheduler#LINEORDER;8846000;7096000;0;0;0;0;8846000;100.0;1.132
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.scheduler.DefaultScheduler#PART;118000;51000;0;0;0;0;118000;99.999;1.002
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.scheduler.DefaultScheduler#SUPPLIER;135000;66000;0;0;0;0;135000;99.999;1.002
+1403017666899;1;1;ssb;1.0;1;pdgf.core.dataGenerator.worker.RowWorker#worker#0;6290713000;6140403000;0;0;10;11000000;6301713000;99.825;94.765
+ssb;ssb;ssb;ssb;ssb;
+1403017666899;1;1;1.0;1;ALL;6709;116142220;16.5 MiB/s;
+1403017666899;1;1;1.0;1;CUSTOMER;101;2698630;25.5 MiB/s;
+1403017666899;1;1;1.0;1;LINEORDER;5974;94818048;15.1 MiB/s;
+1403017666899;1;1;1.0;1;PART;404;18241094;43.1 MiB/s;
+1403017666899;1;1;1.0;1;SUPPLIER;50;157383;3.0 MiB/s;
+
+INFO MetaScheduler#PausedThread pdgf.core.dataGenerator.DataGenerator - Time to stop and flush everything: 0h:00m:00s:5ms
+DEBUG ShutdownHook pdgf.core.dataGenerator.scheduler.MetaScheduler - Node 1: All workers stopped successfully!

@@ -160,19 +160,23 @@ bool ExtendibleHashing::addBHF() {
     int totalKeysRepartition = 0;
 
     for (int i = 0; i < keysRepartition.size(); i++) {
+        totalKeysRepartition += keysRepartition[i];
+    }
+
+    for (int i = 0; i < keysRepartition.size(); i++) {
         if (keysRepartition[i] > 0) {
-            int neededNumberBuckets = (double) histograms[i].size() / Bucket::BUCKET_SIZE;
+            int neededNumberBuckets = (double) histograms[i].size() / (Bucket::BUCKET_SIZE);
             double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - keysRepartition[i]);
-            cout << neededBHFRatio << endl;
+//            neededBHFRatio *= (totalKeysRepartition / keysRepartition[i]);
+            cout << "column " << i << " neededBHFRatio : " << neededBHFRatio << endl;
             if (neededBHFRatio > maxNeededBHFRatio) {
                 maxNeededBHFRatio = neededBHFRatio;
                 maxNeededBHFRatioIndex = i;
             }
-            totalKeysRepartition += keysRepartition[i];
         }
     }
 
-    if (maxNeededBHFRatio <= 0.01 or totalKeysRepartition > directory.getGlobalDepth()) {
+    if (maxNeededBHFRatio <= 0.0 or totalKeysRepartition > directory.getGlobalDepth()) {
         cout << "Not Adding BHF " << endl;
         return false;
     } else {

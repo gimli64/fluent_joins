@@ -10,19 +10,21 @@ HashTable::HashTable(string name, vector<int> keysRepartition, vector<int> order
         for (int i = 0; i < keysRepartition.size(); i++) {
             histograms.push_back(map<string, int>());
             globalDepthLimit += keysRepartition[i];
-            interleaveOrder.push_back(i);
+            if (keysRepartition[i] > 0)
+                interleaveOrder.push_back(i);
         }
     }
     if (interleaveOrder.size() == 0) {
         for (int i = 0; i < keysRepartition.size(); i++) {
-            interleaveOrder.push_back(i);
+            if (keysRepartition[i] > 0)
+                interleaveOrder.push_back(i);
         }
     }
 }
 
 size_t HashTable::getHash(string key)
 {
-      return string_hasher(key);
+    return string_hasher(key);
 }
 
 vector<string> HashTable::get(string key)
@@ -110,7 +112,8 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t 
             rightOffset += bitsToSet[j];
         }
 
-        hashes.push_back(interleaveHashes(hash_values));
+        size_t hash = interleaveHashes(hash_values);
+        hashes.push_back(hash);
     }
 }
 

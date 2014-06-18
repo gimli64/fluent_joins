@@ -25,7 +25,7 @@ public:
     void setNextBucketName(string name);
     string getNextBucketName();
     void setNext(DepthBucket * next);
-    DepthBucket *next() const;
+    DepthBucket *getNext() const;
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;

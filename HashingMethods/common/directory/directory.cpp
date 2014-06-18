@@ -49,7 +49,7 @@ void Directory::putCouple(size_t hash, Couple couple)
 
     while (bucket->isFull()) {
         if (bucket->hasNext()) {
-            bucket = bucket->next();
+            bucket = bucket->getNext();
         } else {
             DepthBucket *nextBucket = factory->newBucket();
             bucket->setNextBucketName(nextBucket->name);
@@ -81,7 +81,7 @@ void Directory::split(DepthBucket* bucket)
 
     DepthBucket *nextBucket = bucket;
     while (nextBucket->hasNext()) {
-        nextBucket = nextBucket->next();
+        nextBucket = nextBucket->getNext();
         values.insert(values.end(), nextBucket->elements.begin(), nextBucket->elements.end());
     }
 

@@ -134,7 +134,7 @@ void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
         writeBucket(bucket, bucketPath);
 
         while(bucket->hasNext()) {
-            bucket = bucket->next();
+            bucket = bucket->getNext();
             writeBucket(bucket, bucketPath);
         }
 
