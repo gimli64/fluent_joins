@@ -5,6 +5,13 @@ Directory::Directory()
     factory = BucketFactory<DepthBucket>::getInstance();
 }
 
+Directory::~Directory()
+{
+    for(int i = 0; i < buckets.size(); i++) {
+        delete buckets[i];
+    }
+}
+
 Directory::Directory(HashTable *hasher)
     :hasher(hasher), globalDepth(0)
 {
@@ -129,13 +136,7 @@ DepthBucket* Directory::getBucket(size_t hash)
 
 DepthBucket *Directory::fetchBucket(size_t hash)
 {
-    string name = bucketNames.at(hash & ((1 << globalDepth) - 1));
-//    if (!bucketFetched[name]) {
-//        bucketFetched[name] = true;
-//        return factory->readBucket(bucketPath + name);
-//    }
-    return factory->readBucket(bucketPath + name);
-//    return new DepthBucket();
+    return factory->readBucket(bucketPath + bucketNames.at(hash & ((1 << globalDepth) - 1)));
 }
 
 vector<DepthBucket *> Directory::getBuckets()
@@ -164,7 +165,6 @@ vector<DepthBucket *> Directory::fetchBuckets()
 
 void Directory::reset()
 {
-    bucketFetched = map<string, bool>();
     buckets.clear();
     buckets.resize(bucketNames.size(), new DepthBucket());
 }

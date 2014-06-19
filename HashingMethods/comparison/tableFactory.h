@@ -11,10 +11,12 @@
 #include <time.h>
 #include <ctime>        // std::time
 #include <cstdlib>      // std::rand, std::srand
+#include <boost/algorithm/string/join.hpp>
 #include <pqxx/pqxx>
 
 using namespace std;
 using namespace pqxx;
+using namespace boost;
 
 template<class T, class B> class TableFactory
 {
@@ -41,6 +43,7 @@ template<class T, class B>
 void TableFactory<T, B>::createTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder)
 {
     cout << "Building table " << name << endl;
+    system("exec mkdir -p /tmp/tables");
     system(("exec mkdir -p /tmp/buckets/" + name).c_str());
     BucketFactory<B>::getInstance()->reset();
     T table(name, keysRepartition, interleaveOrder);
@@ -77,6 +80,18 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     table.printState();
     cout << "Writing table " << name << " to disk\n" << endl;
     writeTable(&table);
+
+    cout << "\nBuilding standard table\n" << endl;
+    ofstream standardTableFile (("/tmp/tables/" + name + "_aux").c_str());
+    if (standardTableFile.is_open()) {
+        for (int i = 0; i < relation.size(); i++) {
+            for (int j = 0; j < relation[i].size(); j++) {
+                standardTableFile << relation[i][j].c_str() << "|";
+            }
+            standardTableFile << "\n";
+        }
+        standardTableFile.close();
+    } else cout << "Unable to open file";
 }
 
 template<class T, class B>

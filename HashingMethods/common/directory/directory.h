@@ -20,6 +20,7 @@ class Directory
 public:
     Directory();
     Directory(HashTable *hasher);
+    ~Directory();
 
     vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
@@ -44,11 +45,8 @@ private:
     string bucketPath;
     vector<string> bucketNames;
     vector<DepthBucket*> buckets;
-
     BucketFactory<DepthBucket> *factory;
     HashTable *hasher;
-
-    map<string, bool> bucketFetched;
 
     void split(DepthBucket *bucket);
     void doubleSize();

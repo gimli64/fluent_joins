@@ -1,6 +1,6 @@
 #include "bucket.h"
 
-int Bucket::BUCKET_SIZE = 60;
+int Bucket::BUCKET_SIZE = 80;
 
 Bucket::Bucket(string name)
     :elements(), name(name)

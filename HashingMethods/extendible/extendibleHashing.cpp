@@ -21,24 +21,12 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 
 DepthBucket *ExtendibleHashing::fetchBucket(size_t hash)
 {
-    DepthBucket *bucket = directory.fetchBucket(hash);
-    if (bucket->size() > 0) {
-//        numberBucketFetch += bucket->getChainCount();
-        numberBucketFetch++;
-    }
-
-    return bucket;
+    return directory.fetchBucket(hash);
 }
 
 DepthBucket *ExtendibleHashing::getBucket(size_t hash)
 {
-    DepthBucket *bucket = directory.getBucket(hash);
-    if (bucket->size() > 0) {
-//        numberBucketFetch += bucket->getChainCount();
-        numberBucketFetch++;
-    }
-
-    return bucket;
+    return directory.getBucket(hash);
 }
 
 vector<Couple> ExtendibleHashing::fetchAllCouples()
@@ -58,13 +46,17 @@ vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, 
     DepthBucket *bucket;
     vector<Couple> couples;
     vector<size_t> hashes;
+    int numberFetches = 0;
     getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
     for (int i = 0; i < hashes.size(); i++) {
         bucket = fetchBucket(hashes[i]);
         vector<Couple> values = bucket->getAllValues();
+        numberFetches += bucket->getChainCount();
         couples.insert(couples.end(), values.begin(), values.end());
+        delete bucket;
     }
-    delete bucket;
+    cout << "table " << name << ": " << numberFetches << " bucket fetched." << endl;
+    numberBucketFetch += numberFetches;
     return couples;
 }
 

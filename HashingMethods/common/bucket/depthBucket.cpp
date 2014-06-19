@@ -35,10 +35,9 @@ vector<Couple> DepthBucket::getAllValues()
 {
     vector<Couple> values = Bucket::getAllValues();
     if (hasNext()) {
-        DepthBucket *bucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
-        vector<Couple> nextValues = bucket->getAllValues();
+        nextBucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
+        vector<Couple> nextValues = nextBucket->getAllValues();
         values.insert(values.end(), nextValues.begin(), nextValues.end());
-        delete bucket;
     }
 
     return values;
