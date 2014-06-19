@@ -22,7 +22,6 @@ public:
     TableFactory();
 
     void createTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder = vector<int>());
-    void createAutomatedTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder = vector<int>());
 
     void writeTable(T* table);
     T *readTable(string name);
@@ -47,13 +46,28 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     T table(name, keysRepartition, interleaveOrder);
     clock_t tStart = clock();
 
+    bool automated = false;
+    if (interleaveOrder.size() == 0)
+        automated = true;
+
     int totalNumberKeys = 0;
     for (int i = 0; i < keysRepartition.size(); i++)
         totalNumberKeys += keysRepartition[i];
     insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE;
 
+    //    srand (unsigned(std::time(0)));
+    //    random_shuffle(relation.begin(), relation.end());
+
     for (int i = 0; i < relation.size(); i++) {
         table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
+
+        if (automated && i >= insertionLimit) {
+            if(table.addBHF()) {
+                insertionLimit *= 2;
+            } else {
+                insertionLimit *= 1.1;
+            }
+        }
 
         if (i % 100000 == 0 && i > 0)
             cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
@@ -64,45 +78,6 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     cout << "Writing table " << name << " to disk\n" << endl;
     writeTable(&table);
 }
-
-template<class T, class B>
-void TableFactory<T, B>::createAutomatedTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder)
-{
-    cout << "Building table " << name << endl;
-    system(("exec mkdir -p /tmp/buckets/" + name).c_str());
-    BucketFactory<B>::getInstance()->reset();
-    T table(name, keysRepartition, interleaveOrder);
-
-    int totalNumberKeys = 0;
-    for (int i = 0; i < keysRepartition.size(); i++)
-        totalNumberKeys += keysRepartition[i];
-    insertionLimit = (int) pow(2.0, totalNumberKeys) * B::BUCKET_SIZE;
-
-    clock_t tStart = clock();
-
-//    srand (unsigned(std::time(0)));
-//    random_shuffle(relation.begin(), relation.end());
-
-    for (int i = 0; i < relation.size(); i++) {
-        table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
-
-        if (i >= insertionLimit) {
-            if(table.addBHF()) {
-                insertionLimit *= 1.9;
-            } else {
-                insertionLimit *= 1.1;
-            }
-        }
-        if (i % 100000 == 0 && i > 0)
-            cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
-    }
-    cout << "\nFinished building table " << name << endl;
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    table.printState();
-    cout << "Writing table " << name << " to disk\n" << endl;
-    writeTable(&table);
-}
-
 
 template<class T, class B>
 void TableFactory<T, B>::writeTable(T *table)
