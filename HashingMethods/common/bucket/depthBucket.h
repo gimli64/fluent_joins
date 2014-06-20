@@ -21,11 +21,11 @@ public:
     void setLocalDepth(int depth);
     void setBucketPath(string path);
 
-    bool hasNext() const;
+    bool hasNext();
     void setNextBucketName(string name);
     string getNextBucketName();
     void setNext(DepthBucket * next);
-    DepthBucket *getNext() const;
+    DepthBucket *getNext();
 
     virtual string className() const;
     virtual ostream& dump(ostream &strm) const;

@@ -19,10 +19,8 @@ vector<string> DepthBucket::getValue(string key)
         if (!hasNext()) {
             throw e;
         } else {
-            DepthBucket *bucket;
             try {
-                bucket = getNext();
-                result = bucket->getValue(key);
+                result = getNext()->getValue(key);
             } catch (string &e) {
                 throw e;
             }
@@ -35,8 +33,7 @@ vector<Couple> DepthBucket::getAllValues()
 {
     vector<Couple> values = Bucket::getAllValues();
     if (hasNext()) {
-        nextBucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
-        vector<Couple> nextValues = nextBucket->getAllValues();
+        vector<Couple> nextValues = getNext()->getAllValues();
         values.insert(values.end(), nextValues.begin(), nextValues.end());
     }
 
@@ -72,21 +69,25 @@ void DepthBucket::setNext(DepthBucket * next)
     nextBucket = next;
 }
 
-bool DepthBucket::hasNext() const
+bool DepthBucket::hasNext()
 {
     return nextBucketName != "";
 }
 
-DepthBucket *DepthBucket::getNext() const
+DepthBucket *DepthBucket::getNext()
 {
+    if (nextBucket == 0)
+        nextBucket = BucketFactory<DepthBucket>::getInstance()->readBucket(bucketPath + nextBucketName);
     return nextBucket;
 }
 
-int DepthBucket::getLocalDepth() {
+int DepthBucket::getLocalDepth()
+{
     return localDepth;
 }
 
-void DepthBucket::setLocalDepth(int depth) {
+void DepthBucket::setLocalDepth(int depth)
+{
     localDepth = depth;
 }
 
@@ -99,9 +100,9 @@ ostream& DepthBucket::dump(ostream &strm) const
 {
     ostream& output = Bucket::dump(strm);
     output << " , depth : " << localDepth;
-    if (hasNext()) {
-        output << " --> ";
-        return getNext()->dump(output);
-    }
+//    if (hasNext()) {
+//        output << " --> ";
+//        return getNext()->dump(output);
+//    }
     return output;
 }

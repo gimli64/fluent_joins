@@ -27,6 +27,7 @@ public:
     void reset();                   // Reset the factory variables for new initialization
 
     // Used at the end of a hash table initialization, serialize all its buckets
+    // and delete the memory objects
     void writeAll(vector<T*> buckets, string bucketPath);
 
     // Remove all buckets from disk
@@ -136,6 +137,8 @@ void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
             bucket = bucket->getNext();
             writeBucket(bucket, bucketPath);
         }
+
+        delete *it;
     }
 }
 

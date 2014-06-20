@@ -5,13 +5,6 @@ Directory::Directory()
     factory = BucketFactory<DepthBucket>::getInstance();
 }
 
-Directory::~Directory()
-{
-    for(int i = 0; i < buckets.size(); i++) {
-        delete buckets[i];
-    }
-}
-
 Directory::Directory(HashTable *hasher)
     :hasher(hasher), globalDepth(0)
 {
