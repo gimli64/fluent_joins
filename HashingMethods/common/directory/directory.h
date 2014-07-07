@@ -33,11 +33,6 @@ public:
     vector<DepthBucket *> fetchBuckets();
 
     void reset();
-    void loadBuckets();
-    void loadBucket(size_t hash);
-
-    string className() const;
-    ostream& dump(ostream& strm) const;
 
 private:
     int globalDepth;
@@ -59,7 +54,5 @@ private:
         ar & bucketNames;
     }
 };
-
-ostream& operator<<(ostream&, const Directory&);
 
 #endif // DIRECTORY_H

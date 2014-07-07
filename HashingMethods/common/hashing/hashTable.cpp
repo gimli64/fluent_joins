@@ -24,7 +24,11 @@ HashTable::HashTable(string name, vector<int> keysRepartition, vector<int> order
 
 size_t HashTable::getHash(string key)
 {
-    return string_hasher(key);
+    srand(int_hasher(lexical_cast<int>(key)));
+//    srand(std::hash<string>(key));
+    return rand();
+//    return int_hasher(lexical_cast<int>(key));
+//    return string_hasher(key);
 }
 
 vector<string> HashTable::get(string key)
@@ -58,7 +62,6 @@ void HashTable::printState() {}
 size_t HashTable::interleaveHashes(vector<size_t> &hashes)
 {
     size_t key = 0;
-
     int hashIndex = 0;
     int bitIndex = 0;
     for (bitIndex = 0; bitIndex <= globalDepthLimit; bitIndex++) {
@@ -70,7 +73,7 @@ size_t HashTable::interleaveHashes(vector<size_t> &hashes)
     return key;
 }
 
-void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes)
+void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes)
 {
     int numberBitsUnset = 0;
     vector<int> bitsToSet;
@@ -79,9 +82,6 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t 
         if (i == position) {
             numberBitsUnset += (keysRepartition[i] - keyHashSize);
             bitsToSet.push_back(keysRepartition[i] - keyHashSize);
-        } else if (i == position2) {
-            numberBitsUnset += (keysRepartition[i] - keyHashSize2);
-            bitsToSet.push_back(keysRepartition[i] - keyHashSize2);
         } else {
             numberBitsUnset += keysRepartition[i];
             bitsToSet.push_back(keysRepartition[i]);
@@ -90,10 +90,10 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t 
 
     int numberHashes = (int) pow(2.0, (double) numberBitsUnset) - 1;
     hashes.reserve(numberHashes);
-
     vector<size_t> hash_values;
     size_t rightOffset;
     size_t mask;
+
     for (int i = numberHashes; i >= 0; i--) {
         hash_values.clear();
         rightOffset = 0;
@@ -104,8 +104,6 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t 
 
             if (j == position) {
                 hash_values.push_back((((i & mask) >> rightOffset) << keyHashSize) + keyHash);
-            } else if (j == position2) {
-                hash_values.push_back(((((i & mask) >> rightOffset) << keyHashSize2) + keyHash2));
             } else {
                 hash_values.push_back((i & mask) >> rightOffset);
             }
@@ -115,11 +113,6 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, size_t 
         size_t hash = interleaveHashes(hash_values);
         hashes.push_back(hash);
     }
-}
-
-Bucket *HashTable::fetchBucket(size_t hash)
-{
-    return new Bucket();
 }
 
 void HashTable::putMultikey(Couple couple)

@@ -14,6 +14,7 @@ public:
 
     virtual vector<string> getValue(string key);
 
+    virtual int size();
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
     virtual int getLocalDepth();
@@ -23,12 +24,8 @@ public:
 
     bool hasNext();
     void setNextBucketName(string name);
-    string getNextBucketName();
     void setNext(DepthBucket * next);
     DepthBucket *getNext();
-
-    virtual string className() const;
-    virtual ostream& dump(ostream &strm) const;
 
 private:
     int localDepth;

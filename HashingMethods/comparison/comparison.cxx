@@ -21,10 +21,21 @@ void createTables(TableFactory<ExtendibleHashing, DepthBucket> factory)
         vector<int> BHFsRepartition;
         vector<int> interleaveOrder;
 
-        R = result( N.exec("SELECT * from customer"));
-        BHFsRepartition.clear();
-        BHFsRepartition.push_back(1);
-        factory.createTable(R, "customer", BHFsRepartition);
+        //        R = result( N.exec("SELECT * from customer"));
+        //        BHFsRepartition.clear();
+        //        BHFsRepartition.push_back(10);
+        //        interleaveOrder.clear();
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        interleaveOrder.push_back(0);
+        //        factory.createTable(R, "customer", BHFsRepartition, interleaveOrder);
 
         //        R = result( N.exec("SELECT * from part"));
         //        BHFsRepartition.clear();
@@ -43,36 +54,238 @@ void createTables(TableFactory<ExtendibleHashing, DepthBucket> factory)
 
         //        R = result( N.exec("SELECT * from lineorder limit 1000000"));
         //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(5);
-        //        BHFsRepartition.push_back(5);
         //        BHFsRepartition.push_back(4);
+        //        BHFsRepartition.push_back(0);
+        //        BHFsRepartition.push_back(4);
+        //        BHFsRepartition.push_back(4);
+        //        BHFsRepartition.push_back(3);
         //        interleaveOrder.clear();
+        //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(2);
         //        interleaveOrder.push_back(3);
         //        interleaveOrder.push_back(4);
+        //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(2);
         //        interleaveOrder.push_back(3);
         //        interleaveOrder.push_back(4);
+        //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(2);
         //        interleaveOrder.push_back(3);
         //        interleaveOrder.push_back(4);
-        //        interleaveOrder.push_back(2);
-        //        interleaveOrder.push_back(3);
-        //        interleaveOrder.push_back(4);
+        //        interleaveOrder.push_back(0);
         //        interleaveOrder.push_back(2);
         //        interleaveOrder.push_back(3);
         //        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
 
-        //        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(1);
-        //        BHFsRepartition.push_back(1);
-        //        BHFsRepartition.push_back(1);
-        //        factory.createTable(R, "lineorder2", BHFsRepartition);
+//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(5);
+//        BHFsRepartition.push_back(5);
+//        BHFsRepartition.push_back(5);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(4);
+//        BHFsRepartition.push_back(6);
+//        BHFsRepartition.push_back(5);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(2);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(3);
+//        interleaveOrder.push_back(4);
+//        interleaveOrder.push_back(3);
+//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(5);
+        BHFsRepartition.push_back(6);
+        BHFsRepartition.push_back(4);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(4);
+        BHFsRepartition.push_back(7);
+        BHFsRepartition.push_back(4);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(4);
+        BHFsRepartition.push_back(8);
+        BHFsRepartition.push_back(3);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(3);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(6);
+        BHFsRepartition.push_back(4);
+        BHFsRepartition.push_back(5);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(6);
+        BHFsRepartition.push_back(5);
+        BHFsRepartition.push_back(4);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(2);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(7);
+        BHFsRepartition.push_back(4);
+        BHFsRepartition.push_back(4);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(2);
+        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
+
+
+//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(0);
+//        BHFsRepartition.push_back(1);
+//        BHFsRepartition.push_back(1);
+//        BHFsRepartition.push_back(1);
+//        factory.createTable(R, "lineorder2", BHFsRepartition);
 
         C.disconnect ();
     } catch (const std::exception &e) {
@@ -86,15 +299,19 @@ int main()
     QueryExecuter<ExtendibleHashing, DepthBucket> executer;
     time_t start,end;
 
-    //    createTables(factory);
+    createTables(factory);
 
-    ExtendibleHashing *customerTable = factory.readTable("customer");
-    ExtendibleHashing *partTable = factory.readTable("part");
-    ExtendibleHashing *supplierTable = factory.readTable("supplier");
+    //    ExtendibleHashing *customerTable = factory.readTable("customer");
+    //    ExtendibleHashing *partTable = factory.readTable("part");
+    //    ExtendibleHashing *supplierTable = factory.readTable("supplier");
     //    ExtendibleHashing *partsuppTable = factory.readTable("partsupp");
     //    ExtendibleHashing *dateTable = factory.readTable("date");
-    ExtendibleHashing *lineorderTable = factory.readTable("lineorder");
+    //    ExtendibleHashing *lineorderTable = factory.readTable("lineorder");
 
+
+    /********************************************
+    ****************** SORT MERGE ***************
+    ********************************************/
     //    cout << "SORT MERGE JOINS" << endl;
     //    cout << " \nJoining lineorder and customer" << endl;
     //    time(&start);
@@ -114,25 +331,45 @@ int main()
     //    time (&end);
     //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << "MULTIKEY JOINS" << endl;
-    cout << " \nJoining lineorder and customer" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
+    //    cout << " \nJoining lineorder and date" << endl;
+    //    time (&start);
+    //    executer.sortMergeBinaryJoin(lineorderTable, dateTable, 5, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << " \nJoining lineorder and part" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << " \nJoining lineorder and supplier" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
+    /********************************************
+    ****************** MULTIKEY *****************
+    ********************************************/
+    //    cout << "MULTIKEY JOINS" << endl;
+    //    cout << " \nJoining lineorder and customer" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
+    //    cout << " \nJoining lineorder and part" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //    cout << " \nJoining lineorder and supplier" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //    cout << " \nJoining lineorder and date" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+
+    /*****************************************************
+    ****************** MULTIKEY THREADED *****************
+    *****************************************************/
     //    cout << "MULTIKEY JOINS THREADED" << endl;
     //    cout << " \nJoining lineorder and customer" << endl;
     //    time (&start);
@@ -152,27 +389,47 @@ int main()
     //    time (&end);
     //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << "MULTIKEY JOINS, AUTOMATED TABLE" << endl;
-    lineorderTable = factory.readTable("lineorder2");
+    //    cout << " \nJoining lineorder and date" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoinThreaded(lineorderTable, dateTable, 5, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << " \nJoining lineorder and customer" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
-    cout << " \nJoining lineorder and part" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
+    /****************************************************
+    ****************** MULTIKEY AUTOMATED ***************
+    ****************************************************/
+    //    cout << "MULTIKEY JOINS, AUTOMATED TABLE" << endl;
+    //    lineorderTable = factory.readTable("lineorder2");
 
-    cout << " \nJoining lineorder and supplier" << endl;
-    time (&start);
-    executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
-    time (&end);
-    printf("Time taken: %.2fs\n\n", difftime (end,start));
+    //    cout << " \nJoining lineorder and customer" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, customerTable, 2, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 
+    //    cout << " \nJoining lineorder and part" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, partTable, 3, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //    cout << " \nJoining lineorder and supplier" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, supplierTable, 4, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //    cout << " \nJoining lineorder and date" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoin(lineorderTable, dateTable, 5, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+
+    /*************************************************************
+    ****************** MULTIKEY AUTOMATED THREADED ***************
+    *************************************************************/
     //    cout << "MULTIKEY JOINS THREADED, AUTOMATED TABLE" << endl;
     //    cout << " \nJoining lineorder and customer" << endl;
     //    time (&start);
@@ -189,6 +446,12 @@ int main()
     //    cout << " \nJoining lineorder and supplier" << endl;
     //    time (&start);
     //    executer.multikeyBinaryJoinThreaded(lineorderTable, supplierTable, 4, 0);
+    //    time (&end);
+    //    printf("Time taken: %.2fs\n\n", difftime (end,start));
+
+    //    cout << " \nJoining lineorder and date" << endl;
+    //    time (&start);
+    //    executer.multikeyBinaryJoinThreaded(lineorderTable, dateTable, 5, 0);
     //    time (&end);
     //    printf("Time taken: %.2fs\n\n", difftime (end,start));
 

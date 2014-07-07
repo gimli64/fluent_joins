@@ -29,6 +29,14 @@ vector<string> DepthBucket::getValue(string key)
     return result;
 }
 
+int DepthBucket::size() {
+    int size = Bucket::size();
+    if (hasNext()) {
+        size += getNext()->size();
+    }
+    return size;
+}
+
 vector<Couple> DepthBucket::getAllValues()
 {
     vector<Couple> values = Bucket::getAllValues();
@@ -59,11 +67,6 @@ void DepthBucket::setNextBucketName(string name)
     nextBucketName = name;
 }
 
-string DepthBucket::getNextBucketName()
-{
-    return nextBucketName;
-}
-
 void DepthBucket::setNext(DepthBucket * next)
 {
     nextBucket = next;
@@ -89,20 +92,4 @@ int DepthBucket::getLocalDepth()
 void DepthBucket::setLocalDepth(int depth)
 {
     localDepth = depth;
-}
-
-string DepthBucket::className() const
-{
-    return "DepthBucket ";
-}
-
-ostream& DepthBucket::dump(ostream &strm) const
-{
-    ostream& output = Bucket::dump(strm);
-    output << " , depth : " << localDepth;
-//    if (hasNext()) {
-//        output << " --> ";
-//        return getNext()->dump(output);
-//    }
-    return output;
 }

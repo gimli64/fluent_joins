@@ -49,10 +49,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     T table(name, keysRepartition, interleaveOrder);
     clock_t tStart = clock();
 
-    bool automated = false;
-    if (interleaveOrder.size() == 0)
-        automated = true;
-
+    bool automated = (interleaveOrder.size() == 0);
     int totalNumberKeys = 0;
     for (int i = 0; i < keysRepartition.size(); i++)
         totalNumberKeys += keysRepartition[i];
@@ -72,26 +69,35 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
             }
         }
 
-        if (i % 100000 == 0 && i > 0)
+        if (i % 100000 == 0 && i > 0) {
             cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
+//            table.printState();
+//            table.dimensionStats(2);
+//            table.dimensionStats(3);
+//            table.dimensionStats(4);
+//            table.dimensionStats(5);
+//            cout << "\n" << endl;
+        }
     }
     cout << "\n\nFinished building table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    table.dimensionStats(2);
     table.printState();
-    cout << "Writing table " << name << " to disk\n" << endl;
-    writeTable(&table);
 
-    cout << "\nBuilding standard table\n" << endl;
-    ofstream standardTableFile (("/tmp/tables/" + name + "_aux").c_str());
-    if (standardTableFile.is_open()) {
-        for (int i = 0; i < relation.size(); i++) {
-            for (int j = 0; j < relation[i].size(); j++) {
-                standardTableFile << relation[i][j].c_str() << "|";
-            }
-            standardTableFile << "\n";
-        }
-        standardTableFile.close();
-    } else cout << "Unable to open file";
+//    cout << "Writing table " << name << " to disk\n" << endl;
+//    writeTable(&table);
+
+//    cout << "Building standard table\n" << endl;
+//    ofstream standardTableFile (("/tmp/tables/" + name + "_aux").c_str());
+//    if (standardTableFile.is_open()) {
+//        for (int i = 0; i < relation.size(); i++) {
+//            for (int j = 0; j < relation[i].size(); j++) {
+//                standardTableFile << relation[i][j].c_str() << "|";
+//            }
+//            standardTableFile << "\n";
+//        }
+//        standardTableFile.close();
+//    } else cout << "Unable to open file";
 }
 
 template<class T, class B>

@@ -19,16 +19,6 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
     directory.putCouple(hash, couple);
 }
 
-DepthBucket *ExtendibleHashing::fetchBucket(size_t hash)
-{
-    return directory.fetchBucket(hash);
-}
-
-DepthBucket *ExtendibleHashing::getBucket(size_t hash)
-{
-    return directory.getBucket(hash);
-}
-
 vector<Couple> ExtendibleHashing::fetchAllCouples()
 {
     vector<Couple> couples;
@@ -41,15 +31,15 @@ vector<Couple> ExtendibleHashing::fetchAllCouples()
     return couples;
 }
 
-vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
+vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, int position)
 {
     DepthBucket *bucket;
     vector<Couple> couples;
     vector<size_t> hashes;
     int numberFetches = 0;
-    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
+    getHashes(keyHash, keyHashSize, position, hashes);
     for (int i = 0; i < hashes.size(); i++) {
-        bucket = fetchBucket(hashes[i]);
+        bucket = directory.fetchBucket(hashes[i]);
         vector<Couple> values = bucket->getAllValues();
         numberFetches += bucket->getChainCount();
         couples.insert(couples.end(), values.begin(), values.end());
@@ -60,52 +50,37 @@ vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, 
     return couples;
 }
 
-vector<Couple> ExtendibleHashing::getCouples(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2)
+void ExtendibleHashing::dimensionStats(int position)
 {
+    int keyHashSize = keysRepartition[position];
+    map<DepthBucket*, bool> bucketFetched;
+    double distance = 0;
+    double load_factor = ((double) numberItems / (directory.getBuckets().size() * Bucket::BUCKET_SIZE));
     DepthBucket *bucket;
-    vector<Couple> couples;
-    vector<size_t> hashes;
-    getHashes(keyHash, keyHashSize, position, keyHash2, keyHashSize2, position2, hashes);
-    for (int i = 0; i < hashes.size(); i++) {
-        bucket = getBucket(hashes[i]);
-        vector<Couple> values = bucket->getAllValues();
-        couples.insert(couples.end(), values.begin(), values.end());
-    }
-    return couples;
-}
 
-void ExtendibleHashing::reset()
-{
-    directory.reset();
-}
+    ofstream distribution_file;
+    distribution_file.open ("/Users/gimli/projects/fluent_joins/stats/bucket_distribution");
 
-void ExtendibleHashing::loadBuckets(size_t keyHash, int keyHashSize, int position)
-{
-    if (position >= 0) {
+    for (size_t keyHash = 0; keyHash < (int) pow(2.0, (double) keyHashSize); keyHash++) {
         vector<size_t> hashes;
-        getHashes(keyHash, keyHashSize, position, 0, 0, -1, hashes);
+        vector<DepthBucket*> buckets;
+        getHashes(keyHash, keyHashSize, position, hashes);
         for (int i = 0; i < hashes.size(); i++) {
-            directory.loadBucket(hashes[i]);
+            bucket = directory.getBucket(hashes[i]);
+            if (!bucketFetched[bucket]) {
+                bucketFetched[bucket] = true;
+                buckets.push_back(directory.getBucket(hashes[i]));
+            }
         }
-    } else {
-        directory.loadBuckets();
+        for (vector<DepthBucket*>::iterator bucket = buckets.begin(); bucket != buckets.end(); ++bucket) {
+            distance += abs(((double) (*bucket)->size() / Bucket::BUCKET_SIZE) - load_factor);
+            distribution_file <<  (*bucket)->size() <<  "\n";
+        }
+//        cout << "Maximum load factor in partition " << keyHash << " : " << maxLoadFactor << endl;
     }
-}
-
-string ExtendibleHashing::className() const
-{
-    return "ExtendibleHashing ";
-}
-
-ostream& ExtendibleHashing::dump(ostream& strm) const
-{
-    const void * address = static_cast<const void*>(this);
-    stringstream ss;
-    ss << address;
-    ostream& output = strm;
-    output << className() + ss.str() + " : \n";
-    output << "## " << directory;
-    return output;
+    distribution_file.close();
+    cout << "Distance for table " << position << " : " << distance << endl;
+    cout << "\n" << endl;
 }
 
 void ExtendibleHashing::printState()
@@ -141,7 +116,7 @@ void ExtendibleHashing::printState()
     for (int i = 0; i < keysRepartition.size(); i++)
         cout << keysRepartition[i] << ", ";
     cout << "]" << endl;
-    cout << "load factor : " << (double) numberItems / (BucketFactory<DepthBucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE) << "\n" << endl;
+    cout << "load factor : " << (double) numberItems / (buckets.size() * Bucket::BUCKET_SIZE) << "\n" << endl;
 
     BucketFactory<DepthBucket>::getInstance()->writeAll(buckets, bucketPath);
 }
@@ -178,9 +153,4 @@ bool ExtendibleHashing::addBHF() {
         cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
         return true;
     }
-}
-
-ostream& operator<<(ostream& strm, const ExtendibleHashing& hash)
-{
-    return hash.dump(strm);
 }

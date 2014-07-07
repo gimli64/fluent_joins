@@ -131,11 +131,11 @@ void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
 {
     for(typename vector<T*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
         T* bucket = *it;
-        writeBucket(bucket, bucketPath);
+//        writeBucket(bucket, bucketPath);
 
         while(bucket->hasNext()) {
             bucket = bucket->getNext();
-            writeBucket(bucket, bucketPath);
+//            writeBucket(bucket, bucketPath);
         }
 
         delete *it;

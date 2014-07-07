@@ -2,7 +2,10 @@
 #define HASHTABLE_H
 
 #include "common/bucket/bucket.h"
+
+#include <cstdlib>      // std::rand, std::srand
 #include <vector>
+#include <functional>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
@@ -43,15 +46,15 @@ public:
 protected:
     string bucketPath;
     boost::hash<string> string_hasher;
+    boost::hash<int> int_hasher;
     int globalDepthLimit;
     int numberBucketFetch;
     int numberItems;
 
-    void getHashes(size_t keyHash, int keyHashSize, int position, size_t keyHash2, int keyHashSize2, int position2, vector<size_t> &hashes);
+    void getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes);
 
 private:
     size_t interleaveHashes(vector<size_t> &hashes);
-    virtual Bucket* fetchBucket(size_t hash);
 
     virtual void putCouple(size_t hash, Couple couple);
     virtual vector<string> getValue(size_t hash, string key);

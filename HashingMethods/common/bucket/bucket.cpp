@@ -1,6 +1,6 @@
 #include "bucket.h"
 
-int Bucket::BUCKET_SIZE = 80;
+int Bucket::BUCKET_SIZE = 60;
 
 Bucket::Bucket(string name)
     :elements(), name(name)
@@ -42,25 +42,4 @@ vector<Couple> Bucket::getAllValues()
 int Bucket::getChainCount()
 {
     return 1;
-}
-
-string Bucket::className() const
-{
-    return "Bucket ";
-}
-
-ostream& Bucket::dump(ostream &strm) const
-{
-    string output = className() + name + " : [";
-    for(int i = 0; i < elements.size(); i++) {
-        output += elements.at(i).key;
-        if (i < elements.size() - 1)
-            output += ", ";
-    }
-    return strm << output << "]";
-}
-
-ostream& operator<<(ostream& o, const Bucket& bucket)
-{
-    return bucket.dump(o);
 }

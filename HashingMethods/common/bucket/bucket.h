@@ -20,13 +20,10 @@ public:
     void putCouple(Couple couple);
 
     bool isFull();
-    int size();
+    virtual int size();
 
     virtual int getChainCount();
     virtual vector<Couple> getAllValues();
-
-    virtual string className() const;
-    virtual ostream& dump(ostream &strm) const;
 
 private:
     friend class boost::serialization::access;
@@ -37,7 +34,5 @@ private:
         ar & elements;
     }
 };
-
-ostream& operator<<(ostream&, const Bucket&);
 
 #endif // BUCKET_H
