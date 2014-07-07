@@ -7,7 +7,6 @@ add_executable(HashingMethodTests hashingMethodTests.cpp)
 target_link_libraries (BucketTests
                        Bucket
                        DepthBucket
-#                       ChainedBucket
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
                        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
@@ -16,7 +15,6 @@ target_link_libraries (BucketTests
 target_link_libraries (DirectoryTests
                        Directory
                        BucketFactory
-#                       HybridDirectory
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
                        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
@@ -25,8 +23,6 @@ target_link_libraries (DirectoryTests
 target_link_libraries (HashingMethodTests
                        BucketFactory
                        ExtendibleHashing
-#                       LinearHashing
-#                       HybridHashing
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
                        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}

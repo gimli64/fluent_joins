@@ -1,6 +1,4 @@
 #include "extendible/extendibleHashing.h"
-//#include "linear/linearHashing.h"
-//#include "hybrid/hybridHashing.h"
 #define BOOST_TEST_MODULE hashingMethodTests
 #include <boost/test/unit_test.hpp>
 
@@ -32,37 +30,4 @@
 //    } catch (string &e) {
 //        BOOST_CHECK_EQUAL("Value wasn't found", e);
 //    }
-//}
-
-//BOOST_AUTO_TEST_CASE(linearHashing_test)
-//{
-//    LinearHashing hasher = LinearHashing();
-//    vector<string> values;
-//    values.push_back("0");
-//    values.push_back("1");
-//    hasher.put(Couple("0", values));
-//    BucketFactory<ChainedBucket>::getInstance()->writeAll(hasher.getBuckets(), "test");
-//    BOOST_CHECK_EQUAL("1", hasher.get("0").at(1));
-//    try {
-//        hasher.get("1");
-//    } catch (string &e) {
-//        BOOST_CHECK_EQUAL("Value wasn't found", e);
-//    }
-
-//}
-
-//BOOST_AUTO_TEST_CASE(hybridHashing_test)
-//{
-//    HybridHashing hasher = HybridHashing();
-//    vector<string> values;
-//    values.push_back("0");
-//    values.push_back("1");
-//    hasher.put(Couple("0", values));
-//    BucketFactory<DepthBucket>::getInstance()->writeAll(hasher.getBuckets(), "test");
-//    BOOST_CHECK_EQUAL("1", hasher.get("0").at(1));
-//    try {
-//        hasher.get("1");
-//    } catch (string &e) {
-//        BOOST_CHECK_EQUAL("Value wasn't found", e);
-//    };
 //}

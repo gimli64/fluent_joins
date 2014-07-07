@@ -1,5 +1,2 @@
 add_library(ExtendibleHashing extendibleHashing.cpp)
-#add_library(MultikeyExtendibleHashing multikeyExtendibleHashing.cpp)
-
 target_link_libraries(ExtendibleHashing HashTable Directory)
-#target_link_libraries(MultikeyExtendibleHahsing ExtendibleHashing)

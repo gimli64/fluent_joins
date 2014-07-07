@@ -1,5 +1,0 @@
-add_library(HybridHashing hybridHashing.cpp)
-add_library(MultikeyHybridHashing multikeyHybridHashing.cpp)
-
-target_link_libraries(HybridHashing HashTable HybridDirectory)
-target_link_libraries(MultikeyHybridHashing HybridHashing HybridDirectory)
