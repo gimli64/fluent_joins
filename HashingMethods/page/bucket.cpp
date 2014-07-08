@@ -3,7 +3,7 @@
 int Bucket::BUCKET_SIZE = 49;
 
 Bucket::Bucket(string name)
-    :elements(), name(name), localDepth(0)
+    :elements(), name(name)
 {
     elements.reserve(BUCKET_SIZE);
 }
@@ -42,14 +42,4 @@ vector<Couple> Bucket::getAllValues()
 void Bucket::setBucketPath(string path)
 {
     bucketPath = path;
-}
-
-int Bucket::getLocalDepth()
-{
-    return localDepth;
-}
-
-void Bucket::setLocalDepth(int depth)
-{
-    localDepth = depth;
 }

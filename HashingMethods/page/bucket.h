@@ -1,14 +1,15 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
-#include "couple.h"
+#include "page.h"
+#include "common/couple.h"
 
 #include <vector>
 #include <boost/serialization/vector.hpp>
 
 using namespace std;
 
-class Bucket
+class Bucket: public Page
 {
 public:
     static int BUCKET_SIZE;
@@ -16,18 +17,14 @@ public:
 
     Bucket(string name = "");
     virtual vector<string> getValue(string key);
-    void putCouple(Couple couple);
+    virtual void putCouple(Couple couple);
     bool isFull();
     void setBucketPath(string path);
-
-    int getLocalDepth();
-    void setLocalDepth(int depth);
 
     int size();
     vector<Couple> getAllValues();
 
 private:
-    int localDepth;
     string bucketPath;
     vector<Couple> elements;
 

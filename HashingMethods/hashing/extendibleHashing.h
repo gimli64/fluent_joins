@@ -8,8 +8,6 @@
 
 using std::ostream;
 
-class Directory;
-
 class ExtendibleHashing : public HashTable
 {
 public:

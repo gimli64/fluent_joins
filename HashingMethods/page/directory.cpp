@@ -38,10 +38,10 @@ void Directory::putCouple(size_t hash, Couple couple)
     if (!bucket->isFull()) {
         bucket->putCouple(couple);
     } else {
-        if (bucket->getLocalDepth() == globalDepth) {
+        if (bucket->getDepth() == globalDepth) {
             doubleSize();
         }
-        if (bucket->getLocalDepth() < globalDepth) {
+        if (bucket->getDepth() < globalDepth) {
             split(bucket);
             putCouple(hash, couple);
         }
@@ -68,7 +68,7 @@ void Directory::split(Bucket* bucket)
 
     for (vector<Couple>::iterator it = values.begin(); it != values.end(); ++it) {
         size_t h = hasher->getMultikeyHash(*it) & ((1 << globalDepth) - 1);
-        if ((h | (1 << bucket->getLocalDepth())) == h)
+        if ((h | (1 << bucket->getDepth())) == h)
             newBucket2->putCouple(*it);
         else
             newBucket1->putCouple(*it);
@@ -81,7 +81,7 @@ void Directory::split(Bucket* bucket)
     }
 
     for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
-        if ((*it | (1 << bucket->getLocalDepth())) == *it) {
+        if ((*it | (1 << bucket->getDepth())) == *it) {
             bucketNames.at(*it) = newBucket2->name;
             buckets.at(*it) = newBucket2;
         }
@@ -91,9 +91,9 @@ void Directory::split(Bucket* bucket)
         }
     }
 
-    newBucket1->setLocalDepth(bucket->getLocalDepth() + 1);
+    newBucket1->setDepth(bucket->getDepth() + 1);
     newBucket1->setBucketPath(bucketPath);
-    newBucket2->setLocalDepth(newBucket1->getLocalDepth());
+    newBucket2->setDepth(newBucket1->getDepth());
     newBucket2->setBucketPath(bucketPath);
     factory->deleteBucket(bucket);
 }
