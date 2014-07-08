@@ -1,9 +1,9 @@
 #ifndef DIRECTORY_H
 #define DIRECTORY_H
 
-#include "common/bucket/depthBucket.h"
-#include "common/bucket/bucketFactory.h"
-#include "common/hashing/hashTable.h"
+#include "bucket.h"
+#include "bucketFactory.h"
+#include "hashing/hashTable.h"
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 
@@ -26,11 +26,11 @@ public:
 
     int getGlobalDepth();
 
-    DepthBucket *getBucket(size_t hash);
-    vector<DepthBucket *> getBuckets();
+    Bucket *getBucket(size_t hash);
+    vector<Bucket *> getBuckets();
 
-    DepthBucket *fetchBucket(size_t hash);
-    vector<DepthBucket *> fetchBuckets();
+    Bucket *fetchBucket(size_t hash);
+    vector<Bucket *> fetchBuckets();
 
     void reset();
 
@@ -38,11 +38,11 @@ private:
     int globalDepth;
     string bucketPath;
     vector<string> bucketNames;
-    vector<DepthBucket*> buckets;
-    BucketFactory<DepthBucket> *factory;
+    vector<Bucket*> buckets;
+    BucketFactory<Bucket> *factory;
     HashTable *hasher;
 
-    void split(DepthBucket *bucket);
+    void split(Bucket *bucket);
     void doubleSize();
 
     friend class boost::serialization::access;

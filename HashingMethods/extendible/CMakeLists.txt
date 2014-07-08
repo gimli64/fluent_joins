@@ -1,2 +1,0 @@
-add_library(ExtendibleHashing extendibleHashing.cpp)
-target_link_libraries(ExtendibleHashing HashTable Directory)

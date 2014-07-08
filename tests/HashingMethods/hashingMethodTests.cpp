@@ -1,4 +1,4 @@
-#include "extendible/extendibleHashing.h"
+#include "hashing/extendibleHashing.h"
 #define BOOST_TEST_MODULE hashingMethodTests
 #include <boost/test/unit_test.hpp>
 

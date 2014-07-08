@@ -4,6 +4,6 @@ include_directories(${PROJECT_SOURCE_DIR}/HashingMethods)
 
 find_package(Threads REQUIRED)
 
-add_subdirectory(common)
-add_subdirectory(extendible)
-add_subdirectory(comparison)
+add_subdirectory(page)
+add_subdirectory(hashing)
+add_subdirectory(experiments)

@@ -1,9 +1,8 @@
 #ifndef TABLEFACTORY_H
 #define TABLEFACTORY_H
 
-#include "extendible/extendibleHashing.h"
-#include "common/bucket/bucketFactory.h"
-#include "common/bucket/bucket.h"
+#include "hashing/extendibleHashing.h"
+#include "page/bucketFactory.h"
 
 #include <vector>
 #include <fstream>
@@ -81,7 +80,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     }
     cout << "\n\nFinished building table " << name << endl;
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    table.dimensionStats(2);
+//    table.dimensionStats(2);
     table.printState();
 
 //    cout << "Writing table " << name << " to disk\n" << endl;

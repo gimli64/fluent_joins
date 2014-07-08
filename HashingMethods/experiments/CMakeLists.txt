@@ -1,7 +1,7 @@
 add_library(QueryExecuter queryExecuter.cpp)
 add_library(TableFactory tableFactory.cpp)
 
-add_executable(comparison comparison.cxx)
+add_executable(experiments experiments.cxx)
 
 target_link_libraries(TableFactory
                       pqxx
@@ -14,7 +14,7 @@ target_link_libraries(QueryExecuter
                       ${Boost_LIBRARIES}
                      )
 
-target_link_libraries(comparison
+target_link_libraries(experiments
                       TableFactory
                       QueryExecuter
                       )

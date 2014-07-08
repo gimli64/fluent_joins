@@ -6,7 +6,6 @@ add_executable(HashingMethodTests hashingMethodTests.cpp)
 
 target_link_libraries (BucketTests
                        Bucket
-                       DepthBucket
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
                        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}

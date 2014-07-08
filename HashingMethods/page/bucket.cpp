@@ -1,9 +1,9 @@
 #include "bucket.h"
 
-int Bucket::BUCKET_SIZE = 60;
+int Bucket::BUCKET_SIZE = 49;
 
 Bucket::Bucket(string name)
-    :elements(), name(name)
+    :elements(), name(name), localDepth(0)
 {
     elements.reserve(BUCKET_SIZE);
 }
@@ -39,7 +39,17 @@ vector<Couple> Bucket::getAllValues()
     return elements;
 }
 
-int Bucket::getChainCount()
+void Bucket::setBucketPath(string path)
 {
-    return 1;
+    bucketPath = path;
+}
+
+int Bucket::getLocalDepth()
+{
+    return localDepth;
+}
+
+void Bucket::setLocalDepth(int depth)
+{
+    localDepth = depth;
 }

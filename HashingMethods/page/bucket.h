@@ -13,25 +13,31 @@ class Bucket
 public:
     static int BUCKET_SIZE;
     string name;
-    vector<Couple> elements;
 
     Bucket(string name = "");
     virtual vector<string> getValue(string key);
     void putCouple(Couple couple);
-
     bool isFull();
-    virtual int size();
+    void setBucketPath(string path);
 
-    virtual int getChainCount();
-    virtual vector<Couple> getAllValues();
+    int getLocalDepth();
+    void setLocalDepth(int depth);
+
+    int size();
+    vector<Couple> getAllValues();
 
 private:
+    int localDepth;
+    string bucketPath;
+    vector<Couple> elements;
+
     friend class boost::serialization::access;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & name;
         ar & elements;
+        ar & bucketPath;
     }
 };
 

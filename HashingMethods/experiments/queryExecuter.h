@@ -1,9 +1,8 @@
 #ifndef QUERYEXECUTER_H
 #define QUERYEXECUTER_H
 
-#include "extendible/extendibleHashing.h"
-#include "common/bucket/bucketFactory.h"
-#include "common/bucket/bucket.h"
+#include "hashing/extendibleHashing.h"
+#include "page/bucketFactory.h"
 
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/split.hpp>

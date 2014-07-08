@@ -1,7 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#include "common/bucket/bucket.h"
+#include "page/couple.h"
 
 #include <cstdlib>      // std::rand, std::srand
 #include <vector>
