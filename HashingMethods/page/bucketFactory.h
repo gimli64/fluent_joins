@@ -17,21 +17,10 @@ template<class T> class BucketFactory
 public:
     static BucketFactory<T>* getInstance();
 
-    T* readBucket(string bucketFile) const;
-    void writeBucket(T *bucket, string bucketPath);
-
     T* newBucket();                 // Creation without serialization
     void deleteBucket(T *bucket);   // Delete on memory change number buckets
-    void removeBucket(T *bucket);   // Remove on disk and change number buckets
 
     void reset();                   // Reset the factory variables for new initialization
-
-    // Used at the end of a hash table initialization, serialize all its buckets
-    // and delete the memory objects
-    void writeAll(vector<T*> buckets, string bucketPath);
-
-    // Remove all buckets from disk
-    void removeAll(string bucketPath);
 
     int getBucketCount();
     int getNumberBuckets();
@@ -66,28 +55,6 @@ BucketFactory<T>::BucketFactory()
 }
 
 template<class T>
-T* BucketFactory<T>::readBucket(string bucketFile) const
-{
-    T* bucket = new T();
-    {
-        ifstream ifs((constPrefix + bucketFile).c_str());
-        text_iarchive ia(ifs);
-        ia >> *bucket;
-    }
-    return bucket;
-}
-
-template<class T>
-void BucketFactory<T>::writeBucket(T *bucket, string bucketPath)
-{
-    ofstream ofs((constPrefix + bucketPath + bucket->name).c_str());
-    {
-        text_oarchive oa(ofs);
-        oa << *bucket;
-    }
-}
-
-template<class T>
 T* BucketFactory<T>::newBucket()
 {
     T *bucket = new T(bucketPrefix + lexical_cast<string>(bucketCount));
@@ -104,36 +71,10 @@ void BucketFactory<T>::deleteBucket(T *bucket)
 }
 
 template<class T>
-void BucketFactory<T>::removeBucket(T *bucket)
-{
-    numberBuckets -= bucket->getChainCount();
-    remove(bucket->name.c_str());
-    delete bucket;
-}
-
-template<class T>
 void BucketFactory<T>::reset()
 {
     numberBuckets = 0;
     bucketCount = 0;
-}
-
-template<class T>
-void BucketFactory<T>::removeAll(string bucketPath)
-{
-    reset();
-    system(("exec find " + constPrefix + bucketPath + " -name '" + bucketPrefix + "*' | xargs rm").c_str());
-    system(("exec find " + constPrefix + bucketPath + "_aux" + " -name '" + bucketPrefix + "*' | xargs rm").c_str());
-}
-
-template<class T>
-void BucketFactory<T>::writeAll(vector<T*> buckets, string bucketPath)
-{
-    for(typename vector<T*>::iterator it = buckets.begin(); it != buckets.end(); ++it) {
-        T* bucket = *it;
-        writeBucket(bucket, bucketPath);
-        delete *it;
-    }
 }
 
 template<class T>

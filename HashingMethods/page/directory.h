@@ -5,8 +5,6 @@
 #include "bucket.h"
 #include "bucketFactory.h"
 #include "hashing/hashTable.h"
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/vector.hpp>
 
 #include <iostream>
 #include <algorithm>
@@ -39,13 +37,6 @@ private:
 
     void split(Bucket *bucket);
     void doubleSize();
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version)
-    {
-        ar & depth;
-    }
 };
 
 #endif // DIRECTORY_H

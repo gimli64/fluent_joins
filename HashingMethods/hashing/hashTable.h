@@ -6,8 +6,6 @@
 #include <cstdlib>      // std::rand, std::srand
 #include <vector>
 #include <functional>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/lexical_cast.hpp>
 #include <math.h>
@@ -55,16 +53,6 @@ private:
 
     virtual void putCouple(size_t hash, Couple couple);
     virtual vector<string> getValue(size_t hash, string key);
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version)
-    {
-        ar & name;
-        ar & keysRepartition;
-        ar & globalDepthLimit;
-        ar & interleaveOrder;
-    }
 };
 
 #endif // HASHTABLE_H

@@ -5,7 +5,6 @@
 #include "common/couple.h"
 
 #include <vector>
-#include <boost/serialization/vector.hpp>
 
 using namespace std;
 
@@ -29,14 +28,6 @@ public:
 private:
     string name;
     vector<Couple> elements;
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version)
-    {
-        ar & name;
-        ar & elements;
-    }
 };
 
 #endif // BUCKET_H

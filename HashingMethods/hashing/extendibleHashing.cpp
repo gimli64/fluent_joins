@@ -108,8 +108,6 @@ void ExtendibleHashing::printState()
         cout << keysRepartition[i] << ", ";
     cout << "]" << endl;
 //    cout << "load factor : " << (double) numberItems / (buckets.size() * Bucket::BUCKET_SIZE) << "\n" << endl;
-
-//    BucketFactory<Bucket>::getInstance()->writeAll(buckets, bucketPath);
 }
 
 bool ExtendibleHashing::addBHF() {

@@ -28,14 +28,6 @@ private:
 
     virtual vector<string> getValue(size_t hash, string key);
     virtual void putCouple(size_t hash, Couple couple);
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version)
-    {
-        ar & boost::serialization::base_object<HashTable>(*this);
-        ar & directory;
-    }
 };
 
 #endif // EXTENDIBLEHASHING_H

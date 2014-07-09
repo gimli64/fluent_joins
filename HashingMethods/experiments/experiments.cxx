@@ -1,13 +1,52 @@
-#include "tableFactory.h"
+#include "page/bucketFactory.h"
 #include "queryExecuter.h"
+
 #include <time.h>
+#include <pqxx/pqxx>
 
 #include <iostream>
 #include <cstdlib>
 
 using namespace std;
+using namespace pqxx;
 
-void createTables(TableFactory<ExtendibleHashing, Bucket> factory)
+void createTable(result relation, string name, vector<int> keysRepartition, vector<int> interleaveOrder)
+{
+    cout << "Building table " << name << endl;
+    BucketFactory<Bucket>::getInstance()->reset();
+    ExtendibleHashing table(name, keysRepartition, interleaveOrder);
+    clock_t tStart = clock();
+
+    bool automated = (interleaveOrder.size() == 0);
+    int totalNumberKeys = 0;
+    for (int i = 0; i < keysRepartition.size(); i++)
+        totalNumberKeys += keysRepartition[i];
+    int insertionLimit = (int) pow(2.0, totalNumberKeys) * Bucket::BUCKET_SIZE;
+
+    //    srand (unsigned(std::time(0)));
+    //    random_shuffle(relation.begin(), relation.end());
+
+    for (int i = 0; i < relation.size(); i++) {
+        table.put(Couple(relation[i][0].c_str(), relation[i]));
+
+        if (automated && i >= insertionLimit) {
+            if(table.addBHF()) {
+                insertionLimit *= 2;
+            } else {
+                insertionLimit *= 1.1;
+            }
+        }
+
+        if (i % 1000 == 0 && i > 0) {
+            cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
+        }
+    }
+    cout << "\n\nFinished building table " << name << endl;
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    table.printState();
+}
+
+void createTables()
 {
     try {
         connection C("dbname=tpch-skewed-part user=gimli hostaddr=127.0.0.1");
@@ -35,7 +74,7 @@ void createTables(TableFactory<ExtendibleHashing, Bucket> factory)
         interleaveOrder.push_back(0);
         interleaveOrder.push_back(0);
         interleaveOrder.push_back(0);
-        factory.createTable(R, "customer", BHFsRepartition, interleaveOrder);
+        createTable(R, "customer", BHFsRepartition, interleaveOrder);
 
         //        R = result( N.exec("SELECT * from part"));
         //        BHFsRepartition.clear();
@@ -51,232 +90,6 @@ void createTables(TableFactory<ExtendibleHashing, Bucket> factory)
         //        BHFsRepartition.clear();
         //        BHFsRepartition.push_back(1);
         //        factory.createTable(R, "date", BHFsRepartition);
-
-        //        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(4);
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(4);
-        //        BHFsRepartition.push_back(4);
-        //        BHFsRepartition.push_back(3);
-        //        interleaveOrder.clear();
-        //        interleaveOrder.push_back(0);
-        //        interleaveOrder.push_back(2);
-        //        interleaveOrder.push_back(3);
-        //        interleaveOrder.push_back(4);
-        //        interleaveOrder.push_back(0);
-        //        interleaveOrder.push_back(2);
-        //        interleaveOrder.push_back(3);
-        //        interleaveOrder.push_back(4);
-        //        interleaveOrder.push_back(0);
-        //        interleaveOrder.push_back(2);
-        //        interleaveOrder.push_back(3);
-        //        interleaveOrder.push_back(4);
-        //        interleaveOrder.push_back(0);
-        //        interleaveOrder.push_back(2);
-        //        interleaveOrder.push_back(3);
-        //        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(5);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(4);
-//        BHFsRepartition.push_back(6);
-//        BHFsRepartition.push_back(5);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(3);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(6);
-//        BHFsRepartition.push_back(4);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(4);
-//        BHFsRepartition.push_back(7);
-//        BHFsRepartition.push_back(4);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(4);
-//        BHFsRepartition.push_back(8);
-//        BHFsRepartition.push_back(3);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(3);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(6);
-//        BHFsRepartition.push_back(4);
-//        BHFsRepartition.push_back(5);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(6);
-//        BHFsRepartition.push_back(5);
-//        BHFsRepartition.push_back(4);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(2);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
-//        R = result( N.exec("SELECT * from lineorder limit 1000000"));
-//        BHFsRepartition.clear();
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(0);
-//        BHFsRepartition.push_back(7);
-//        BHFsRepartition.push_back(4);
-//        BHFsRepartition.push_back(4);
-//        interleaveOrder.clear();
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(3);
-//        interleaveOrder.push_back(4);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(2);
-//        interleaveOrder.push_back(2);
-//        factory.createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
-
 
         //        R = result( N.exec("SELECT * from lineorder limit 1000"));
         //        BHFsRepartition.clear();
@@ -295,11 +108,10 @@ void createTables(TableFactory<ExtendibleHashing, Bucket> factory)
 
 int main()
 {
-    TableFactory<ExtendibleHashing, Bucket> factory;
     QueryExecuter<ExtendibleHashing, Bucket> executer;
     time_t start,end;
 
-    createTables(factory);
+    createTables();
 
     //    ExtendibleHashing *customerTable = factory.readTable("customer");
     //    ExtendibleHashing *partTable = factory.readTable("part");
