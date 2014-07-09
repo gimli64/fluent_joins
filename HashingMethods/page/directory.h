@@ -1,6 +1,7 @@
 #ifndef DIRECTORY_H
 #define DIRECTORY_H
 
+#include "page.h"
 #include "bucket.h"
 #include "bucketFactory.h"
 #include "hashing/hashTable.h"
@@ -15,7 +16,7 @@
 using namespace std;
 using namespace boost;
 
-class Directory
+class Directory: public Page
 {
 public:
     Directory();
@@ -24,21 +25,15 @@ public:
     vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
 
-    int getGlobalDepth();
-
-    Bucket *getBucket(size_t hash);
     vector<Bucket *> getBuckets();
-
-    Bucket *fetchBucket(size_t hash);
-    vector<Bucket *> fetchBuckets();
 
     void reset();
 
+    virtual Page *getBucket(size_t hash);
+    virtual bool isBucket();
+
 private:
-    int globalDepth;
-    string bucketPath;
-    vector<string> bucketNames;
-    vector<Bucket*> buckets;
+    vector<Page*> pages;
     BucketFactory<Bucket> *factory;
     HashTable *hasher;
 
@@ -49,9 +44,7 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & globalDepth;
-        ar & bucketPath;
-        ar & bucketNames;
+        ar & depth;
     }
 };
 

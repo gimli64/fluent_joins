@@ -1,7 +1,5 @@
 #include "bucket.h"
 
-int Bucket::BUCKET_SIZE = 49;
-
 Bucket::Bucket(string name)
     :elements(), name(name)
 {
@@ -39,7 +37,12 @@ vector<Couple> Bucket::getAllValues()
     return elements;
 }
 
-void Bucket::setBucketPath(string path)
+bool Bucket::isBucket()
 {
-    bucketPath = path;
+    return true;
+}
+
+Page * Bucket::getBucket(size_t hash)
+{
+    return this;
 }

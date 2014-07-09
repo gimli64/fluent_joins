@@ -5,6 +5,10 @@
 BOOST_AUTO_TEST_CASE(bucket_test)
 {
     Bucket bucket = Bucket();
+    BOOST_CHECK_EQUAL(true, bucket.isBucket());
+    BOOST_CHECK_EQUAL(0, bucket.getDepth());
+    bucket.setDepth(1);
+    BOOST_CHECK_EQUAL(1, bucket.getDepth());
     vector<string> values;
     values.push_back("0");
     values.push_back("1");
@@ -24,5 +28,4 @@ BOOST_AUTO_TEST_CASE(bucket_test)
         bucket.putCouple(Couple("0", values));
     }
     BOOST_CHECK_EQUAL(true, bucket.isFull());
-//    BOOST_CHECK_EQUAL(, bucket.getAllValues()[0]);
 }

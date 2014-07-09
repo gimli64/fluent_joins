@@ -12,14 +12,13 @@ class Page
 public:
 
     Page();
-
-    virtual vector<string> getValue(string key);
-    virtual void putCouple(Couple couple);
-
     int getDepth();
     void setDepth(int depth);
 
-private:
+    virtual bool isBucket() = 0;
+    virtual Page* getBucket(size_t hash) = 0;
+
+protected:
     int depth;
 };
 

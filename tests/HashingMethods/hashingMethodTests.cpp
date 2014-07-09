@@ -2,8 +2,8 @@
 #define BOOST_TEST_MODULE hashingMethodTests
 #include <boost/test/unit_test.hpp>
 
-//BOOST_AUTO_TEST_CASE(hashingMethod_test)
-//{
+BOOST_AUTO_TEST_CASE(hashingMethod_test)
+{
 //    HashingMethod hasher = HashingMethod();
 //    vector<string> values;
 //    values.push_back("0");
@@ -14,7 +14,7 @@
 //    } catch (string &e) {
 //        BOOST_CHECK_EQUAL("Value wasn't found", e);
 //    }
-//}
+}
 
 //BOOST_AUTO_TEST_CASE(extendibleHashing_test)
 //{

@@ -3,8 +3,6 @@
 HashTable::HashTable(string name, vector<int> keysRepartition, vector<int> order)
     :name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberItems(0), interleaveOrder(order)
 {
-    bucketPath = name + "/";
-
     if (keysRepartition.size() > 0) {
         globalDepthLimit = -1;  // coherence with 0 indexation
         for (int i = 0; i < keysRepartition.size(); i++) {
@@ -31,6 +29,18 @@ size_t HashTable::getHash(string key)
 //    return string_hasher(key);
 }
 
+size_t HashTable::getMultikeyHash(Couple& couple)
+{
+    vector<size_t> hashes;
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        hashes.push_back(getHash(couple.values[i]));
+    }
+
+    size_t hash_value = interleaveHashes(hashes);
+    couple.key = lexical_cast<string>(hash_value);
+    return hash_value;
+}
+
 vector<string> HashTable::get(string key)
 {
     try {
@@ -42,7 +52,15 @@ vector<string> HashTable::get(string key)
 
 void HashTable::put(Couple couple)
 {
-    putCouple(getHash(couple.key), couple);
+    numberItems++;
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        if (!histograms[i][couple.values[i]]) {
+            histograms[i][couple.values[i]] = 1;
+        } else {
+            histograms[i][couple.values[i]]++;
+        }
+    }
+    putCouple(getMultikeyHash(couple), couple);
 }
 
 vector<string> HashTable::getValue(size_t hash, string key)
@@ -98,10 +116,8 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<
         hash_values.clear();
         rightOffset = 0;
         mask = 0;
-
         for (int j = 0; j < keysRepartition.size(); j++) {
             mask = ((1 << bitsToSet[j]) - 1) << rightOffset;
-
             if (j == position) {
                 hash_values.push_back((((i & mask) >> rightOffset) << keyHashSize) + keyHash);
             } else {
@@ -115,31 +131,6 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<
     }
 }
 
-void HashTable::putMultikey(Couple couple)
-{
-    numberItems++;
-    for (int i = 0; i < keysRepartition.size(); i++) {
-        if (!histograms[i][couple.values[i]]) {
-            histograms[i][couple.values[i]] = 1;
-        } else {
-            histograms[i][couple.values[i]]++;
-        }
-    }
-    putCouple(getMultikeyHash(couple), couple);
-}
-
-size_t HashTable::getMultikeyHash(Couple& couple)
-{
-    vector<size_t> hashes;
-    for (int i = 0; i < keysRepartition.size(); i++) {
-        hashes.push_back(getHash(couple.values[i]));
-    }
-
-    size_t hash_value = interleaveHashes(hashes);
-    couple.key = lexical_cast<string>(hash_value);
-    return hash_value;
-}
-
 int HashTable::getNumberBucketFetch()
 {
     return numberBucketFetch;
@@ -148,11 +139,6 @@ int HashTable::getNumberBucketFetch()
 void HashTable::setNumberBucketFetch(int number)
 {
     numberBucketFetch = number;
-}
-
-string HashTable::getBucketPath()
-{
-    return bucketPath;
 }
 
 int HashTable::getGlobalDepthLimit()

@@ -27,10 +27,9 @@ public:
 
     size_t getHash(string key);
     vector<string> get(string key);
-    virtual void put(Couple couple);
+    void put(Couple couple);
 
     size_t getMultikeyHash(Couple &couple);
-    void putMultikey(Couple couple);
 
     virtual void printState();
 
@@ -38,13 +37,11 @@ public:
     void setNumberBucketFetch(int number);
 
     int getGlobalDepthLimit();
-    string getBucketPath();
     string getName();
 
     virtual bool addBHF();
 
 protected:
-    string bucketPath;
     boost::hash<string> string_hasher;
     boost::hash<int> int_hasher;
     int globalDepthLimit;
@@ -64,7 +61,6 @@ private:
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & name;
-        ar & bucketPath;
         ar & keysRepartition;
         ar & globalDepthLimit;
         ar & interleaveOrder;

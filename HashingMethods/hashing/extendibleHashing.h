@@ -16,6 +16,8 @@ public:
     virtual void printState();
     virtual bool addBHF();
 
+    vector<Couple> getCouples(size_t keyHash, int keyHashSize, int position);
+
     vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position);
     vector<Couple> fetchAllCouples();
 

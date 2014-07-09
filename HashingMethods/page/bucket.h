@@ -12,20 +12,22 @@ using namespace std;
 class Bucket: public Page
 {
 public:
-    static int BUCKET_SIZE;
-    string name;
+    static const int BUCKET_SIZE = 49;
 
     Bucket(string name = "");
-    virtual vector<string> getValue(string key);
-    virtual void putCouple(Couple couple);
-    bool isFull();
-    void setBucketPath(string path);
 
+    vector<string> getValue(string key);
+    void putCouple(Couple couple);
+
+    virtual bool isBucket();
+    virtual Page* getBucket(size_t hash);
+
+    bool isFull();
     int size();
     vector<Couple> getAllValues();
 
 private:
-    string bucketPath;
+    string name;
     vector<Couple> elements;
 
     friend class boost::serialization::access;
@@ -34,7 +36,6 @@ private:
     {
         ar & name;
         ar & elements;
-        ar & bucketPath;
     }
 };
 

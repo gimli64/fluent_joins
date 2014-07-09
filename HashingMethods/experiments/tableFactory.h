@@ -58,7 +58,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
     //    random_shuffle(relation.begin(), relation.end());
 
     for (int i = 0; i < relation.size(); i++) {
-        table.putMultikey(Couple(relation[i][0].c_str(), relation[i]));
+        table.put(Couple(relation[i][0].c_str(), relation[i]));
 
         if (automated && i >= insertionLimit) {
             if(table.addBHF()) {
@@ -68,7 +68,7 @@ void TableFactory<T, B>::createTable(result relation, string name, vector<int> k
             }
         }
 
-        if (i % 100000 == 0 && i > 0) {
+        if (i % 1000 == 0 && i > 0) {
             cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
 //            table.printState();
 //            table.dimensionStats(2);
