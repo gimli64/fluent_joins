@@ -4,21 +4,21 @@ Couple::Couple()
 {
 }
 
-Couple::Couple(string key, vector<string>& values)
-    :key(key), values(values)
+Couple::Couple(vector<string>& values)
+    :values(values)
 {
 }
 
 
-Couple::Couple(string key, const tuple &tuple)
-    :key(key)
+Couple::Couple(const tuple &tuple)
 {
     for(int i = 0; i < tuple.size(); i++) {
         values.push_back(tuple[i].c_str());
     }
+//    cout << values[0] << " " << values[1] << endl;
 }
 
-bool operator==(const Couple &lhs, const string key)
+bool operator==(const Couple &lhs, const size_t key)
 {
     return lhs.key == key;
 }

@@ -6,9 +6,9 @@ Bucket::Bucket(string name)
     elements.reserve(BUCKET_SIZE);
 }
 
-vector<string> Bucket::getValue(string key)
+vector<string> Bucket::getValue(size_t hash, string key)
 {
-    vector<Couple>::iterator it = find(elements.begin(), elements.end(), key);
+    vector<Couple>::iterator it = find(elements.begin(), elements.end(), hash);
     if (it != elements.end()) {
         return (*it).values;
     } else {
@@ -16,7 +16,7 @@ vector<string> Bucket::getValue(string key)
     }
 }
 
-void Bucket::putCouple(Couple couple)
+void Bucket::putCouple(size_t hash, Couple couple)
 {
     elements.push_back(couple);
     // TODO : raise an error if the bucket is full !
@@ -42,7 +42,26 @@ bool Bucket::isBucket()
     return true;
 }
 
-Page * Bucket::getBucket(size_t hash)
+Bucket *Bucket::getBucket(size_t hash)
 {
     return this;
+}
+
+string Bucket::className() const
+{
+    return "Bucket ";
+}
+
+ostream& Bucket::dump(ostream& strm) const
+{
+    ostream& output = strm << className() << name << " depth " << lexical_cast<string>(depth);
+    output << " : " << lexical_cast<string>(elements.size()) << " tuples";
+//    output << " : [";
+//    for(int i = 0; i < elements.size(); i++) {
+//        output << bitset<12>(elements.at(i).key);
+//        if (i < elements.size() - 1)
+//            output << ", ";
+//    }
+//    output << "]";
+    return output << endl;
 }

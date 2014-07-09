@@ -32,8 +32,6 @@ private:
     static BucketFactory<T>* instance;
     int bucketCount;           // Used as a postfix for the bucket names
     int numberBuckets;         // Actual number of buckets (for building phase)
-    const string constPrefix;  // Beginning of path to the buckets
-    const string bucketPrefix;
 };
 
 
@@ -50,14 +48,14 @@ BucketFactory<T>* BucketFactory<T>::getInstance()
 
 template<class T>
 BucketFactory<T>::BucketFactory()
-    :bucketCount(0), numberBuckets(0), constPrefix("/tmp/buckets/"), bucketPrefix("b")
+    :bucketCount(0), numberBuckets(0)
 {
 }
 
 template<class T>
 T* BucketFactory<T>::newBucket()
 {
-    T *bucket = new T(bucketPrefix + lexical_cast<string>(bucketCount));
+    T *bucket = new T(lexical_cast<string>(bucketCount));
     bucketCount++;
     numberBuckets++;
     return bucket;

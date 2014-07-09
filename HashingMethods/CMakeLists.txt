@@ -1,4 +1,4 @@
-find_package(Boost REQUIRED COMPONENTS thread serialization system filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/HashingMethods)
 

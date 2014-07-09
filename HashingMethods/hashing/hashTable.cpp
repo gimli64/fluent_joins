@@ -33,11 +33,18 @@ size_t HashTable::getMultikeyHash(Couple& couple)
 {
     vector<size_t> hashes;
     for (int i = 0; i < keysRepartition.size(); i++) {
-        hashes.push_back(getHash(couple.values[i]));
+        if (keysRepartition[i] > 0) {
+//            cout << "hash " << lexical_cast<string>(i) << " : " << bitset<13>(getHash(couple.values[i])) << endl;
+            hashes.push_back(getHash(couple.values[i]));
+        }
+        else
+            hashes.push_back(0);
     }
 
     size_t hash_value = interleaveHashes(hashes);
-    couple.key = lexical_cast<string>(hash_value);
+//    cout << "hash value : "  << bitset<13>(hash_value) << endl;
+//    cout << endl;
+    couple.key = hash_value;
     return hash_value;
 }
 

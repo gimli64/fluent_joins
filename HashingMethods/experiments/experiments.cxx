@@ -23,11 +23,14 @@ void createTable(result relation, string name, vector<int> keysRepartition, vect
         totalNumberKeys += keysRepartition[i];
     int insertionLimit = (int) pow(2.0, totalNumberKeys) * Bucket::BUCKET_SIZE;
 
-    //    srand (unsigned(std::time(0)));
-    //    random_shuffle(relation.begin(), relation.end());
+    srand (unsigned(std::time(0)));
+    random_shuffle(relation.begin(), relation.end());
 
     for (int i = 0; i < relation.size(); i++) {
-        table.put(Couple(relation[i][0].c_str(), relation[i]));
+        Couple couple(relation[i]);
+        couple.values[0] = lexical_cast<string>(i);
+        table.put(Couple(relation[i]));
+//        table.put(couple);
 
         if (automated && i >= insertionLimit) {
             if(table.addBHF()) {
@@ -37,7 +40,7 @@ void createTable(result relation, string name, vector<int> keysRepartition, vect
             }
         }
 
-        if (i % 1000 == 0 && i > 0) {
+        if (i % 100000 == 0 && i > 0) {
             cout << "Inserted " << i << " values, time taken :  " <<  (double)(clock() - tStart)/CLOCKS_PER_SEC << "s" << endl;
         }
     }
@@ -49,7 +52,7 @@ void createTable(result relation, string name, vector<int> keysRepartition, vect
 void createTables()
 {
     try {
-        connection C("dbname=tpch-skewed-part user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=tpch-normal user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
@@ -60,45 +63,74 @@ void createTables()
         vector<int> BHFsRepartition;
         vector<int> interleaveOrder;
 
-        R = result( N.exec("SELECT * from customer"));
-        BHFsRepartition.clear();
-        BHFsRepartition.push_back(10);
-        interleaveOrder.clear();
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(0);
-        createTable(R, "customer", BHFsRepartition, interleaveOrder);
+//        R = result( N.exec("SELECT * from customer"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(10);
+//        interleaveOrder.clear();
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        interleaveOrder.push_back(0);
+//        createTable(R, "customer", BHFsRepartition, interleaveOrder);
 
         //        R = result( N.exec("SELECT * from part"));
         //        BHFsRepartition.clear();
         //        BHFsRepartition.push_back(1);
-        //        factory.createTable(R, "part", BHFsRepartition);
+        //        createTable(R, "part", BHFsRepartition);
 
         //        R = result( N.exec("SELECT * from supplier"));
         //        BHFsRepartition.clear();
         //        BHFsRepartition.push_back(1);
-        //        factory.createTable(R, "supplier", BHFsRepartition);
+        //        createTable(R, "supplier", BHFsRepartition);
 
         //        R = result( N.exec("SELECT * from date"));
         //        BHFsRepartition.clear();
         //        BHFsRepartition.push_back(1);
-        //        factory.createTable(R, "date", BHFsRepartition);
+        //        createTable(R, "date", BHFsRepartition);
 
-        //        R = result( N.exec("SELECT * from lineorder limit 1000"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(0);
-        //        BHFsRepartition.push_back(1);
-        //        BHFsRepartition.push_back(1);
-        //        BHFsRepartition.push_back(1);
-        //        factory.createTable(R, "lineorder2", BHFsRepartition);
+        R = result( N.exec("SELECT * from lineorder limit 1000000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(5);
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(3);
+        BHFsRepartition.push_back(2);
+        BHFsRepartition.push_back(2);
+        BHFsRepartition.push_back(2);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(2);
+        interleaveOrder.clear();
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(1);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(5);
+        interleaveOrder.push_back(15);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(3);
+        interleaveOrder.push_back(4);
+        interleaveOrder.push_back(5);
+        interleaveOrder.push_back(15);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(2);
+        interleaveOrder.push_back(0);
+        interleaveOrder.push_back(0);
+        createTable(R, "lineorder", BHFsRepartition, interleaveOrder);
 
         C.disconnect ();
     } catch (const std::exception &e) {

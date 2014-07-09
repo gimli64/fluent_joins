@@ -16,51 +16,21 @@ vector<string> ExtendibleHashing::getValue(size_t hash, string key)
 
 void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 {
-    directory.putCouple(hash, couple);
+    directory.putCouple(hash, couple);\
+//    cout << directory << endl;
 }
 
 vector<Couple> ExtendibleHashing::getCouples(size_t keyHash, int keyHashSize, int position)
 {
-    Bucket *bucket;
-    vector<Couple> couples;
-    vector<size_t> hashes;
-    getHashes(keyHash, keyHashSize, position, hashes);
-    for (int i = 0; i < hashes.size(); i++) {
-        bucket = (Bucket*) directory.getBucket(hashes[i]);
-        vector<Couple> values = bucket->getAllValues();
-        couples.insert(couples.end(), values.begin(), values.end());
-    }
-    return couples;
-}
-
-vector<Couple> ExtendibleHashing::fetchAllCouples()
-{
-//    vector<Couple> couples;
-//    vector<Bucket *> buckets = directory.fetchBuckets();
-//    for (int i = 0; i < buckets.size(); i++) {
-//        vector<Couple> values = buckets[i]->getAllValues();
-//        couples.insert(couples.end(), values.begin(), values.end());
-//    }
-//    numberBucketFetch += buckets.size();
-//    return couples;
-}
-
-vector<Couple> ExtendibleHashing::fetchCouples(size_t keyHash, int keyHashSize, int position)
-{
 //    Bucket *bucket;
 //    vector<Couple> couples;
 //    vector<size_t> hashes;
-//    int numberFetches = 0;
 //    getHashes(keyHash, keyHashSize, position, hashes);
 //    for (int i = 0; i < hashes.size(); i++) {
-//        bucket = directory.fetchBucket(hashes[i]);
+//        bucket = (Bucket*) directory.getBucket(hashes[i]);
 //        vector<Couple> values = bucket->getAllValues();
-//        numberFetches += 1;
 //        couples.insert(couples.end(), values.begin(), values.end());
-//        delete bucket;
 //    }
-//    cout << "table " << name << ": " << numberFetches << " bucket fetched." << endl;
-//    numberBucketFetch += numberFetches;
 //    return couples;
 }
 
@@ -99,14 +69,19 @@ void ExtendibleHashing::dimensionStats(int position)
 
 void ExtendibleHashing::printState()
 {
-    cout << "global depth : " << directory.getDepth() << endl;
+    cout << "global depth : " << directory.getGlobalDepth() << endl;
     BucketFactory<Bucket>::getInstance()->printState();
 
 //    vector<Bucket *> buckets = directory.getBuckets();
     cout << "keys repartition : [";
-    for (int i = 0; i < keysRepartition.size(); i++)
-        cout << keysRepartition[i] << ", ";
-    cout << "]" << endl;
+    for (int i = 0; i < keysRepartition.size(); i++) {
+        cout << keysRepartition[i];
+        if (i < keysRepartition.size() - 1)
+            cout << ",";
+    }
+    cout << "]\n" << endl;
+
+    cout << directory << endl;
 //    cout << "load factor : " << (double) numberItems / (buckets.size() * Bucket::BUCKET_SIZE) << "\n" << endl;
 }
 

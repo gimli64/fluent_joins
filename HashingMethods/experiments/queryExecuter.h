@@ -9,7 +9,6 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/lexical_cast.hpp>
 #include <time.h>
-#include <boost/thread.hpp>
 
 using namespace boost;
 
@@ -44,7 +43,7 @@ vector<Couple> QueryExecuter<T, B>::readStandardTable(string fileName)
     if (file.is_open()) {
         while (getline(file,line)) {
             split(values, line, is_any_of("|"));
-            couples.push_back(Couple(values[0], values));
+            couples.push_back(Couple(values));
         }
         file.close();
     }
@@ -133,36 +132,6 @@ vector<string> QueryExecuter<T, B>::multikeyBinaryJoin(T *table1, T *table2, int
     cout << result.size() << " values successfully joined" << endl;
     cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
     cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
-    return result;
-}
-
-template<class T, class B>
-vector<string> QueryExecuter<T, B>::multikeyBinaryJoinThreaded(T *table1, T *table2, int leftPosition, int rightPosition)
-{
-    table1->setNumberBucketFetch(0);
-    table1->reset();
-    table2->setNumberBucketFetch(0);
-    table2->reset();
-
-    vector<string> result;
-    vector<thread *> workerThreads;
-    int keyHashSize = min(table1->keysRepartition[leftPosition], table2->keysRepartition[rightPosition]);
-    cout << "Using multikeyBinaryJoin threaded, key hash size : " << keyHashSize << endl;
-
-    int numberThreads = (int) pow(2.0, (double) keyHashSize);
-
-    for (size_t keyHash = 0; keyHash < numberThreads; keyHash++) {
-        workerThreads.push_back(new thread(binaryJoinCouples, table1, table2, leftPosition, rightPosition, keyHash, keyHashSize));
-    }
-    for (size_t i = 0; i < numberThreads; i++) {
-        workerThreads[i]->join();
-        delete workerThreads[i];
-    }
-    cout << "Values successfully joined" << endl;
-
-    //    cout << result.size() << " values successfully joined" << endl;
-    //    cout << "table " << table1->getName() << " : " << table1->getNumberBucketFetch() << " bucket fetch" << endl;
-    //    cout << "table " << table2->getName() << " : " << table2->getNumberBucketFetch() << " bucket fetch" << endl;
     return result;
 }
 

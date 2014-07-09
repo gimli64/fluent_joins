@@ -18,9 +18,6 @@ public:
 
     vector<Couple> getCouples(size_t keyHash, int keyHashSize, int position);
 
-    vector<Couple> fetchCouples(size_t keyHash, int keyHashSize, int position);
-    vector<Couple> fetchAllCouples();
-
     void dimensionStats(int position);
 
 private:

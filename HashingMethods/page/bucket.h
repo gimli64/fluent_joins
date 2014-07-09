@@ -5,8 +5,10 @@
 #include "common/couple.h"
 
 #include <vector>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
+using namespace boost;
 
 class Bucket: public Page
 {
@@ -15,15 +17,18 @@ public:
 
     Bucket(string name = "");
 
-    vector<string> getValue(string key);
-    void putCouple(Couple couple);
+    vector<string> getValue(size_t hash, string key);
+    void putCouple(size_t hash, Couple couple);
 
-    virtual bool isBucket();
-    virtual Page* getBucket(size_t hash);
-
+    Bucket *getBucket(size_t hash);
+    bool isBucket();
     bool isFull();
+
     int size();
     vector<Couple> getAllValues();
+
+    virtual string className() const;
+    virtual ostream& dump(ostream& strm) const;
 
 private:
     string name;
