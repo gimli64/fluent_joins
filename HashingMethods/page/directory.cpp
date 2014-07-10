@@ -1,7 +1,7 @@
 #include "directory.h"
 
 Directory::Directory(HashTable *hasher)
-    :level(0), parent(0)
+    :level(0), parent(0), hashPrefix(0)
 {
     factory = BucketFactory<Bucket>::getInstance();
     if (hasher != 0) {
@@ -155,16 +155,18 @@ Page *Directory::getBucket(size_t hash)
     return pages.at(pageIndex(hash))->getBucket(hash);
 }
 
-vector<Bucket *> Directory::getBuckets()
+set<Bucket *> Directory::getBuckets()
 {
-    //    set<Bucket *> uniqueBuckets = set<Bucket *>(pages.begin(), pages.end());
-    //    vector<Bucket *> buckets;
-    //    buckets.reserve(uniqueBuckets.size());
-    //    for (set<Bucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
-    //        buckets.push_back(*it);
-    //    }
-
-    //    return buckets;
+    set<Bucket *> buckets;
+    for (int i = 0; i < pages.size(); i++) {
+        if (pages[i]->isBucket())
+            buckets.insert((Bucket *) pages[i]);
+        else {
+            set<Bucket*> pageBuckets = ((Directory*) pages[i])->getBuckets();
+            buckets.insert(pageBuckets.begin(), pageBuckets.end());
+        }
+    }
+    return buckets;
 }
 
 int Directory::getGlobalDepth()
@@ -180,6 +182,16 @@ int Directory::getGlobalDepth()
     return depth + maxPageDepth;
 }
 
+double Directory::pageSize() const
+{
+    double size = pow(2.0, depth) / pow(2.0, DEPTH_LIMIT);
+    for (int i = 0; i < pages.size(); i++) {
+        if (!pages[i]->isBucket())
+            size += ((Directory*)pages[i])->pageSize();
+    }
+    return size;
+}
+
 string Directory::className() const
 {
     return "Directory ";
@@ -187,7 +199,9 @@ string Directory::className() const
 
 ostream& Directory::dump(ostream& strm) const
 {
-    ostream& output = Page::dump(strm) << ", level " << lexical_cast<string>(level) << ", hash prefix " << bitset<DEPTH_LIMIT>(hashPrefix) << endl;
+    ostream& output = Page::dump(strm) << ", level " << lexical_cast<string>(level);
+    output << ", hash prefix " << bitset<DEPTH_LIMIT>(hashPrefix);
+    output << ", page size " << pageSize() << endl;
     for(int i = 0; i < pages.size(); i++) {
         if (!pages[i]->isBucket()) {
             for(int j = 0; j < level + 1; j++)

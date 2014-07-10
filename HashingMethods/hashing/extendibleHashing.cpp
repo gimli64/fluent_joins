@@ -69,9 +69,9 @@ void ExtendibleHashing::dimensionStats(int position)
 void ExtendibleHashing::printState()
 {
     cout << "global depth : " << directory.getGlobalDepth() << endl;
+    cout << "directory page size : " << directory.pageSize() << endl;
     BucketFactory<Bucket>::getInstance()->printState();
 
-//    vector<Bucket *> buckets = directory.getBuckets();
     cout << "keys repartition : [";
     for (int i = 0; i < keysRepartition.size(); i++) {
         cout << keysRepartition[i];
@@ -79,9 +79,11 @@ void ExtendibleHashing::printState()
             cout << ",";
     }
     cout << "]\n" << endl;
-
+\
+    cout << "load factor : ";
+    cout << (double) numberItems / (BucketFactory<Bucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE);
+    cout << endl << endl;
     cout << directory << endl;
-//    cout << "load factor : " << (double) numberItems / (buckets.size() * Bucket::BUCKET_SIZE) << "\n" << endl;
 }
 
 bool ExtendibleHashing::addBHF() {

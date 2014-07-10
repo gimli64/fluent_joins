@@ -22,7 +22,7 @@ public:
 
     Directory(HashTable *hasher = 0);
 
-    vector<Bucket *> getBuckets();
+    set<Bucket *> getBuckets();
     size_t pageIndex(size_t hash);
 
     vector<string> getValue(size_t hash, string key);
@@ -32,6 +32,7 @@ public:
     Page *getBucket(size_t hash);
 
     int getGlobalDepth();
+    double pageSize() const;
 
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;

@@ -20,7 +20,7 @@ public:
     virtual void putCouple(size_t hash, Couple couple) = 0;
 
     virtual Page* getBucket(size_t hash) = 0;
-    virtual bool isBucket();
+    virtual bool isBucket();\
 
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
