@@ -20,13 +20,10 @@ class Directory: public Page
 public:
     static const int DEPTH_LIMIT = 10;
 
-//    Directory();
     Directory(HashTable *hasher = 0);
 
     vector<Bucket *> getBuckets();
     size_t pageIndex(size_t hash);
-    int getLevel();
-    void setLevel(int level);
 
     vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
@@ -41,6 +38,7 @@ public:
 
 private:
     int level;
+    size_t hashPrefix;  // For debugging
     vector<Page*> pages;
     Directory *parent;
 
@@ -48,6 +46,7 @@ private:
     HashTable *hasher;
 
     void split(Bucket *bucket);
+    void splitAllBuckets(size_t childIndexFirstBit);
     void doubleSize();
     void splitInnerNode(size_t hash);
     void insertNewLevel(size_t hash);

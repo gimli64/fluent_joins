@@ -56,12 +56,12 @@ ostream& Bucket::dump(ostream& strm) const
 {
     ostream& output = strm << className() << name << " depth " << lexical_cast<string>(depth);
     output << " : " << lexical_cast<string>(elements.size()) << " tuples";
-//    output << " : [";
-//    for(int i = 0; i < elements.size(); i++) {
-//        output << bitset<12>(elements.at(i).key);
-//        if (i < elements.size() - 1)
-//            output << ", ";
-//    }
-//    output << "]";
+    output << " : [";
+    for(int i = 0; i < elements.size(); i++) {
+        output << bitset<12>(elements.at(i).key);
+        if (i < elements.size() - 1)
+            output << ", ";
+    }
+    output << "]";
     return output << endl;
 }

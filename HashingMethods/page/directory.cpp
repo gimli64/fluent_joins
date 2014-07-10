@@ -26,13 +26,13 @@ void Directory::putCouple(size_t hash, Couple couple)
         page->putCouple(hash, couple);
         return;
     }
-
-    if (!page->isFull()) {
-        page->putCouple(hash, couple);
+    Bucket *bucket = (Bucket*) page;
+    if (!bucket->isFull()) {
+        bucket->putCouple(hash, couple);
         return;
     }
-    if (page->getDepth() < depth) {
-        split((Bucket*) page);
+    if (bucket->getDepth() < depth) {
+        split(bucket);
         putCouple(hash, couple);
         return;
     }
@@ -47,10 +47,7 @@ void Directory::putCouple(size_t hash, Couple couple)
         }
         return;
     }
-//    cout << *this << endl;
-//    cout << "insert new level" << endl;
     insertNewLevel(hash);
-//    cout << *this << endl;
     putCouple(hash, couple);
 }
 
@@ -66,57 +63,47 @@ void Directory::doubleSize()
 
 void Directory::splitInnerNode(size_t hash)
 {
-    size_t index = pageIndex(hash);
-    Page *child = pages[index];
+    size_t childIndex = pageIndex(hash);
+    Page *child = pages[childIndex];
     int childDepth = child->getDepth();
-    int indexFirstBits = index & ((1 << childDepth) - 1);
+    int indexFirstBits = childIndex & ((1 << childDepth) - 1);
     for (int i = 0; i < pages.size(); i++) {
         if ((i & ((1 << childDepth) - 1)) == indexFirstBits)
-            pages[i]->doubleSize();
+            ((Directory*) pages[i])->doubleSize();
     }
 }
 
 void Directory::insertNewLevel(size_t hash)
 {
-    int firstBit = pageIndex(hash) & 1;
+    size_t childIndexFirstBit = pageIndex(hash) & 1;
+    splitAllBuckets(childIndexFirstBit);
     for(int i = 0; i < pages.size(); i++) {
-        if ((i & 1) == firstBit) {
-            if (pages[i]->getDepth() < depth) {
-                cout << "LULULULULU" << endl;
-            }
-            if (pages[i]->getDepth() == depth - 1) {
-                cout << "LALALALALA" << endl;
-                split((Bucket*) pages[i]);
-            }
-        }
-    }
-    for(int i = 0; i < pages.size(); i++) {
-        if ((i & 1) == firstBit) {
+        if ((i & 1) == childIndexFirstBit) {
             Directory *newDir = new Directory();
             newDir->hasher = hasher;
             newDir->setDepth(1);
-            newDir->setLevel(getLevel() + 1);
+            newDir->level = this->level + 1;
             newDir->parent = this;
-
-            Page *previousBucket = pages[i];
-            newDir->pages.push_back(previousBucket);
-            newDir->pages.push_back(previousBucket);
-            int bucketDepth = previousBucket->getDepth();
-            previousBucket->setDepth(0);
-//            if (bucketDepth == depth - 1) {
-//                cout << "LALALALALA" << endl;
-//                split((Bucket*) previousBucket);
-//            }
-//            if (bucketDepth < depth) {
-//                cout << "LULULULU" << endl;
-//                for (int j = 0; j < pages.size(); j++) {
-//                    if (pages[j] == previousBucket)
-//                        pages[j] = newDir;
-//                }
-//            } else {
-//                pages[i] = newDir;
-//            }
+            newDir->hashPrefix = i;
+            pages[i]->setDepth(0);
+            newDir->pages.push_back(pages[i]);
+            newDir->pages.push_back(pages[i]);
             pages[i] = newDir;
+        }
+    }
+}
+
+void Directory::splitAllBuckets(size_t childIndexFirstBit)
+{
+    bool allBucketsSplit = false;
+    while(!allBucketsSplit) {
+        allBucketsSplit = true;
+        for(int i = 0; i < pages.size(); i++) {
+            if ((i & 1) == childIndexFirstBit && pages[i]->getDepth() < DEPTH_LIMIT) {
+                if (pages[i]->getDepth() < DEPTH_LIMIT - 1)
+                    allBucketsSplit = false;
+                split((Bucket*) pages[i]);
+            }
         }
     }
 }
@@ -142,12 +129,10 @@ void Directory::split(Bucket* bucket)
     }
 
     for(vector<int>::iterator it = l.begin(); it != l.end(); ++it) {
-        if ((*it | (1 << bucket->getDepth())) == *it) {
+        if ((*it | (1 << bucket->getDepth())) == *it)
             pages.at(*it) = newBucket2;
-        }
-        else {
+        else
             pages.at(*it) = newBucket1;
-        }
     }
 
     newBucket1->setDepth(bucket->getDepth() + 1);
@@ -157,7 +142,7 @@ void Directory::split(Bucket* bucket)
 
 size_t Directory::pageIndex(size_t hash)
 {
-    return (hash >> (DEPTH_LIMIT * getLevel())) & ((1 << depth) - 1);
+    return (hash >> (DEPTH_LIMIT * level)) & ((1 << depth) - 1);
 }
 
 Page *Directory::getPage(size_t hash)
@@ -168,16 +153,6 @@ Page *Directory::getPage(size_t hash)
 Page *Directory::getBucket(size_t hash)
 {
     return pages.at(pageIndex(hash))->getBucket(hash);
-}
-
-int Directory::getLevel()
-{
-    return level;
-}
-
-void Directory::setLevel(int level)
-{
-    this->level = level;
 }
 
 vector<Bucket *> Directory::getBuckets()
@@ -197,12 +172,11 @@ int Directory::getGlobalDepth()
     int maxPageDepth = 0;
     for(int i = 0; i < pages.size(); i++) {
         if(!pages[i]->isBucket()) {
-            int pageDepth = pages[i]->getGlobalDepth();
+            int pageDepth = ((Directory*) pages[i])->getGlobalDepth();
             if (pageDepth > maxPageDepth)
                 maxPageDepth = pageDepth;
         }
     }
-
     return depth + maxPageDepth;
 }
 
@@ -213,11 +187,13 @@ string Directory::className() const
 
 ostream& Directory::dump(ostream& strm) const
 {
-    ostream& output = Page::dump(strm) << ", level " << lexical_cast<string>(level) << endl;
+    ostream& output = Page::dump(strm) << ", level " << lexical_cast<string>(level) << ", hash prefix " << bitset<DEPTH_LIMIT>(hashPrefix) << endl;
     for(int i = 0; i < pages.size(); i++) {
-        for(int j = 0; j < level + 1; j++)
-            output << "--";
-        output << "> " << *(pages[i]);
+        if (!pages[i]->isBucket()) {
+            for(int j = 0; j < level + 1; j++)
+                output << "--";
+            output << "> " << *(pages[i]);
+        }
     }
     return output;
 }

@@ -16,8 +16,7 @@ vector<string> ExtendibleHashing::getValue(size_t hash, string key)
 
 void ExtendibleHashing::putCouple(size_t hash, Couple couple)
 {
-    directory.putCouple(hash, couple);\
-//    cout << directory << endl;
+    directory.putCouple(hash, couple);
 }
 
 vector<Couple> ExtendibleHashing::getCouples(size_t keyHash, int keyHashSize, int position)

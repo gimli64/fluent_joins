@@ -52,7 +52,7 @@ void createTable(result relation, string name, vector<int> keysRepartition, vect
 void createTables()
 {
     try {
-        connection C("dbname=tpch-normal user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=tpch-skewed-part user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {

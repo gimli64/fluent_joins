@@ -5,8 +5,6 @@ Page::Page()
 {
 }
 
-void Page::putCouple(size_t hash, Couple couple) {}
-
 int Page::getDepth()
 {
     return depth;
@@ -20,18 +18,6 @@ void Page::setDepth(int depth)
 bool Page::isBucket()
 {
     return false;
-}
-
-bool Page::isFull()
-{
-    return false;
-}
-
-void Page::doubleSize() {}
-
-int Page::getGlobalDepth()
-{
-    return 0;
 }
 
 string Page::className() const

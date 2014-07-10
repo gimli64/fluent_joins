@@ -17,14 +17,10 @@ public:
     void setDepth(int depth);
 
     virtual vector<string> getValue(size_t hash, string key) = 0;
-    virtual void putCouple(size_t hash, Couple couple);
+    virtual void putCouple(size_t hash, Couple couple) = 0;
 
     virtual Page* getBucket(size_t hash) = 0;
     virtual bool isBucket();
-    virtual bool isFull();
-    virtual void doubleSize();
-
-    virtual int getGlobalDepth();
 
     virtual string className() const;
     virtual ostream& dump(ostream& strm) const;
