@@ -1,22 +1,13 @@
 #include "hashTable.h"
 
-HashTable::HashTable(string name, vector<int> keysRepartition, vector<int> order)
-    :name(name), keysRepartition(keysRepartition), numberBucketFetch(0), numberItems(0), interleaveOrder(order)
+HashTable::HashTable(string name, vector<int> BHFsRepartitions)
+    :name(name), BHFsRepartitions(BHFsRepartitions), numberItems(0)
 {
-    if (keysRepartition.size() > 0) {
-        globalDepthLimit = -1;  // coherence with 0 indexation
-        for (int i = 0; i < keysRepartition.size(); i++) {
-            histograms.push_back(map<string, int>());
-            globalDepthLimit += keysRepartition[i];
-            if (keysRepartition[i] > 0)
-                interleaveOrder.push_back(i);
-        }
-    }
-    if (interleaveOrder.size() == 0) {
-        for (int i = 0; i < keysRepartition.size(); i++) {
-            if (keysRepartition[i] > 0)
-                interleaveOrder.push_back(i);
-        }
+    interleaveOrder = vector<int>();
+    for (int i = 0; i < BHFsRepartitions.size(); i++) {
+        histograms.push_back(map<string, int>());
+        if (BHFsRepartitions[i] > 0)
+            interleaveOrder.push_back(i);
     }
 }
 
@@ -32,9 +23,8 @@ size_t HashTable::getHash(string key)
 size_t HashTable::getMultikeyHash(Couple& couple)
 {
     vector<size_t> hashes;
-    for (int i = 0; i < keysRepartition.size(); i++) {
-        if (keysRepartition[i] > 0) {
-//            cout << "hash " << lexical_cast<string>(i) << " : " << bitset<13>(getHash(couple.values[i])) << endl;
+    for (int i = 0; i < BHFsRepartitions.size(); i++) {
+        if (BHFsRepartitions[i] > 0) {
             hashes.push_back(getHash(couple.values[i]));
         }
         else
@@ -42,16 +32,28 @@ size_t HashTable::getMultikeyHash(Couple& couple)
     }
 
     size_t hash_value = interleaveHashes(hashes);
-//    cout << "hash value : "  << bitset<13>(hash_value) << endl;
-//    cout << endl;
     couple.key = hash_value;
     return hash_value;
+}
+
+size_t HashTable::interleaveHashes(vector<size_t> &hashes)
+{
+    size_t key = 0;
+    int hashIndex = 0;
+    int bitIndex = 0;
+    for (bitIndex = 0; bitIndex < interleaveOrder.size(); bitIndex++) {
+        hashIndex = interleaveOrder[bitIndex];
+        key |= ((hashes[hashIndex] & 1) << bitIndex);
+        hashes[hashIndex] >>= 1;
+    }
+
+    return key;
 }
 
 vector<string> HashTable::get(string key)
 {
     try {
-        return getValue(getHash(key), key);
+        return getValue(getHash(key));
     } catch (string &e) {
         throw e;
     }
@@ -60,7 +62,7 @@ vector<string> HashTable::get(string key)
 void HashTable::put(Couple couple)
 {
     numberItems++;
-    for (int i = 0; i < keysRepartition.size(); i++) {
+    for (int i = 0; i < BHFsRepartitions.size(); i++) {
         if (!histograms[i][couple.values[i]]) {
             histograms[i][couple.values[i]] = 1;
         } else {
@@ -70,46 +72,18 @@ void HashTable::put(Couple couple)
     putCouple(getMultikeyHash(couple), couple);
 }
 
-vector<string> HashTable::getValue(size_t hash, string key)
-{
-    throw string("Value wasn't found");
-}
-
-void HashTable::putCouple(size_t hash, Couple couple) {}
-
-bool HashTable::addBHF()
-{
-    return false;
-}
-
-void HashTable::printState() {}
-
-size_t HashTable::interleaveHashes(vector<size_t> &hashes)
-{
-    size_t key = 0;
-    int hashIndex = 0;
-    int bitIndex = 0;
-    for (bitIndex = 0; bitIndex <= globalDepthLimit; bitIndex++) {
-        hashIndex = interleaveOrder[bitIndex];
-        key |= ((hashes[hashIndex] & 1) << bitIndex);
-        hashes[hashIndex] >>= 1;
-    }
-
-    return key;
-}
-
 void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes)
 {
     int numberBitsUnset = 0;
     vector<int> bitsToSet;
 
-    for (int i = 0; i < keysRepartition.size(); i++) {
+    for (int i = 0; i < BHFsRepartitions.size(); i++) {
         if (i == position) {
-            numberBitsUnset += (keysRepartition[i] - keyHashSize);
-            bitsToSet.push_back(keysRepartition[i] - keyHashSize);
+            numberBitsUnset += (BHFsRepartitions[i] - keyHashSize);
+            bitsToSet.push_back(BHFsRepartitions[i] - keyHashSize);
         } else {
-            numberBitsUnset += keysRepartition[i];
-            bitsToSet.push_back(keysRepartition[i]);
+            numberBitsUnset += BHFsRepartitions[i];
+            bitsToSet.push_back(BHFsRepartitions[i]);
         }
     }
 
@@ -123,7 +97,7 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<
         hash_values.clear();
         rightOffset = 0;
         mask = 0;
-        for (int j = 0; j < keysRepartition.size(); j++) {
+        for (int j = 0; j < BHFsRepartitions.size(); j++) {
             mask = ((1 << bitsToSet[j]) - 1) << rightOffset;
             if (j == position) {
                 hash_values.push_back((((i & mask) >> rightOffset) << keyHashSize) + keyHash);
@@ -138,22 +112,40 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<
     }
 }
 
-int HashTable::getNumberBucketFetch()
+int HashTable::getNumberBHFs()
 {
-    return numberBucketFetch;
+    return interleaveOrder.size();
 }
 
-void HashTable::setNumberBucketFetch(int number)
-{
-    numberBucketFetch = number;
-}
+void HashTable::addBHF() {
+    double maxNeededBHFRatio = 0.0;
+    int maxNeededBHFRatioIndex = 0;
+    int totalBHFsRepartitions = 0;
 
-int HashTable::getGlobalDepthLimit()
-{
-    return globalDepthLimit;
-}
+//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
+//        totalBHFsRepartitions += BHFsRepartitions[i];
+//    }
 
-string HashTable::getName()
-{
-    return name;
+//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
+//        if (BHFsRepartitions[i] > 0) {
+//            int neededNumberBuckets = (double) histograms[i].size() / (Bucket::BUCKET_SIZE);
+//            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - BHFsRepartitions[i]);
+////            neededBHFRatio *= (totalBHFsRepartitions / BHFsRepartitions[i]);
+//            cout << "column " << i << " neededBHFRatio : " << neededBHFRatio << endl;
+//            if (neededBHFRatio > maxNeededBHFRatio) {
+//                maxNeededBHFRatio = neededBHFRatio;
+//                maxNeededBHFRatioIndex = i;
+//            }
+//        }
+//    }
+
+//    if (maxNeededBHFRatio <= 0.0 or totalBHFsRepartitions > directory.getDepth()) {
+//        cout << "Not Adding BHF " << endl;
+//    } else {
+//        BHFsRepartitions[maxNeededBHFRatioIndex] += 1;
+//        interleaveOrder.push_back(maxNeededBHFRatioIndex);
+//        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
+//    }
+    BHFsRepartitions[0] += 1;
+    interleaveOrder.push_back(0);
 }

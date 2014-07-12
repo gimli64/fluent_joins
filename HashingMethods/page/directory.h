@@ -22,14 +22,13 @@ public:
 
     Directory(HashTable *hasher = 0);
 
-    set<Bucket *> getBuckets();
-    size_t pageIndex(size_t hash);
-
-    vector<string> getValue(size_t hash, string key);
+    vector<string> getValue(size_t hash);
     void putCouple(size_t hash, Couple couple);
 
+    size_t pageIndex(size_t hash);
     Page *getPage(size_t hash);
     Page *getBucket(size_t hash);
+    vector<Bucket *> getBuckets();
 
     int getGlobalDepth();
     double pageSize() const;

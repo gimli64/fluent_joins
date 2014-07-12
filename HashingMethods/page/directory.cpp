@@ -10,10 +10,10 @@ Directory::Directory(HashTable *hasher)
     }
 }
 
-vector<string> Directory::getValue(size_t hash, string key)
+vector<string> Directory::getValue(size_t hash)
 {
     try {
-        return ((Bucket*) getBucket(hash))->getValue(hash, key);
+        return getBucket(hash)->getValue(hash);
     } catch (string &e) {
         throw e;
     }
@@ -21,6 +21,11 @@ vector<string> Directory::getValue(size_t hash, string key)
 
 void Directory::putCouple(size_t hash, Couple couple)
 {
+    if (hasher->getNumberBHFs() < (DEPTH_LIMIT * level + depth)) {
+        hasher->addBHF();
+        hash = hasher->getMultikeyHash(couple);
+    }
+
     Page *page = getPage(hash);
     if(!page->isBucket()) {
         page->putCouple(hash, couple);
@@ -155,15 +160,15 @@ Page *Directory::getBucket(size_t hash)
     return pages.at(pageIndex(hash))->getBucket(hash);
 }
 
-set<Bucket *> Directory::getBuckets()
+vector<Bucket *> Directory::getBuckets()
 {
-    set<Bucket *> buckets;
+    vector<Bucket *> buckets;
     for (int i = 0; i < pages.size(); i++) {
         if (pages[i]->isBucket())
-            buckets.insert((Bucket *) pages[i]);
+            buckets.push_back((Bucket *) pages[i]);
         else {
-            set<Bucket*> pageBuckets = ((Directory*) pages[i])->getBuckets();
-            buckets.insert(pageBuckets.begin(), pageBuckets.end());
+            vector<Bucket*> pageBuckets = ((Directory*) pages[i])->getBuckets();
+            buckets.insert(buckets.end(), pageBuckets.begin(), pageBuckets.end());
         }
     }
     return buckets;
@@ -200,14 +205,15 @@ string Directory::className() const
 ostream& Directory::dump(ostream& strm) const
 {
     ostream& output = Page::dump(strm) << ", level " << lexical_cast<string>(level);
-    output << ", hash prefix " << bitset<DEPTH_LIMIT>(hashPrefix);
+    if (parent != 0)
+        output << ", hash prefix " << bitset<13>(hashPrefix);
     output << ", page size " << pageSize() << endl;
     for(int i = 0; i < pages.size(); i++) {
-        if (!pages[i]->isBucket()) {
+//        if (!pages[i]->isBucket()) {
             for(int j = 0; j < level + 1; j++)
                 output << "--";
             output << "> " << *(pages[i]);
-        }
+//        }
     }
     return output;
 }

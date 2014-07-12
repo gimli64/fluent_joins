@@ -11,19 +11,16 @@ using std::ostream;
 class ExtendibleHashing : public HashTable
 {
 public:
-    ExtendibleHashing(string name = "", vector<int> keysRepartition = vector<int>(), vector<int> interleaveOrder = vector<int>());
+    ExtendibleHashing(string name, vector<int> keysRepartition);
 
     virtual void printState();
-    virtual bool addBHF();
 
-    vector<Couple> getCouples(size_t keyHash, int keyHashSize, int position);
-
-    void dimensionStats(int position);
+    set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position);
 
 private:
     Directory directory;
 
-    virtual vector<string> getValue(size_t hash, string key);
+    virtual vector<string> getValue(size_t hash);
     virtual void putCouple(size_t hash, Couple couple);
 };
 

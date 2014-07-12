@@ -6,7 +6,7 @@ Bucket::Bucket(string name)
     elements.reserve(BUCKET_SIZE);
 }
 
-vector<string> Bucket::getValue(size_t hash, string key)
+vector<string> Bucket::getValue(size_t hash)
 {
     vector<Couple>::iterator it = find(elements.begin(), elements.end(), hash);
     if (it != elements.end()) {
@@ -58,7 +58,7 @@ ostream& Bucket::dump(ostream& strm) const
     output << " : " << lexical_cast<string>(elements.size()) << " tuples";
     output << " : [";
     for(int i = 0; i < elements.size(); i++) {
-        output << bitset<12>(elements.at(i).key);
+        output << bitset<3>(elements.at(i).key);
         if (i < elements.size() - 1)
             output << ", ";
     }

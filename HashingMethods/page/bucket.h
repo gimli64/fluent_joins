@@ -17,7 +17,7 @@ public:
 
     Bucket(string name = "");
 
-    vector<string> getValue(size_t hash, string key);
+    vector<string> getValue(size_t hash);
     void putCouple(size_t hash, Couple couple);
 
     Bucket *getBucket(size_t hash);

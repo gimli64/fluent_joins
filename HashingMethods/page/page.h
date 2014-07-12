@@ -16,7 +16,7 @@ public:
     int getDepth();
     void setDepth(int depth);
 
-    virtual vector<string> getValue(size_t hash, string key) = 0;
+    virtual vector<string> getValue(size_t hash) = 0;
     virtual void putCouple(size_t hash, Couple couple) = 0;
 
     virtual Page* getBucket(size_t hash) = 0;
