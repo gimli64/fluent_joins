@@ -2,13 +2,13 @@
 #define HASHTABLE_H
 
 #include "common/couple.h"
+#include "page/bucket.h"
 
 #include <cstdlib>      // std::rand, std::srand
 #include <vector>
 #include <functional>
 #include <boost/functional/hash.hpp>
 #include <boost/lexical_cast.hpp>
-#include <math.h>
 
 using namespace std;
 using namespace boost;
@@ -20,7 +20,7 @@ public:
     vector<map<string, int> > histograms;
     string name;
 
-    HashTable(string name, vector<int> BHFsRepartitions);
+    HashTable(string name, vector<int> BHFsRepartitions, vector<int>interleaveOrder = vector<int>());
 
     vector<string> get(string key);
     void put(Couple couple);
@@ -28,8 +28,9 @@ public:
     size_t getMultikeyHash(Couple &couple);
 
     int getNumberBHFs();
-    void addBHF();
 
+    virtual set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position) = 0;
+    virtual void addBHF() = 0;
     virtual void printState() = 0;
 
 protected:

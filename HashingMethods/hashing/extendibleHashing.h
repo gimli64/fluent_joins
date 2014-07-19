@@ -1,6 +1,7 @@
 #ifndef EXTENDIBLEHASHING_H
 #define EXTENDIBLEHASHING_H
 
+#include "experiments/manager.h"
 #include "hashTable.h"
 #include "page/directory.h"
 #include <ostream>
@@ -11,11 +12,12 @@ using std::ostream;
 class ExtendibleHashing : public HashTable
 {
 public:
-    ExtendibleHashing(string name, vector<int> keysRepartition);
+    ExtendibleHashing(string name, vector<int> BHFsRepartitions, vector<int>interleaveOrder = vector<int>());
 
     virtual void printState();
 
-    set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position);
+    virtual void addBHF();
+    virtual set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position);
 
 private:
     Directory directory;

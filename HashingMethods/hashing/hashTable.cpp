@@ -1,13 +1,15 @@
 #include "hashTable.h"
 
-HashTable::HashTable(string name, vector<int> BHFsRepartitions)
-    :name(name), BHFsRepartitions(BHFsRepartitions), numberItems(0)
+HashTable::HashTable(string name, vector<int> BHFsRepartitions, vector<int> interleaveOrder)
+    :name(name), BHFsRepartitions(BHFsRepartitions), numberItems(0), interleaveOrder(interleaveOrder)
 {
-    interleaveOrder = vector<int>();
-    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-        histograms.push_back(map<string, int>());
-        if (BHFsRepartitions[i] > 0)
-            interleaveOrder.push_back(i);
+    if (interleaveOrder.size() == 0) {
+        for (int i = 0; i < BHFsRepartitions.size(); i++) {
+            histograms.push_back(map<string, int>());
+            if (BHFsRepartitions[i] > 0) {
+                interleaveOrder.push_back(i);
+            }
+        }
     }
 }
 
@@ -62,13 +64,13 @@ vector<string> HashTable::get(string key)
 void HashTable::put(Couple couple)
 {
     numberItems++;
-    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-        if (!histograms[i][couple.values[i]]) {
-            histograms[i][couple.values[i]] = 1;
-        } else {
-            histograms[i][couple.values[i]]++;
-        }
-    }
+//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
+//        if (!histograms[i][couple.values[i]]) {
+//            histograms[i][couple.values[i]] = 1;
+//        } else {
+//            histograms[i][couple.values[i]]++;
+//        }
+//    }
     putCouple(getMultikeyHash(couple), couple);
 }
 
@@ -115,37 +117,4 @@ void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<
 int HashTable::getNumberBHFs()
 {
     return interleaveOrder.size();
-}
-
-void HashTable::addBHF() {
-    double maxNeededBHFRatio = 0.0;
-    int maxNeededBHFRatioIndex = 0;
-    int totalBHFsRepartitions = 0;
-
-//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-//        totalBHFsRepartitions += BHFsRepartitions[i];
-//    }
-
-//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-//        if (BHFsRepartitions[i] > 0) {
-//            int neededNumberBuckets = (double) histograms[i].size() / (Bucket::BUCKET_SIZE);
-//            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - BHFsRepartitions[i]);
-////            neededBHFRatio *= (totalBHFsRepartitions / BHFsRepartitions[i]);
-//            cout << "column " << i << " neededBHFRatio : " << neededBHFRatio << endl;
-//            if (neededBHFRatio > maxNeededBHFRatio) {
-//                maxNeededBHFRatio = neededBHFRatio;
-//                maxNeededBHFRatioIndex = i;
-//            }
-//        }
-//    }
-
-//    if (maxNeededBHFRatio <= 0.0 or totalBHFsRepartitions > directory.getDepth()) {
-//        cout << "Not Adding BHF " << endl;
-//    } else {
-//        BHFsRepartitions[maxNeededBHFRatioIndex] += 1;
-//        interleaveOrder.push_back(maxNeededBHFRatioIndex);
-//        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
-//    }
-    BHFsRepartitions[0] += 1;
-    interleaveOrder.push_back(0);
 }
