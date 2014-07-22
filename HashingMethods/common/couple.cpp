@@ -15,10 +15,9 @@ Couple::Couple(const tuple &tuple)
     for(int i = 0; i < tuple.size(); i++) {
         values.push_back(tuple[i].c_str());
     }
-//    cout << values[0] << " " << values[1] << endl;
 }
 
-bool operator==(const Couple &lhs, const size_t key)
+bool operator==(const Couple &lhs, const string key)
 {
     return lhs.key == key;
 }

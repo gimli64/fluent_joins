@@ -22,7 +22,7 @@ public:
 
     HashTable(string name, vector<int> BHFsRepartitions, vector<int>interleaveOrder = vector<int>());
 
-    vector<string> get(string key);
+    vector<string> get(Couple couple);
     void put(Couple couple);
 
     size_t getMultikeyHash(Couple &couple);
@@ -44,7 +44,7 @@ private:
     boost::hash<int> int_hasher;
 
     virtual void putCouple(size_t hash, Couple couple) = 0;
-    virtual vector<string> getValue(size_t hash) = 0;
+    virtual vector<string> getValue(size_t hash, string key) = 0;
 
     size_t getHash(string key);
     size_t interleaveHashes(vector<size_t> &hashes);

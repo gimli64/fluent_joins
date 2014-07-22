@@ -15,7 +15,7 @@ public:
     Couple(const tuple &tuple);
     Couple(vector<string> &values);
 
-    size_t key;
+    string key;
     vector<string> values;
 
     virtual string className() const;
@@ -24,7 +24,7 @@ public:
 private:
 };
 
-bool operator==(const Couple &lhs, const size_t key);
+bool operator==(const Couple &lhs, const string key);
 
 ostream& operator<<(ostream&, const Couple&);
 

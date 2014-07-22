@@ -6,9 +6,9 @@ Bucket::Bucket(string name)
     elements.reserve(BUCKET_SIZE);
 }
 
-vector<string> Bucket::getValue(size_t hash)
+vector<string> Bucket::getValue(size_t hash, string key)
 {
-    vector<Couple>::iterator it = find(elements.begin(), elements.end(), hash);
+    vector<Couple>::iterator it = find(elements.begin(), elements.end(), key);
     if (it != elements.end()) {
         return (*it).values;
     } else {

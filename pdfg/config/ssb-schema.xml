@@ -10,10 +10,10 @@ xsi:noNamespaceSchemaLocation="structure/pdgfSchema.xsd">
 	<rng name="PdgfDefaultRandom"/>
     
 	<property name="SF" type="double">10</property>
-	<property name="L" type="double">6000000 * ${SF} / 4</property>
-	<property name="P" type="double">200000 * Math.floor(1 + (Math.log(${SF}) / Math.log(2.0)))</property>
-	<property name="S" type="double">2000 * ${SF}</property>
-	<property name="C" type="double">30000 * ${SF}</property>
+	<property name="L" type="double">6000000 * ${SF}</property>
+	<property name="P" type="double">800000 * Math.floor(1 + (Math.log(${SF}) / Math.log(2.0)))</property>
+	<property name="S" type="double">8000 * ${SF}</property>
+	<property name="C" type="double">120000 * ${SF}</property>
 	
 	<property name="DateBeginDate" type="date">1992-01-01</property>
 	<property name="DateEndDate" type="date">1998-12-31</property>
@@ -35,7 +35,7 @@ xsi:noNamespaceSchemaLocation="structure/pdgfSchema.xsd">
 		<field name="LO_NUMBER_OF_LINEITEMS" size="" type="NUMERIC">
 			<gen_LongGenerator>
 				<min>1</min>
-				<max>7</max>
+				<max>1</max>
 			</gen_LongGenerator>
 		</field>
 
@@ -170,6 +170,7 @@ xsi:noNamespaceSchemaLocation="structure/pdgfSchema.xsd">
 				<reference table="SUPPLIER" field="S_SUPPKEY"/>
 			</gen_DefaultReferenceGenerator>
 		</field>
+
 		<field name="LO_ORDERDATE" size="" type="DATE">
 			<gen_ExtendedDateGenerator>
 				<format>yyyyMMdd</format>

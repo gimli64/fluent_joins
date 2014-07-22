@@ -13,11 +13,12 @@ using namespace boost;
 class Bucket: public Page
 {
 public:
+    vector<Couple> elements;
     static const int BUCKET_SIZE = 49;
 
     Bucket(string name = "");
 
-    vector<string> getValue(size_t hash);
+    vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
 
     Bucket *getBucket(size_t hash);
@@ -32,7 +33,6 @@ public:
 
 private:
     string name;
-    vector<Couple> elements;
 };
 
 #endif // BUCKET_H

@@ -3,11 +3,10 @@
 HashTable::HashTable(string name, vector<int> BHFsRepartitions, vector<int> interleaveOrder)
     :name(name), BHFsRepartitions(BHFsRepartitions), numberItems(0), interleaveOrder(interleaveOrder)
 {
-    if (interleaveOrder.size() == 0) {
+    if (this->interleaveOrder.size() == 0) {
         for (int i = 0; i < BHFsRepartitions.size(); i++) {
-            histograms.push_back(map<string, int>());
             if (BHFsRepartitions[i] > 0) {
-                interleaveOrder.push_back(i);
+                this->interleaveOrder.push_back(i);
             }
         }
     }
@@ -34,7 +33,6 @@ size_t HashTable::getMultikeyHash(Couple& couple)
     }
 
     size_t hash_value = interleaveHashes(hashes);
-    couple.key = hash_value;
     return hash_value;
 }
 
@@ -52,10 +50,10 @@ size_t HashTable::interleaveHashes(vector<size_t> &hashes)
     return key;
 }
 
-vector<string> HashTable::get(string key)
+vector<string> HashTable::get(Couple couple)
 {
     try {
-        return getValue(getHash(key));
+        return getValue(getMultikeyHash(couple), couple.key);
     } catch (string &e) {
         throw e;
     }

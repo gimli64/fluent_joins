@@ -1,14 +1,15 @@
 #include "extendibleHashing.h"
 
 ExtendibleHashing::ExtendibleHashing(string name, vector<int> BHFsRepartitions, vector<int> interleaveOrder)
-    :directory(Directory(this)), HashTable(name, BHFsRepartitions, interleaveOrder)
+    :HashTable(name, BHFsRepartitions, interleaveOrder)
 {
+    directory = Directory(this);
 }
 
-vector<string> ExtendibleHashing::getValue(size_t hash)
+vector<string> ExtendibleHashing::getValue(size_t hash, string key)
 {
     try {
-        return directory.getValue(hash);
+        return directory.getValue(hash, key);
     } catch (string &e) {
         throw e;
     }
@@ -32,9 +33,19 @@ set<Bucket*> ExtendibleHashing::getBuckets(size_t keyHash, int keyHashSize, int 
 
 void ExtendibleHashing::printState()
 {
+    vector<Bucket *> buckets = directory.getBuckets();
+    set<Bucket *> uniqueBuckets(buckets.begin(), buckets.end());
+    double loadFactor = (double) numberItems / (uniqueBuckets.size() * Bucket::BUCKET_SIZE);
+    double distanceToUniform = 0.0;
+
+    Bucket* bucket;
+    for(set<Bucket*>::iterator it = uniqueBuckets.begin(); it != uniqueBuckets.end(); ++it) {
+        bucket = *it;
+        distanceToUniform += pow(((double) bucket->size() / Bucket::BUCKET_SIZE) - loadFactor, 2.0);
+    }
+
     cout << "global depth : " << directory.getGlobalDepth() << endl;
     cout << "directory page size : " << directory.pageSize() << endl;
-    BucketFactory<Bucket>::getInstance()->printState();
     cout << "keys repartition : [";
     for (int i = 0; i < BHFsRepartitions.size(); i++) {
         cout << BHFsRepartitions[i];
@@ -42,42 +53,14 @@ void ExtendibleHashing::printState()
             cout << ",";
     }
     cout << "]" << endl;
-    cout << "load factor : ";
-    cout << (double) numberItems / (BucketFactory<Bucket>::getInstance()->getNumberBuckets() * Bucket::BUCKET_SIZE);
+    BucketFactory<Bucket>::getInstance()->printState();
+    cout << "distance to uniform : " << distanceToUniform << endl;
+    cout << "load factor : " << loadFactor << endl;
     cout << endl << endl;
 //    cout << directory << endl;
 }
 
 void ExtendibleHashing::addBHF() {
-//    double maxNeededBHFRatio = 0.0;
-//    int maxNeededBHFRatioIndex = 0;
-//    int totalBHFsRepartitions = 0;
-
-//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-//        totalBHFsRepartitions += BHFsRepartitions[i];
-//    }
-
-//    for (int i = 0; i < BHFsRepartitions.size(); i++) {
-//        if (BHFsRepartitions[i] > 0) {
-//            int neededNumberBuckets = (double) histograms[i].size() / (Bucket::BUCKET_SIZE);
-//            double neededBHFRatio = ((double) log(neededNumberBuckets) / log(2) - BHFsRepartitions[i]);
-////            neededBHFRatio *= (totalBHFsRepartitions / BHFsRepartitions[i]);
-//            cout << "column " << i << " neededBHFRatio : " << neededBHFRatio << endl;
-//            if (neededBHFRatio > maxNeededBHFRatio) {
-//                maxNeededBHFRatio = neededBHFRatio;
-//                maxNeededBHFRatioIndex = i;
-//            }
-//        }
-//    }
-
-//    if (maxNeededBHFRatio <= 0.0 or totalBHFsRepartitions > directory.getDepth()) {
-//        cout << "Not Adding BHF " << endl;
-//    } else {
-//        BHFsRepartitions[maxNeededBHFRatioIndex] += 1;
-//        interleaveOrder.push_back(maxNeededBHFRatioIndex);
-//        cout << "Adding BHF on column " << maxNeededBHFRatioIndex << endl;
-//    }
-
     if (BHFsRepartitions.size() == 1) {
         BHFsRepartitions[0] += 1;
         interleaveOrder.push_back(0);

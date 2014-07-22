@@ -22,7 +22,7 @@ public:
 
     Directory(HashTable *hasher = 0);
 
-    vector<string> getValue(size_t hash);
+    vector<string> getValue(size_t hash, string key);
     void putCouple(size_t hash, Couple couple);
 
     size_t pageIndex(size_t hash);

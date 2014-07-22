@@ -10,10 +10,10 @@ Directory::Directory(HashTable *hasher)
     }
 }
 
-vector<string> Directory::getValue(size_t hash)
+vector<string> Directory::getValue(size_t hash, string key)
 {
     try {
-        return getBucket(hash)->getValue(hash);
+        return getBucket(hash)->getValue(hash, key);
     } catch (string &e) {
         throw e;
     }
