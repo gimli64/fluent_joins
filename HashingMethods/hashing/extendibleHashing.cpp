@@ -20,15 +20,20 @@ void ExtendibleHashing::putCouple(size_t hash, Couple couple)
     directory.putCouple(hash, couple);
 }
 
-set<Bucket*> ExtendibleHashing::getBuckets(size_t keyHash, int keyHashSize, int position)
+void ExtendibleHashing::getBuckets(vector<size_t> &setHashes, vector<int> &sizes, set<Bucket *> &buckets)
 {
-    set<Bucket*> buckets;
     vector<size_t> hashes;
-    getHashes(keyHash, keyHashSize, position, hashes);
+    getHashes(setHashes, sizes, hashes);
     for (int i = 0; i < hashes.size(); i++) {
         buckets.insert((Bucket*) directory.getBucket(hashes[i]));
     }
-    return buckets;
+}
+
+int ExtendibleHashing::getNumberBuckets()
+{
+    vector<Bucket *> buckets = directory.getBuckets();
+    set<Bucket *> uniqueBuckets(buckets.begin(), buckets.end());
+    return uniqueBuckets.size();
 }
 
 void ExtendibleHashing::printState()
@@ -55,9 +60,7 @@ void ExtendibleHashing::printState()
     cout << "]" << endl;
     BucketFactory<Bucket>::getInstance()->printState();
     cout << "distance to uniform : " << distanceToUniform << endl;
-    cout << "load factor : " << loadFactor << endl;
-    cout << endl << endl;
-//    cout << directory << endl;
+    cout << "load factor : " << loadFactor << endl << endl;
 }
 
 void ExtendibleHashing::addBHF() {
@@ -65,8 +68,6 @@ void ExtendibleHashing::addBHF() {
         BHFsRepartitions[0] += 1;
         interleaveOrder.push_back(0);
     } else {
-        int maxNumberPagesIndex = Manager::getInstance()->performAllJoins();
-
         int minBHFsAllocated = interleaveOrder.size();
         int minBHFsAllocatedIndex = 0;
         for (int i = 0; i < BHFsRepartitions.size(); i++) {
@@ -78,9 +79,5 @@ void ExtendibleHashing::addBHF() {
         cout << "Allocating BHF to " << minBHFsAllocatedIndex << endl;
         BHFsRepartitions[minBHFsAllocatedIndex] += 1;
         interleaveOrder.push_back(minBHFsAllocatedIndex);
-
-//        cout << "Allocating BHF to " << maxNumberPagesIndex << endl;
-//        BHFsRepartitions[maxNumberPagesIndex] += 1;
-//        interleaveOrder.push_back(maxNumberPagesIndex);
     }
 }

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <set>
+#include <numeric>
 #include <boost/algorithm/string/join.hpp>
 
 #include "hashing/hashTable.h"
@@ -14,14 +15,19 @@ class Manager
 {
 public:
     static const int PAGE_SIZE = 4096;
+    static const int NUM_PAGES = 1000;
+
+    double Tseek;
+    double Ttransfer;
+    double Tsort;
+    double Tmerge;
+    double Tblacklist;
 
     HashTable *customerTable;
     HashTable *partTable;
     HashTable *supplierTable;
     HashTable *dateTable;
     HashTable *lineorderTable;
-
-    vector<int> numPages;
 
     static Manager* getInstance();
 
@@ -31,7 +37,11 @@ private:
     static Manager* instance;
 
     Manager();
-    void multikeyBinaryJoin(HashTable *table1, HashTable *table2, int leftPosition, int rightPosition, int BHFmoved=0);
+    void multikeyBinaryJoin(HashTable *table1, HashTable *table2, int leftPosition, int rightPosition);
+
+    double costRead(int numberPages, int commonBHFs);
+    double costWrite(int numberPages, int pageBuffers);
+    double costSortMerge(int numberPages);
 
     void extractCouples(set<Bucket *> &buckets, vector<Couple> &couples);
     void mergeCouples(vector<Couple> &couples1, vector<Couple> &couples2, int leftPosition, int rightPosition, vector<string> &result);

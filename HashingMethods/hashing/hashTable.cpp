@@ -15,10 +15,7 @@ HashTable::HashTable(string name, vector<int> BHFsRepartitions, vector<int> inte
 size_t HashTable::getHash(string key)
 {
     srand(int_hasher(lexical_cast<int>(key)));
-//    srand(std::hash<string>(key));
     return rand();
-//    return int_hasher(lexical_cast<int>(key));
-//    return string_hasher(key);
 }
 
 size_t HashTable::getMultikeyHash(Couple& couple)
@@ -72,42 +69,29 @@ void HashTable::put(Couple couple)
     putCouple(getMultikeyHash(couple), couple);
 }
 
-void HashTable::getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes)
+void HashTable::getHashes(vector<size_t> &setHashes, vector<int> &sizes, vector<size_t> &hashes)
 {
     int numberBitsUnset = 0;
     vector<int> bitsToSet;
 
     for (int i = 0; i < BHFsRepartitions.size(); i++) {
-        if (i == position) {
-            numberBitsUnset += (BHFsRepartitions[i] - keyHashSize);
-            bitsToSet.push_back(BHFsRepartitions[i] - keyHashSize);
-        } else {
-            numberBitsUnset += BHFsRepartitions[i];
-            bitsToSet.push_back(BHFsRepartitions[i]);
-        }
+        numberBitsUnset += (BHFsRepartitions[i] - sizes[i]);
+        bitsToSet.push_back(BHFsRepartitions[i] - sizes[i]);
     }
 
-    int numberHashes = (int) pow(2.0, (double) numberBitsUnset) - 1;
+    int numberHashes = (int) pow(2.0, (double) numberBitsUnset);
     hashes.reserve(numberHashes);
-    vector<size_t> hash_values;
-    size_t rightOffset;
-    size_t mask;
-
-    for (int i = numberHashes; i >= 0; i--) {
-        hash_values.clear();
-        rightOffset = 0;
-        mask = 0;
+    for (int i = 0; i < numberHashes; i++) {
+        vector<size_t> hashValues;
+        size_t rightOffset = 0;
+        size_t mask = 0;
         for (int j = 0; j < BHFsRepartitions.size(); j++) {
             mask = ((1 << bitsToSet[j]) - 1) << rightOffset;
-            if (j == position) {
-                hash_values.push_back((((i & mask) >> rightOffset) << keyHashSize) + keyHash);
-            } else {
-                hash_values.push_back((i & mask) >> rightOffset);
-            }
+            hashValues.push_back((((i & mask) >> rightOffset) << sizes[j]) + setHashes[j]);
             rightOffset += bitsToSet[j];
         }
 
-        size_t hash = interleaveHashes(hash_values);
+        size_t hash = interleaveHashes(hashValues);
         hashes.push_back(hash);
     }
 }

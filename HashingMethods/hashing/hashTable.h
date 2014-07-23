@@ -16,6 +16,7 @@ using namespace boost;
 class HashTable
 {
 public:
+    int numberItems;
     vector<int> BHFsRepartitions;
     vector<map<string, int> > histograms;
     string name;
@@ -29,18 +30,17 @@ public:
 
     int getNumberBHFs();
 
-    virtual set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position) = 0;
+    virtual int getNumberBuckets() = 0;
+    virtual void getBuckets(vector<size_t> &setHashes, vector<int> &sizes, set<Bucket*> &buckets) = 0;
     virtual void addBHF() = 0;
     virtual void printState() = 0;
 
 protected:
     vector<int> interleaveOrder;
-    int numberItems;
 
-    void getHashes(size_t keyHash, int keyHashSize, int position, vector<size_t> &hashes);
+    void getHashes(vector<size_t> &setHashes, vector<int> &sizes, vector<size_t> &hashes);
 
 private:
-    boost::hash<string> string_hasher;
     boost::hash<int> int_hasher;
 
     virtual void putCouple(size_t hash, Couple couple) = 0;

@@ -38,7 +38,7 @@ int main()
 {
     time_t start,end;
     try {
-        connection C("dbname=tpch-skewed-4 user=gimli hostaddr=127.0.0.1");
+        connection C("dbname=tpch-skewed-4-4-4 user=gimli hostaddr=127.0.0.1");
         if (C.is_open()) {
             cout << "\nOpened database successfully: " << C.dbname() << endl;
         } else {
@@ -49,80 +49,43 @@ int main()
         vector<int> BHFsRepartition;
         vector<int> interleaveOrder;
 
-        //        R = result( N.exec("SELECT * from customer"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(1);
-        //        BucketFactory<Bucket>::getInstance()->reset();
-        //        ExtendibleHashing customerTable("customer", BHFsRepartition);
-        //        createTable(customerTable, R);
-        //        Manager::getInstance()->customerTable = &customerTable;
+//        R = result( N.exec("SELECT * from customer"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(1);
+//        BucketFactory<Bucket>::getInstance()->reset();
+//        ExtendibleHashing customerTable("customer", BHFsRepartition);
+//        createTable(customerTable, R);
+//        Manager::getInstance()->customerTable = &customerTable;
 
-        //        R = result( N.exec("SELECT * from part"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(1);
-        //        BucketFactory<Bucket>::getInstance()->reset();
-        //        ExtendibleHashing partTable("part", BHFsRepartition);
-        //        createTable(partTable, R);
-        //        Manager::getInstance()->partTable = &partTable;
+//        R = result( N.exec("SELECT * from part"));
+//        BHFsRepartition.clear();
+//        BHFsRepartition.push_back(1);
+//        BucketFactory<Bucket>::getInstance()->reset();
+//        ExtendibleHashing partTable("part", BHFsRepartition);
+//        createTable(partTable, R);
+//        Manager::getInstance()->partTable = &partTable;
 
-        //        R = result( N.exec("SELECT * from supplier"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(1);
-        //        BucketFactory<Bucket>::getInstance()->reset();
-        //        ExtendibleHashing supplierTable("supplier", BHFsRepartition);
-        //        createTable(supplierTable, R);
-        //        Manager::getInstance()->supplierTable = &supplierTable;
-
-        //        R = result( N.exec("SELECT * from date"));
-        //        BHFsRepartition.clear();
-        //        BHFsRepartition.push_back(1);
-        //        BucketFactory<Bucket>::getInstance()->reset();
-        //        ExtendibleHashing dateTable("date", BHFsRepartition);
-        //        createTable(dateTable, R);
-        //        Manager::getInstance()->dateTable = &dateTable;
-
-        R = result( N.exec("SELECT * from lineorder"));
+        R = result( N.exec("SELECT * from supplier"));
         BHFsRepartition.clear();
-        BHFsRepartition.push_back(7);
-        BHFsRepartition.push_back(0);
-        BHFsRepartition.push_back(7);
-        BHFsRepartition.push_back(7);
-        BHFsRepartition.push_back(7);
-        interleaveOrder.clear();
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
-        interleaveOrder.push_back(0);
-        interleaveOrder.push_back(2);
-        interleaveOrder.push_back(3);
-        interleaveOrder.push_back(4);
+        BHFsRepartition.push_back(1);
         BucketFactory<Bucket>::getInstance()->reset();
-        ExtendibleHashing lineorderTable("lineorder", BHFsRepartition, interleaveOrder);
+        ExtendibleHashing supplierTable("supplier", BHFsRepartition);
+        createTable(supplierTable, R);
+        Manager::getInstance()->supplierTable = &supplierTable;
+
+        R = result( N.exec("SELECT * from lineorder limit 200000"));
+        BHFsRepartition.clear();
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(0);
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(1);
+        BHFsRepartition.push_back(1);
+        BucketFactory<Bucket>::getInstance()->reset();
+        ExtendibleHashing lineorderTable("lineorder", BHFsRepartition);
         Manager::getInstance()->lineorderTable = &lineorderTable;
         createTable(lineorderTable, R);
 
-//        Manager::getInstance()->performAllJoins();
+        Manager::getInstance()->performAllJoins();
 
 
         C.disconnect ();

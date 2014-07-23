@@ -19,7 +19,8 @@ public:
     virtual void printState();
 
     virtual void addBHF();
-    virtual set<Bucket *> getBuckets(size_t keyHash, int keyHashSize, int position);
+    virtual int getNumberBuckets();
+    virtual void getBuckets(vector<size_t> &setHashes, vector<int> &sizes, set<Bucket*> &buckets);
 
 private:
     virtual vector<string> getValue(size_t hash, string key);
